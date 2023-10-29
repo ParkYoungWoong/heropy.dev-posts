@@ -1,6 +1,6 @@
 ---
-id: _6Jspwa
 filename: css-grid
+id: c6ROLZ
 title: CSS Grid 완벽 가이드
 createdAt: 2019-08-17
 updatedAt: 2023-10-15
