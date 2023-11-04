@@ -1,29 +1,26 @@
 ---
-filename: css-grid
 id: c6ROLZ
+filename: css-grid
 title: CSS Grid 완벽 가이드
 createdAt: 2019-08-17
-updatedAt: 2023-10-15
+updatedAt: 2023-11-04
 group: CSS
 tags:
   - CSS
   - Grid
-description:
 ---
+
+# CSS Grid
 
 CSS Grid(그리드)는 2차원(행과 열)의 레이아웃 시스템을 제공합니다.
 Flexible Box도 훌륭하지만 비교적 단순한 1차원 레이아웃을 위하며, 좀 더 복잡한 레이아웃을 위해 우리는 CSS Grid를 사용할 수 있습니다.
 
 > CSS Grid는 예전부터 핵(Hack)으로 불린 다양한 레이아웃 대체 방식들을 해결하기 위해 만들어진 특별한 CSS 모듈입니다.
 
-<!-- toc -->
-
-# CSS Grid
-
 CSS Grid의 효율적인 학습을 위해서 [파이어폭스 브라우저](https://www.mozilla.org/ko/firefox/new/)를 사용해 테스트할 것을 추천합니다.  
 개발자 도구를 열고 요소를 검색해 표시된 `grid` 버튼을 선택합니다.
 
-![CSS Grid](/images/screenshot/css-grid/use-to-firefox.jpg)
+![CSS Grid](./assets/use-to-firefox.jpg)
 
 CSS Grid를 처음 시작하시는 분들을 위해 간단한 테스트 영상을 준비했습니다.
 
@@ -35,12 +32,11 @@ CSS Grid를 처음 시작하시는 분들을 위해 간단한 테스트 영상�
 [SCSS](https://heropy.blog/2018/01/31/sass/)로 작성되어 있지만, CSS 문법을 포함할 수 있음으로 `// Test here!` 이하에 `.container`와 `.item`을 정의해 보세요.
 혹은 새로운 환경에서 Grid를 테스트해 보세요.
 
-<iframe height="585" style="width: 100%;" scrolling="no" title="Heropy CSS Grid Sample" src="//codepen.io/heropark/embed/ExYKWrR/?height=585&theme-id=0&default-tab=css,result" frameborder="no" allowtransparency="true" allowfullscreen="true">
-  See the Pen <a href='https://codepen.io/heropark/pen/ExYKWrR/'>Heropy CSS Grid Sample</a> by park young woong
-  (<a href='https://codepen.io/heropark'>@heropark</a>) on <a href='https://codepen.io'>CodePen</a>.
+<iframe height="580" style="width: 100%;" scrolling="no" title="Heropy CSS Grid Sample" src="https://codepen.io/heropark/embed/ExYKWrR?default-tab=css%2Cresult" frameborder="no" loading="lazy" allowtransparency="true" allowfullscreen="true">
+  See the Pen <a href="https://codepen.io/heropark/pen/ExYKWrR">
+  Heropy CSS Grid Sample</a> by park young woong (<a href="https://codepen.io/heropark">@heropark</a>)
+  on <a href="https://codepen.io">CodePen</a>.
 </iframe>
-
-# Grid Properties
 
 CSS Grid는 [CSS Flex](https://heropy.blog/2018/11/24/css-flexible-box/)와 같이 Container(컨테이너)와 Item(아이템)이라는 두 가지 개념으로 구분되어 있습니다.
 Container는 Items를 감싸는 부모 요소이며, 그 안에서 각 Item을 배치할 수 있습니다.
@@ -89,9 +85,9 @@ place-self | `align-self`와 `justify-self`의 단축 속성
 order | 그리드 아이템의 배치 순서를 지정
 z-index | 그리드 아이템의 쌓이는 순서를 지정
 
-# Grid Containers
+## Grid Containers
 
-## display
+### display
 
 Grid Container(컨테이너)를 정의합니다.
 정의된 컨테이너의 자식 요소들은 자동으로 Grid Items(아이템)로 정의됩니다.
@@ -109,7 +105,7 @@ Grid Container(컨테이너)를 정의합니다.
 }
 ```
 
-## grid-template-rows
+### grid-template-rows
 
 명시적 행(Track)의 크기를 정의합니다.
 동시에 라인(Line)의 이름도 정의할 수 있습니다.
@@ -159,9 +155,9 @@ Grid Container(컨테이너)를 정의합니다.
 }
 ```
 
-![CSS Grid](/images/screenshot/css-grid/grid-template-rows-1.jpg)
+![CSS Grid](./assets/grid-template-rows-1.jpg)
 
-## grid-template-columns
+### grid-template-columns
 
 명시적 열(Track)의 크기를 정의합니다.
 동시에 라인(Line)의 이름도 정의할 수 있습니다.
@@ -237,7 +233,7 @@ Grid Container(컨테이너)를 정의합니다.
 }
 ```
 
-## grid-template-areas
+### grid-template-areas
 
 지정된 그리드 영역 이름(`grid-area`)을 참조해 그리드 템플릿을 생성합니다.
 
@@ -259,7 +255,7 @@ aside  { grid-area: aside;  }
 footer { grid-area: footer; }
 ```
 
-![CSS Grid](/images/screenshot/css-grid/grid-template-areas-1.jpg)
+![CSS Grid](./assets/grid-template-areas-1.jpg)
 
 `.`(마침표)를 사용하거나 명시적으로 `none`을 입력해 빈 영역을 정의할 수 있습니다.
 
@@ -280,9 +276,9 @@ aside  { grid-area: aside;  }
 footer { grid-area: footer; }
 ```
 
-![CSS Grid](/images/screenshot/css-grid/grid-template-areas-2.jpg)
+![CSS Grid](./assets/grid-template-areas-2.jpg)
 
-## grid-template
+### grid-template
 
 `grid-template-rows`, `grid-template-columns` 그리고 `grid-template-areas`의 단축 속성입니다.
 
@@ -333,7 +329,7 @@ footer { grid-area: footer; }
 }
 ```
 
-## row-gap(grid-row-gap)
+### row-gap(grid-row-gap)
 
 각 행과 행 사이의 간격(Gutter)을 지정합니다.
 
@@ -345,7 +341,7 @@ footer { grid-area: footer; }
 }
 ```
 
-## column-gap(grid-column-gap)
+### column-gap(grid-column-gap)
 
 각 열과 열 사이의 간격(Gutter)을 지정합니다.
 
@@ -355,7 +351,7 @@ footer { grid-area: footer; }
 }
 ```
 
-## gap(grid-gap)
+### gap(grid-gap)
 
 각 행과 행, 열과 열 사이의 간격(Gutter)을 지정합니다.
 
@@ -383,7 +379,7 @@ footer { grid-area: footer; }
 }
 ```
 
-![CSS Grid](/images/screenshot/css-grid/gap-1.jpg)
+![CSS Grid](./assets/gap-1.jpg)
 
 `grid-gap`(`grid-row-gap`, `grid-column-gap`)의 접두사 `grid-`는 더 이상 사용되지 않으며(Deprecated), `gap`(`row-gap`, `column-gap`)로 교체되었습니다.  
 하지만 일부 버전의 브라우저 지원을 위해 `grid-` 접두사의 사용을 고려할 수 있습니다.
@@ -392,7 +388,7 @@ footer { grid-area: footer; }
 - [&lsqb;css-grid&rsqb; grid-gap is deprecated.](https://github.com/postcss/autoprefixer/issues/1046)  
 - https://drafts.csswg.org/css-grid/#change-2016-grid-gap
 
-## grid-auto-rows
+### grid-auto-rows
 
 암시적 행(Track)의 크기를 정의합니다.
 아이템(Item)이 `grid-template-rows`로 정의한 명시적 행 외부에 배치되는 경우 암시적 행의 크기가 적용됩니다.
@@ -419,9 +415,9 @@ footer { grid-area: footer; }
 }
 ```
 
-![CSS Grid](/images/screenshot/css-grid/grid-auto-rows-1.jpg)
+![CSS Grid](./assets/grid-auto-rows-1.jpg)
 
-## grid-auto-columns
+### grid-auto-columns
 
 암시적 열(Track)의 크기를 정의합니다.
 아이템(Item)이 `grid-template-columns`로 정의한 명시적 열 외부에 배치되는 경우 암시적 열의 크기가 적용됩니다.
@@ -442,14 +438,14 @@ footer { grid-area: footer; }
 }
 ```
 
-![CSS Grid](/images/screenshot/css-grid/grid-auto-columns-1.jpg)
+![CSS Grid](./assets/grid-auto-columns-1.jpg)
 
 다음과 같이 아이템이 배치되는 위치에 맞게 암시적 행과 열의 개수가 생성됩니다.
 암시적 크기가 적용된 행과 열은 양수 라인 번호만 사용할 수 있습니다.(음수 사용 불가)
 
-![CSS Grid](/images/screenshot/css-grid/grid-auto-columns-2.jpg)
+![CSS Grid](./assets/grid-auto-columns-2.jpg)
 
-## grid-auto-flow
+### grid-auto-flow
 
 배치하지 않은 아이템(Item)을 어떤 방식의 '자동 배치 알고리즘'으로 처리할지 정의합니다.
 
@@ -477,7 +473,7 @@ column dense | 각 열 축을 따라 차례로 배치, 빈 영역 메움! |
 }
 ```
 
-![CSS Grid](/images/screenshot/css-grid/grid-auto-flow-1.jpg)
+![CSS Grid](./assets/grid-auto-flow-1.jpg)
 
 다음은 `column`과 `column dense`에 대한 예제입니다.
 
@@ -497,9 +493,9 @@ column dense | 각 열 축을 따라 차례로 배치, 빈 영역 메움! |
 }
 ```
 
-![CSS Grid](/images/screenshot/css-grid/grid-auto-flow-2.jpg)
+![CSS Grid](./assets/grid-auto-flow-2.jpg)
 
-## grid
+### grid
 
 `grid-template-xxx`과 `grid-auto-xxx`의 단축 속성입니다.
 
@@ -590,7 +586,7 @@ column dense | 각 열 축을 따라 차례로 배치, 빈 영역 메움! |
 }
 ```
 
-## align-content
+### align-content
 
 그리드 콘텐츠(Contents)를 수직(열 축) 정렬합니다.
 그리드 콘텐츠의 세로 너비가 그리드 컨테이너(Container)보다 작아야 합니다.
@@ -617,9 +613,9 @@ stretch | 열 축을 채우기 위해 그리드 콘텐츠를 늘림 |
 }
 ```
 
-![CSS Grid](/images/screenshot/css-grid/align-content-1.jpg)
+![CSS Grid](./assets/align-content-1.jpg)
 
-## justify-content
+### justify-content
 
 그리드 콘텐츠(Contents)를 수평(행 축) 정렬합니다.
 그리드 콘텐츠의 가로 너비가 그리드 컨테이너(Container)보다 작아야 합니다.
@@ -646,9 +642,9 @@ stretch | 행 축을 채우기 위해 그리드 콘텐츠를 늘림 |
 }
 ```
 
-![CSS Grid](/images/screenshot/css-grid/justify-content-1.jpg)
+![CSS Grid](./assets/justify-content-1.jpg)
 
-## place-content
+### place-content
 
 `align-content`와 `justify-content`의 단축 속성입니다.
 하나의 값만 입력하면 두 속성에 모두 적용됩니다.
@@ -683,7 +679,7 @@ stretch | 행 축을 채우기 위해 그리드 콘텐츠를 늘림 |
 }
 ```
 
-## align-items
+### align-items
 
 그리드 아이템(Items)들을 수직(열 축) 정렬합니다.
 그리드 아이템의 세로 너비가 자신이 속한 그리드 행(Track)의 크기보다 작아야 합니다.
@@ -707,9 +703,9 @@ stretch | 열 축을 채우기 위해 그리드 아이템을 늘림 |
 }
 ```
 
-![CSS Grid](/images/screenshot/css-grid/align-items-1.jpg)
+![CSS Grid](./assets/align-items-1.jpg)
 
-## justify-items
+### justify-items
 
 그리드 아이템(Items)들을 수평(행 축) 정렬합니다.
 그리드 아이템의 가로 너비가 자신이 속한 그리드 열(Track)의 크기보다 작아야 합니다.
@@ -733,9 +729,9 @@ stretch | 행 축을 채우기 위해 그리드 아이템을 늘림 |
 }
 ```
 
-![CSS Grid](/images/screenshot/css-grid/justify-items-1.jpg)
+![CSS Grid](./assets/justify-items-1.jpg)
 
-## place-items
+### place-items
 
 `align-items`와 `justify-items`의 단축 속성입니다.
 하나의 값만 입력하면 두 속성에 모두 적용됩니다.
@@ -770,11 +766,11 @@ stretch | 행 축을 채우기 위해 그리드 아이템을 늘림 |
 }
 ```
 
-# Grid Items
+## Grid Items
 
 정의된 컨테이너의 자식 요소들은 자동으로 Grid Items(아이템)로 정의됩니다.
 
-## grid-row-start, grid-row-end, grid-column-start, grid-column-end
+### grid-row-start, grid-row-end, grid-column-start, grid-column-end
 
 그리드 아이템(Item)을 배치하기 위해 그리드 선(Line)의 '시작 위치'와 '끝 위치'를 지정합니다.
 '숫자'를 지정하거나, '선 이름'을 지정하거나, `span` 키워드를 사용합니다.
@@ -793,7 +789,7 @@ stretch | 행 축을 채우기 위해 그리드 아이템을 늘림 |
 }
 ```
 
-![CSS Grid](/images/screenshot/css-grid/grid-area-1.jpg)
+![CSS Grid](./assets/grid-area-1.jpg)
 
 선의 이름을 지정할 수도 있습니다.
 
@@ -811,7 +807,7 @@ stretch | 행 축을 채우기 위해 그리드 아이템을 늘림 |
 }
 ```
 
-![CSS Grid](/images/screenshot/css-grid/grid-area-2.jpg)
+![CSS Grid](./assets/grid-area-2.jpg)
 
 `span` 키워드를 사용하면 좀 더 쉽게 배치할 수 있습니다.
 `span` 키워드와 '숫자'를 조합하면 '숫자'만큼 라인을 확장하는(`+`) 개념입니다.
@@ -829,7 +825,7 @@ stretch | 행 축을 채우기 위해 그리드 아이템을 늘림 |
 }
 ```
 
-![CSS Grid](/images/screenshot/css-grid/grid-area-3.jpg)
+![CSS Grid](./assets/grid-area-3.jpg)
 
 `span` 키워드를 '시작 위치'에 작성하고, '끝 위치'를 명시해서 확장할(`-`) 수도 있습니다.
 
@@ -845,9 +841,9 @@ stretch | 행 축을 채우기 위해 그리드 아이템을 늘림 |
 }
 ```
 
-![CSS Grid](/images/screenshot/css-grid/grid-area-4.jpg)
+![CSS Grid](./assets/grid-area-4.jpg)
 
-## grid-row
+### grid-row
 
 `grid-row-start`과 `grid-row-end`의 단축 속성입니다.
 각 속성을 `/`로 구분하는 것에 주의하세요.
@@ -896,7 +892,7 @@ stretch | 행 축을 채우기 위해 그리드 아이템을 늘림 |
 }
 ```
 
-## grid-column
+### grid-column
 
 `grid-column-start`과 `grid-column-end`의 단축 속성입니다.
 각 속성을 `/`로 구분하는 것에 주의하세요.
@@ -935,7 +931,7 @@ stretch | 행 축을 채우기 위해 그리드 아이템을 늘림 |
 }
 ```
 
-## grid-area
+### grid-area
 
 `grid-row-start`, `grid-column-start`, `grid-row-end` 그리고 `grid-column-end`의 단축 속성입니다.
 혹은 `grid-template-areas`가 참조할 영역(Area) 이름을 설정할 수도 있습니다.  
@@ -989,9 +985,9 @@ aside.item  { grid-area: aside;  }
 footer.item { grid-area: footer; }
 ```
 
-![CSS Grid](/images/screenshot/css-grid/grid-area-6.jpg)
+![CSS Grid](./assets/grid-area-6.jpg)
 
-## align-self
+### align-self
 
 단일 그리드 아이템(Item)을 수직(열 축) 정렬합니다.
 그리드 아이템의 세로 너비가 자신이 속한 그리드 행(Track)의 크기보다 작아야 합니다.
@@ -1016,9 +1012,9 @@ stretch | 열 축을 채우기 위해 그리드 아이템을 늘림 |
 .item:nth-child(4) { align-self: stretch; }
 ```
 
-![CSS Grid](/images/screenshot/css-grid/align-self-1.jpg)
+![CSS Grid](./assets/align-self-1.jpg)
 
-## justify-self
+### justify-self
 
 단일 그리드 아이템(Item)을 수평(행 축) 정렬합니다.
 그리드 아이템의 가로 너비가 자신이 속한 그리드 열(Track)의 크기보다 작아야 합니다.
@@ -1043,9 +1039,9 @@ stretch | 행 축을 채우기 위해 그리드 아이템을 늘림 |
 .item:nth-child(4) { justify-self: stretch; }
 ```
 
-![CSS Grid](/images/screenshot/css-grid/justify-self-1.jpg)
+![CSS Grid](./assets/justify-self-1.jpg)
 
-## place-self
+### place-self
 
 `align-self`와 `justify-self`의 단축 속성입니다.
 하나의 값만 입력하면 두 속성에 모두 적용됩니다.
@@ -1080,7 +1076,7 @@ stretch | 행 축을 채우기 위해 그리드 아이템을 늘림 |
 }
 ```
 
-## order
+### order
 
 그리드 아이템이 자동 배치되는 순서를 변경할 수 있습니다.
 숫자가 작을수록 앞서 배치됩니다.
@@ -1096,9 +1092,9 @@ stretch | 행 축을 채우기 위해 그리드 아이템을 늘림 |
 .item:nth-child(5) { order: -1; }
 ```
 
-![CSS Grid](/images/screenshot/css-grid/order-1.jpg)
+![CSS Grid](./assets/order-1.jpg)
 
-## z-index
+### z-index
 
 `z-index` 속성을 이용해 아이템이 쌓이는 순서를 변경할 수 있습니다.
 
@@ -1115,13 +1111,13 @@ stretch | 행 축을 채우기 위해 그리드 아이템을 늘림 |
 }
 ```
 
-![CSS Grid](/images/screenshot/css-grid/z-index-1.jpg)
+![CSS Grid](./assets/z-index-1.jpg)
 
-# Grid Functions
+## Grid Functions
 
 그리드에서 사용하는 주요 함수들에 대해서 알아봅시다.
 
-## repeat
+### repeat
 
 `repeat()` 함수는 행/열(Track)의 크기 정의를 반복합니다.
 '반복되는 횟수'와 '행/열의 크기 정의'를 인수로 사용합니다.
@@ -1163,7 +1159,7 @@ stretch | 행 축을 채우기 위해 그리드 아이템을 늘림 |
 }
 ```
 
-## minmax
+### minmax
 
 `minmax()` 함수는 행/열(Track)의 '최소/최대 크기'를 정의합니다.
 첫 번째 인수는 '최솟값'이고 두 번째 인수는 '최댓값'입니다.
@@ -1177,7 +1173,7 @@ stretch | 행 축을 채우기 위해 그리드 아이템을 늘림 |
 }
 ```
 
-![CSS Grid](/images/screenshot/css-grid/minmax-1.jpg)
+![CSS Grid](./assets/minmax-1.jpg)
 
 `minmax()`를 통해 암시적 행/열(Track) 크기를 좀 더 유연하게 사용할 수 있습니다.
 다음 예제는 암시적 '행/열'의 크기를 최소 '200px/300px'으로 지정하지만 `auto`를 통해 그리드 아이템의 크기에 따라 확장될 수 있습니다.
@@ -1189,7 +1185,7 @@ stretch | 행 축을 채우기 위해 그리드 아이템을 늘림 |
 }
 ```
 
-## fit-content
+### fit-content
 
 `fit-content()` 함수는 행/열(Track)의 크기를 그리드 아이템(Item)이 포함하는 내용(Contents) 크기에 맞춥니다.
 '내용의 최대 크기'를 인수로 사용합니다.
@@ -1201,13 +1197,13 @@ stretch | 행 축을 채우기 위해 그리드 아이템을 늘림 |
 }
 ```
 
-![CSS Grid](/images/_6Jspwa/fit-content-1.jpg)
+![CSS Grid](./assets/fit-content-1.jpg)
 
-# Grid Units
+## Grid Units
 
 그리드에서 사용하는 주요 단위들에 대해서 알아봅시다.
 
-## fr
+### fr
 
 `fr`(fractional unit)은 <strong>사용 가능한 공간에 대한 비율</strong>을 의미합니다.
 
@@ -1219,9 +1215,9 @@ stretch | 행 축을 채우기 위해 그리드 아이템을 늘림 |
 }
 ```
 
-![CSS Grid](/_6Jspwa/fr-1.jpg)
+![CSS Grid](./assets/fr-1.jpg)
 
-## min-content
+### min-content
 
 그리드 아이템이 포함하는 내용(Contents)의 최소 크기를 의미합니다.
 
@@ -1238,7 +1234,7 @@ stretch | 행 축을 채우기 위해 그리드 아이템을 늘림 |
 }
 ```
 
-![CSS Grid](/_6Jspwa/min-content-1.jpg)
+![CSS Grid](./assets/min-content-1.jpg)
 
 ```html
 <div class="container">
@@ -1249,9 +1245,9 @@ stretch | 행 축을 채우기 위해 그리드 아이템을 늘림 |
 
 한글을 사용하는 경우 `word-break: keep-all;`를 설정하면 정상적으로 동작합니다.
 
-![CSS Grid](/_6Jspwa/min-content-2.jpg)
+![CSS Grid](./assets/min-content-2.jpg)
 
-## max-content
+### max-content
 
 그리드 아이템이 포함하는 내용(Contents)의 최대 크기를 의미합니다.
 
@@ -1268,7 +1264,7 @@ stretch | 행 축을 채우기 위해 그리드 아이템을 늘림 |
 }
 ```
 
-![CSS Grid](/_6Jspwa/max-content-1.jpg)
+![CSS Grid](./assets/max-content-1.jpg)
 
 그리드 함수들과 같이 더 유용하게 활용할 수 있습니다.
 다음 예제는 총 4컬럼 그리드를 생성하며 각 열(Track)은 최대 `1fr` 크기를 가지지만, `max-content`를 통해 포함된 그리드 아이템의 내용보다 작아질 수 없습니다.
@@ -1279,7 +1275,7 @@ stretch | 행 축을 채우기 위해 그리드 아이템을 늘림 |
 }
 ```
 
-## auto-fill, auto-fit
+### auto-fill, auto-fit
 
 행/열(Track)의 개수를 그리드 컨테이너(Container) 및 행/열 크기에 맞게 자동으로(암시적) 조정합니다.
 `repeat()` 함수와 같이 사용하며, 행/열과 아이템(Item) 개수가 명확할 필요가 없거나 명확하지 않은 경우 유용합니다.(반응형 그리드)
@@ -1293,7 +1289,7 @@ stretch | 행 축을 채우기 위해 그리드 아이템을 늘림 |
 }
 ```
 
-![CSS Grid](/_6Jspwa/auto-fill-1.jpg)
+![CSS Grid](./assets/auto-fill-1.jpg)
 
 만약 4컬럼 그리드를 고집할 필요가 없다면, 다음과 같이 '반복횟수'(`repeat()` 함수의 첫 번째 인수)를 `auto-fill`이나 `auto-fit`으로 수정할 수 있습니다.
 이는 컨테이너의 크기가 아이템들을 수용하기 충분하지 않을 경우 아이템을 자동으로 줄 바꿈 처리하며, 그에 맞게 암시적 행/열도 자동으로 수정합니다.
@@ -1304,9 +1300,9 @@ stretch | 행 축을 채우기 위해 그리드 아이템을 늘림 |
 }
 ```
 
-![CSS Grid](/_6Jspwa/auto-fill-2.jpg)
+![CSS Grid](./assets/auto-fill-2.jpg)
 
-### auto-fill과 auto-fit의 차이
+#### auto-fill과 auto-fit의 차이
 
 `auto-fill`과 `auto-fit`은 차이점은 그리드 컨테이너가 하나의 행/열(Track)에 모든 아이템을 수용하고 <strong>남는 공간이 있을 때</strong> 발생합니다.
 다음과 같이 `auto-fill`은 남는 공간(빈 트랙)을 그대로 유지하고, `auto-fit`은 남는 공간을 축소합니다.
@@ -1320,39 +1316,39 @@ stretch | 행 축을 채우기 위해 그리드 아이템을 늘림 |
 }
 ```
 
-![CSS Grid](/_6Jspwa/auto-fill-3.jpg)
+![CSS Grid](./assets/auto-fill-3.jpg)
 
-# 주요 용어 정리
+## 주요 용어 정리
 
-## Track
+### Track
 
 트랙(Track)은 하나의 행(Row) 혹은 열(Column)을 의미합니다.
 
-![CSS Grid](/_6Jspwa/track-1.jpg)
+![CSS Grid](./assets/track-1.jpg)
 
-## Line
+### Line
 
 선(Line)은 일반적으로 거터(Gutter)라고 하는 트랙과 트랙 사이의 간격을 의미합니다.
 
-![CSS Grid](/_6Jspwa/line-1.jpg)
+![CSS Grid](./assets/line-1.jpg)
 
-## Cell
+### Cell
 
 셀(Cell)은 아이템(Item)이 배치되는 최소 단위의 영역(Area)입니다.
 
-![CSS Grid](/_6Jspwa/cell-1.jpg)
+![CSS Grid](./assets/cell-1.jpg)
 
-## Area
+### Area
 
 영역(Area)은 아이템이 배치되는, 하나 이상의 셀(Cell)로 이루어진 영역입니다.
 
-![CSS Grid](/_6Jspwa/area-1.jpg)
+![CSS Grid](./assets/area-1.jpg)
 
-# 브라우저 지원
+## 브라우저 지원
 
 https://caniuse.com/#search=grid
 
-![CSS Grid browser support](/_6Jspwa/grid-browser-support.jpg)
+![CSS Grid browser support](./assets/grid-browser-support.jpg)
 
 IE11에서는 `-ms-` 접두사를 이용해 일부 Grid 기능을 지원합니다.
 다음에 [Autoprefixer](https://github.com/postcss/autoprefixer)에서 지원 가능한 속성만 정리했습니다.
@@ -1377,10 +1373,3 @@ align-self | -ms-grid-row-align
 justify-self | -ms-grid-column-align
 - | -ms-grid-row-span
 - | -ms-grid-column-span
-
-# 참고 자료(References)
-
-https://developer.mozilla.org/ko/docs/Web/CSS/grid
-https://css-tricks.com/snippets/css/complete-guide-grid/
-https://css-tricks.com/auto-sizing-columns-css-grid-auto-fill-vs-auto-fit/
-https://rachelandrew.co.uk/archives/2016/11/26/should-i-try-to-use-the-ie-implementation-of-css-grid-layout/

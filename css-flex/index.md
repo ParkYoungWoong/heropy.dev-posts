@@ -1,20 +1,16 @@
 ---
-filename: css-flex
 id: Ha29GI
+filename: css-flex
 title: CSS Flex 완벽 가이드
 createdAt: 2018-11-24
-updatedAt: 2023-10-15
+updatedAt: 2023-11-04
 group: CSS
 tags:
   - CSS
   - Flex
-description:
-  많은 경우 float, inline-block, table 등의 도움을 받아서 수평 레이아웃을 구성하지만 이는 차선책이며, 우리는 Flex(Flexible Box)라는 명확한 개념(속성들)으로 레이아웃을 쉽게 구성할 수 있습니다. CSS Flex에 대해서 알아봅시다.  
 ---
 
 # CSS Flex 완벽 가이드
-
-![Flex](./assets/flex-base.jpg)
 
 대부분 사이트는 전체 레이아웃이 수직 구성이며 '위-아래'로 스크롤 하여 사용합니다.
 레이아웃을 구성할 때 가장 많이 사용하는 요소(Elements)들이 기본적으로 블록(Block) 개념으로 표시(Display)되며 이는 뷰(View)에 수직(위에서 아래로)으로 쌓이기 때문에 수직 구성은 상대적으로 쉽게 만들 수 있습니다.
@@ -90,7 +86,7 @@ description:
 Flex는 수평이 될 요소들의 Container(`box-container`)에 `display: flex;`를 적용합니다.
 (세부 속성이 필요하지 않은 경우도 많기 때문에 상당히 쉽고 빠르게 수평 요소를 구성할 수 있습니다.)
 
-# CSS3 Flexible Box
+## CSS3 Flex Box
 
 Flex는 요소의 크기가 불분명하거나 동적인 경우에도, 각 요소를 정렬할 수 있는 효율적인 방법을 제공합니다.
 
@@ -160,7 +156,7 @@ flex-wrap | Items의 여러 줄 묶음(줄 바꿈) 설정 | `nowrap`
 
 개별 속성을 알아봅시다. 
 
-#### flex-direction
+### flex-direction
 
 Items의 주 축(main-axis)을 설정합니다.
 
@@ -197,7 +193,7 @@ flex-direction: 주축;
 
 뒤에서 언급할 속성 중 값으로 `flex-start`와 `flex-end`를 사용하는데 이는 방향에 맞는 그 시작점과 끝점을 의미합니다.
 
-#### flex-wrap
+### flex-wrap
 
 Items의 여러 줄 묶음(줄 바꿈)을 설정합니다.
 
@@ -343,7 +339,7 @@ flex: 증가너비 감소너비 기본너비;
 다시 정리하면 `flex: 1;` 혹은 `flex: 1 1;`은 `flex: 1 1 0;`이 된다는 것입니다.
 이 부분을 기억하지 않으면 엉뚱한 결과가 나올 수 있으니 주의합시다!
 
-#### flex-grow
+### flex-grow
 
 Item의 증가 너비 비율을 설정합니다.
 숫자가 크면 더 많은 너비를 가집니다.
@@ -368,7 +364,7 @@ flex-grow: 증가너비;
 <iframe height='500' scrolling='no' title='flex-grow' src='//codepen.io/heropark/embed/zMLbPw/?height=265&theme-id=0&default-tab=html,result' frameborder='no' allowtransparency='true' allowfullscreen='true' style='width: 100%;'>See the Pen <a href='https://codepen.io/heropark/pen/zMLbPw/'>flex-grow</a> by park young woong (<a href='https://codepen.io/heropark'>@heropark</a>) on <a href='https://codepen.io'>CodePen</a>.
 </iframe>
 
-#### flex-shrink
+### flex-shrink
 
 Item이 감소하는 너비의 비율을 설정합니다.
 숫자가 크면 더 많은 너비가 감소합니다.
@@ -407,7 +403,7 @@ Container의 너비가 줄어 Items의 너비에 영향을 미칠 경우, 영향
 계산이 까다롭기 때문에 활용도는 조금 떨어진다고 생각합니다.
 원리 정도만 이해하고 넘어갑시다.
 
-#### flex-basis
+### flex-basis
 
 Item의 (공간 배분 전) 기본 너비를 설정합니다.
 값이 `auto`일 경우 `width`, `height` 등의 속성으로 Item의 너비를 설정할 수 있습니다.
@@ -448,7 +444,3 @@ align-self: 정렬방법;
 ```
 
 ![Flex](./assets/flex-align-self.jpg)
-
-# 참고 자료(References)
-
-https://developer.mozilla.org/ko/docs/Web/CSS/CSS_Flexible_Box_Layout/Flexbox%EC%9D%98_%EA%B8%B0%EB%B3%B8_%EA%B0%9C%EB%85%90
