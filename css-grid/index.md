@@ -1,13 +1,16 @@
 ---
 id: c6ROLZ
 filename: css-grid
+author: ParkYoungWoong
 title: CSS Grid 완벽 가이드
 createdAt: 2019-08-17
-updatedAt: 2023-11-04
+updatedAt: 2023-11-05
 group: CSS
 tags:
   - CSS
   - Grid
+description: 
+  CSS Grid는 2차원 레이아웃 시스템을 제공하는 CSS 기술로, 웹페이지의 요소를 행과 열로 구성된 그리드 형태로 배치할 수 있게 해줍니다. 복잡한 레이아웃도 쉽게 구현할 수 있어, 정밀한 디자인 작업에 적합합니다.
 ---
 
 # CSS Grid
@@ -211,7 +214,7 @@ Grid Container(컨테이너)를 정의합니다.
 컬럼을 크기를 `fr` 단위를 사용해 다음과 같이 비율로 지정할 수도 있습니다.
 각 컬럼은 비율에 맞게 출력되기 때문에 컨테이너의 너비가 가변해도 열 크기를 수정할 필요가 없습니다.
 
-> `fr` 단위에 대한 좀 더 자세한 내용은 본 포스트 하단에 있는 'Grid Units / fr' 파트에서 확인할 수 있습니다.
+> `fr` 단위에 대한 좀 더 자세한 내용은 본 게시글 하단에 있는 'Grid Units / fr' 파트에서 확인할 수 있습니다.
 
 ```css
 .container {

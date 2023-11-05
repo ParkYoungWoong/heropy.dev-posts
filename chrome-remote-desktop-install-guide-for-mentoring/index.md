@@ -1,28 +1,35 @@
 ---
 id: XLGqke
 filename: chrome-remote-desktop-install-guide-for-mentoring
-title: 크롬 원격 데스크톱 설치 및 사용 가이드
+author: ParkYoungWoong
+title: 멘토링을 위한 구글 크롬 원격 데스크톱 설치 및 사용 가이드
 createdAt: 2023-11-04
 group: 시작하기
 tags:
   - Remote Desktop
+description: 
+  구글 크롬(Google Chrome) 원격 데스크톱을 통해 멘티(학생)의 화면을 멘토(강사)에게 공유하고 그 화면을 제어할 수 있습니다. 설치 및 환경 구성 등의 일부 과정이 필요하므로, 멘토링 사전에 준비하는 것을 추천합니다.
 ---
 
-# 크롬 원격 데스크톱 설치 및 사용 가이드
+# 멘토링을 위한 구글 크롬 원격 데스크톱 설치 및 사용 가이드
 
-Google Chrome 원격 데스크톱을 통해 멘티의 화면을 멘토에게 공유하고 멘토(강사)는 그 화면을 제어할 수 있습니다.
-Google Chrome 브라우저에서만 동작합니다!
+구글 크롬(Google Chrome) 원격 데스크톱을 통해 멘티(학생)의 화면을 멘토(강사)에게 공유하고 그 화면을 제어할 수 있습니다.
+이하 내용과 같이 설치 및 환경 구성 등의 일부 과정이 필요하므로, 멘토링 사전에 준비하는 것을 추천합니다.
 
-구글에서 **‘구글 크롬 원격 데스크톱’** 을 검색하고 첫 번째 링크로 접속합니다.
+//// message-box //// error
+사용자에 따라 일부 과정은 필요하지 않을 수 있습니다!
+////
+
+우선, 크롬 브라우저에서 **‘구글 크롬 원격 데스크톱’** 을 검색하고 첫 번째 링크로 접속합니다.
 혹은 다음 주소로 접속합니다.
 [https://remotedesktop.google.com/support/?hl=ko](https://remotedesktop.google.com/support/?hl=ko)
 
-![](./assets/s1.JPG)
+![구글에서 검색](./assets/s1.JPG)
 
 구글 로그인이 되지 않은 경우, 다음과 같은 화면이 표시됩니다.
 **’내 화면 공유’** 버튼을 선택하고 구글 계정으로 로그인합니다.
 
-![](./assets/s2.JPG)
+![구글 로그인이 되지 않은 경우](./assets/s2.JPG)
 
 ---
 

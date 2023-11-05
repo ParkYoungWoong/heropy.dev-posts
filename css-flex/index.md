@@ -1,13 +1,16 @@
 ---
 id: Ha29GI
 filename: css-flex
+author: ParkYoungWoong
 title: CSS Flex 완벽 가이드
 createdAt: 2018-11-24
-updatedAt: 2023-11-04
+updatedAt: 2023-11-05
 group: CSS
 tags:
   - CSS
   - Flex
+description:
+  CSS Flex는 효율적인 레이아웃 설계를 위한 기술로, 컨테이너 내 항목의 공간 배분과 정렬을 유연하게 관리합니다. 이를 통해 반응형 디자인 레이아웃이 쉬워지고 복잡한 계산 없이도 요소를 원하는 대로 배치할 수 있습니다.
 ---
 
 # CSS Flex 완벽 가이드
@@ -98,7 +101,7 @@ Flex는 요소의 크기가 불분명하거나 동적인 경우에도, 각 요�
 Container에는 `display`, `flex-flow`, `justify-content` 등의 속성을 사용할 수 있으며,
 Items에는 `order`, `flex`, `align-self` 등의 속성을 사용할 수 있습니다.
 
-![Flex](./assets/flex-base.jpg)
+![Flex Container 속성들과 Flex Items 속성들](./assets/flex-base.jpg)
 
 ## Flex Container
 
