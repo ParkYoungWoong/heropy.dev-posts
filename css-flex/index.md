@@ -4,7 +4,7 @@ filename: css-flex
 author: ParkYoungWoong
 title: CSS Flex 완벽 가이드
 createdAt: 2018-11-24
-updatedAt: 2023-11-05
+updatedAt: 2023-11-15
 group: CSS
 tags:
   - CSS
@@ -222,11 +222,12 @@ Items를 줄 바꿈 하려면 값으로 `wrap`을 사용해야 합니다.
 
 값 | 의미 | 기본값
 --|--|--
-flex-start | Items를 시작점(flex-start)으로 정렬 | `flex-start`
-flex-end | Items를 끝점(flex-end)으로 정렬 |
+flex-start(start) | Items를 시작점으로 정렬 | `flex-start`
+flex-end(end) | Items를 끝점으로 정렬 |
 center | Items를 가운데 정렬 |
-space-between | 시작 Item은 시작점에, 마지막 Item은 끝점에 정렬되고 나머지 Items는 사이에 고르게 정렬됨 |
-space-around | Items를 균등한 여백을 포함하여 정렬 |
+space-around | 각 Item 좌우 여백을 고르게 정렬 |
+space-between | 첫 Item은 시작점에, 끝 Item은 끝점에 정렬되고 나머지 여백으로 고르게 정렬 |
+space-evenly | 모든 여백을 고르게 정렬 |
 
 ```plaintext
 justify-content: 정렬방법;
@@ -244,11 +245,12 @@ justify-content: 정렬방법;
 값 | 의미 | 기본값
 --|--|--
 stretch | Container의 교차 축을 채우기 위해 Items를 늘림 | `stretch`
-flex-start | Items를 시작점(flex-start)으로 정렬 |
-flex-end | Items를 끝점(flex-end)으로 정렬 |
+flex-start(start) | Items를 시작점으로 정렬 | 
+flex-end(end) | Items를 끝점으로 정렬 |
 center | Items를 가운데 정렬 |
-space-between | 시작 Item은 시작점에, 마지막 Item은 끝점에 정렬되고 나머지 Items는 사이에 고르게 정렬됨 |
-space-around | Items를 균등한 여백을 포함하여 정렬 |
+space-around | 각 Item 좌우 여백을 고르게 정렬 |
+space-between | 첫 Item은 시작점에, 끝 Item은 끝점에 정렬되고 나머지 여백으로 고르게 정렬 |
+space-evenly | 모든 여백을 고르게 정렬 |
 
 ```plaintext
 align-content: 정렬방법;
@@ -269,9 +271,9 @@ Items가 한 줄일 경우 많이 사용합니다.
 값 | 의미 | 기본값
 --|--|--
 stretch | Container의 교차 축을 채우기 위해 Items를 늘림 | `stretch`
-flex-start | Items를 각 줄의 시작점(flex-start)으로 정렬 |
-flex-end | Items를 각 줄의 끝점(flex-end)으로 정렬 |
-center | Items를 가운데 정렬 |
+flex-start(start) | Items를 각 줄의 시작점으로 정렬 |
+flex-end(end) | Items를 각 줄의 끝점으로 정렬 |
+center | Items를 각 줄의 가운데 정렬 |
 baseline | Items를 문자 기준선에 정렬 |
 
 ```plaintext
@@ -437,8 +439,8 @@ flex-basis: 기본너비;
 --|--|--
 auto | Container의 `align-items` 속성을 상속받음 | `auto`
 stretch | Container의 교차 축을 채우기 위해 Item을 늘림 | 	
-flex-start | Item을 각 줄의 시작점(flex-start)으로 정렬 |
-flex-end | Item을 각 줄의 끝점(flex-end)으로 정렬 |
+flex-start(start) | Item을 각 줄의 시작점으로 정렬 |
+flex-end(end) | Item을 각 줄의 끝점으로 정렬 |
 center | Item을 가운데 정렬 |
 baseline | Item을 문자 기준선에 정렬 |
 
