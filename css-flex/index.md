@@ -1,11 +1,12 @@
 ---
 id: Ha29GI
 filename: css-flex
-author: ParkYoungWoong
 title: CSS Flex 완벽 가이드
-createdAt: 2018-11-24
+createdAt: 2018-11-01
 updatedAt: 2023-11-15
 group: CSS
+author: 
+  - ParkYoungWoong
 tags:
   - CSS
   - Flex
@@ -112,11 +113,12 @@ Flex Container를 위한 속성들은 다음과 같습니다.
 --|--
 display | Flex Container를 정의
 flex-flow | `flex-direction`와 `flex-wrap`의 단축 속성
-flex-direction | Flex Items의 주 축(main-axis)을 설정
+flex-direction | Flex Items의 주 축(Main Axis)을 설정
 flex-wrap | Flex Items의 여러 줄 묶음(줄 바꿈) 설정
-justify-content | 주 축(main-axis)의 정렬 방법을 설정
-align-content | 교차 축(cross-axis)의 정렬 방법을 설정(2줄 이상)
-align-items | 교차 축(cross-axis)에서 Items의 정렬 방법을 설정(1줄)
+justify-content | 주 축(Main Axis)의 정렬 방법을 설정
+align-content | 교차 축(Cross Axis)의 정렬 방법을 설정(2줄 이상)
+align-items | 교차 축(Cross Axis)에서 Items의 정렬 방법을 설정(1줄)
+gap | 각 아이템 사이의 간격을 설정
 
 ### display
 
@@ -281,6 +283,14 @@ align-items: 정렬방법;
 ```
 
 ![Flex](./assets/flex-align-items.jpg)
+
+### gap
+
+각 아이템 사이의 간격을 설정합니다.
+
+값 | 의미 | 기본값
+--|--|--
+단위 | px, em, cm 등 단위로 지정 | `0`
 
 ## Flex Items
 

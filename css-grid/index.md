@@ -3,8 +3,8 @@ id: c6ROLZ
 filename: css-grid
 author: ParkYoungWoong
 title: CSS Grid 완벽 가이드
-createdAt: 2019-08-17
-updatedAt: 2023-11-05
+createdAt: 2019-08-01
+updatedAt: 2023-11-16
 group: CSS
 tags:
   - CSS
@@ -13,14 +13,13 @@ description:
   CSS Grid는 2차원 레이아웃 시스템을 제공하는 CSS 기술로, 웹페이지의 요소를 행과 열로 구성된 그리드 형태로 배치할 수 있게 해줍니다. 복잡한 레이아웃도 쉽게 구현할 수 있어, 정밀한 디자인 작업에 적합합니다.
 ---
 
-# CSS Grid
+# CSS Grid 완벽 가이드
 
 CSS Grid(그리드)는 2차원(행과 열)의 레이아웃 시스템을 제공합니다.
 Flexible Box도 훌륭하지만 비교적 단순한 1차원 레이아웃을 위하며, 좀 더 복잡한 레이아웃을 위해 우리는 CSS Grid를 사용할 수 있습니다.
 
 > CSS Grid는 예전부터 핵(Hack)으로 불린 다양한 레이아웃 대체 방식들을 해결하기 위해 만들어진 특별한 CSS 모듈입니다.
 
-CSS Grid의 효율적인 학습을 위해서 [파이어폭스 브라우저](https://www.mozilla.org/ko/firefox/new/)를 사용해 테스트할 것을 추천합니다.  
 개발자 도구를 열고 요소를 검색해 표시된 `grid` 버튼을 선택합니다.
 
 ![CSS Grid](./assets/use-to-firefox.jpg)
@@ -55,9 +54,9 @@ grid-template-rows | 명시적 행(Track)의 크기를 정의
 grid-template-columns | 명시적 열(Track)의 크기를 정의
 grid-template-areas | 영역(Area) 이름을 참조해 템플릿 생성
 grid-template | `grid-template-xxx`의 단축 속성
-row-gap(grid-row-gap) | 행과 행 사이의 간격(Line)을 정의
-column-gap(grid-column-gap) | 열과 열 사이의 간격(Line)을 정의
-gap(grid-gap) | `xxx-gap`의 단축 속성
+row-gap | 행과 행 사이의 간격(Line)을 정의
+column-gap | 열과 열 사이의 간격(Line)을 정의
+gap | `xxx-gap`의 단축 속성
 grid-auto-rows | 암시적인 행(Track)의 크기를 정의
 grid-auto-columns | 암시적인 열(Track)의 크기를 정의
 grid-auto-flow | 자동 배치 알고리즘 방식을 정의
@@ -332,9 +331,9 @@ footer { grid-area: footer; }
 }
 ```
 
-### row-gap(grid-row-gap)
+### row-gap
 
-각 행과 행 사이의 간격(Gutter)을 지정합니다.
+각 행과 행 사이의 간격(Line width | Gutter)을 지정합니다.
 
 > 더 명확하게는 그리드 선(Grid Line)의 크기를 지정한다고 표현할 수 있습니다.
 
@@ -344,9 +343,9 @@ footer { grid-area: footer; }
 }
 ```
 
-### column-gap(grid-column-gap)
+### column-gap
 
-각 열과 열 사이의 간격(Gutter)을 지정합니다.
+각 열과 열 사이의 간격(Line width | Gutter)을 지정합니다.
 
 ```css
 .container {
@@ -354,13 +353,13 @@ footer { grid-area: footer; }
 }
 ```
 
-### gap(grid-gap)
+### gap
 
-각 행과 행, 열과 열 사이의 간격(Gutter)을 지정합니다.
+각 행과 행, 열과 열 사이의 간격(Line width | Gutter)을 지정합니다.
 
 ```css
 .container {
-  gap: <grid-row-gap> <grid-column-gap>;
+  gap: <row-gap> <column-gap>;
 }
 ```
 
@@ -383,13 +382,6 @@ footer { grid-area: footer; }
 ```
 
 ![CSS Grid](./assets/gap-1.jpg)
-
-`grid-gap`(`grid-row-gap`, `grid-column-gap`)의 접두사 `grid-`는 더 이상 사용되지 않으며(Deprecated), `gap`(`row-gap`, `column-gap`)로 교체되었습니다.  
-하지만 일부 버전의 브라우저 지원을 위해 `grid-` 접두사의 사용을 고려할 수 있습니다.
-
-- [&lsqb;css-grid&rsqb;&lsqb;css-multicol&rsqb;&lsqb;css-flexbox&rsqb;&lsqb;css-tables&rsqb; Proposal for Various Gap Issues.](https://drafts.csswg.org/css-grid/#change-2016-grid-gap)  
-- [&lsqb;css-grid&rsqb; grid-gap is deprecated.](https://github.com/postcss/autoprefixer/issues/1046)  
-- https://drafts.csswg.org/css-grid/#change-2016-grid-gap
 
 ### grid-auto-rows
 
