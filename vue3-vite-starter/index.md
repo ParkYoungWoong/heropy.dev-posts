@@ -70,8 +70,7 @@ $ npm run dev
 ## ESLint + Prettier 구성
 
 - [ESLint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint): 코드 품질 확인 및 버그, 안티패턴(Anti-pattern)을 감지
-- [Prettier](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode): 코드 스타일 및 포맷팅 관리, 일관된 코드 스타일을 적용 가능
-
+- [Prettier - Code formatter](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode): 코드 스타일 및 포맷팅 관리, 일관된 코드 스타일을 적용 가능
 
 ### VS Code 확장 프로그램 설치
 
@@ -103,6 +102,16 @@ $ npm i -D eslint prettier eslint-plugin-vue eslint-config-prettier eslint-plugi
 ```bash --caption=타입스크립트인 경우.
 $ npm i -D eslint prettier eslint-plugin-vue eslint-config-prettier eslint-plugin-prettier @typescript-eslint/eslint-plugin @typescript-eslint/parser
 ```
+
+| 패키지 | 설명 |
+| --- | --- |
+| `eslint` | ESLint 코어 패키지 / 코드 품질 확인 및 버그, 안티패턴(Anti-pattern)을 감지 |
+| `prettier` | Prettier 코어 패키지 / 코드 스타일 및 포맷팅 관리, 일관된 코드 스타일을 적용 가능 |
+| `eslint-plugin-vue` | Vue 지원 플러그인, 문법 분석 및 검사 지원 |
+| `eslint-config-prettier` | ESLint와 Prettier의 충돌 방지 |
+| `eslint-plugin-prettier` | Prettier 규칙을 ESLint 규칙으로 통합 |
+| `@typescript-eslint/eslint-plugin` | 타입스크립트 지원 플러그인 |
+| `@typescript-eslint/parser` | 타입스크립트 코드 분석 및 검사 지원 |
 
 설치가 완료되면, 프로젝트 루트 경로에 `.eslintrc.json` 파일을 생성하고 다음과 같이 내용을 추가합니다.
 
