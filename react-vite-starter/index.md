@@ -1,21 +1,21 @@
 ---
-filename: vue3-vite-starter
-id: aBLqC5
-title: Vite로 시작하는 Vue 프로젝트
+filename: react-vite-starter
+id: 6iFzkB
+title: Vite로 시작하는 React 프로젝트
 createdAt: 2023-11-30
-group: Vue
+group: React
 author:
   - ParkYoungWoong
 tags:
-  - Vue
+  - React
   - Vite
 description:
-  Vite.js 빌드 도구를 사용해 Vue 프로젝트를 시작하는 방법을 살펴보며, 자바스크립트와 타입스크립트 프로젝트에서의 구성을 구분해 설명합니다.
+  Vite.js 빌드 도구를 사용해 React 프로젝트를 시작하는 방법을 살펴보며, 자바스크립트와 타입스크립트 프로젝트에서의 구성을 구분해 설명합니다.
 ---
 
-# Vite로 시작하는 Vue 프로젝트
+# Vite로 시작하는 React 프로젝트
 
-Vite.js 빌드 도구를 사용해 Vue 프로젝트를 시작하는 방법을 설명합니다.
+Vite.js 빌드 도구를 사용해 React 프로젝트를 시작하는 방법을 설명합니다.
 자바스크립트와 타입스크립트 프로젝트에서의 구성을 구분하고 있습니다.
 
 /// message-box --icon=info --color=success
@@ -29,8 +29,8 @@ VS Code로 프로젝트 폴더를 열고 터미널에서 다음 명령을 순서
 ```bash
 # 현재 경로에 프로젝트 구성
 $ npm create vite@latest .
-  # > Vue 선택
-  # > JavaScript 혹은 TypeScript 선택
+  # > React 선택
+  # > JavaScript + SWC 혹은 TypeScript + SWC 선택
 
 # 의존성 패키지 설치
 $ npm i
@@ -41,8 +41,8 @@ $ npm i
 ```bash
 # 현재 경로에 프로젝트 폴더 생성 및 구성
 $ npm create vite@latest <프로젝트_폴더_이름>
-  # > Vue 선택
-  # > JavaScript 혹은 TypeScript 선택
+  # > React 선택
+  # > JavaScript + SWC 혹은 TypeScript + SWC 선택
 
 # 프로젝트 경로로 이동
 $ cd <프로젝트_폴더_이름>
@@ -56,6 +56,10 @@ $ code .
 $ code . -r
 # 혹은 수동으로 프로젝트 열기
 ```
+
+/// message-box --icon=info --color=info
+[SWC(Speedy Web Compiler)](https://swc.rs/)는 Rust 기반의 고성능 자바스크립트/타입스크립트 컴파일러입니다.
+///
 
 /// message-box --icon=info --color=info
 `code` 명령은 다음 과정을 통해 설치 후 사용할 수 있습니다.
@@ -83,35 +87,30 @@ ESLint와 Prettier를 사용하기 위해 VS Code에서 각 확장 프로그램�
 
 ![ESLint](./assets/s2.JPG) ![Prettier - Code formatter](./assets/s3.JPG)
 
-Vue 프로젝트이므로, 다음 확장 프로그램도 추가로 설치해 도움을 받을 수 있습니다.
-
-- [Vue Language Features (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.volar): Vue 프로젝트의 문법 강조, 자동 완성, 오류 검사 등을 지원
-- [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin): TS 서버가 `*.vue` 파일(SFC)을 인식할 수 있도록 지원
-
-![Vue Language Features (Volar)](./assets/s4.JPG) ![TypeScript Vue Plugin (Volar)](./assets/s5.JPG)
-
 ### 패키지 설치 및 구성
 
 프로젝트에서 사용할 수 있도록, 각 의존성 패키지를 설치합니다.
 각 패키지는 모두 런타임에서 필요치 않은 개발용이기 때문에, `-D` 플래그를 사용해 '개발 의존성 패키지(Dev Dependencies)'로 설치합니다.
 
 ```bash --caption=자바스크립트인 경우.
-$ npm i -D eslint prettier eslint-plugin-vue eslint-config-prettier eslint-plugin-prettier
+$ npm i -D eslint prettier eslint-plugin-react eslint-config-prettier eslint-plugin-prettier
 ```
 
 ```bash --caption=타입스크립트인 경우.
-$ npm i -D eslint prettier eslint-plugin-vue eslint-config-prettier eslint-plugin-prettier @typescript-eslint/eslint-plugin @typescript-eslint/parser
+$ npm i -D eslint prettier eslint-plugin-react eslint-config-prettier eslint-plugin-prettier @typescript-eslint/eslint-plugin @typescript-eslint/parser
 ```
 
-| 패키지 | 설명 |
-| --- | --- |
-| `eslint` | ESLint 코어 패키지 / 코드 품질 확인 및 버그, 안티패턴(Anti-pattern)을 감지 |
-| `prettier` | Prettier 코어 패키지 / 코드 스타일 및 포맷팅 관리, 일관된 코드 스타일을 적용 가능 |
-| `eslint-plugin-vue` | Vue 지원 플러그인, 문법 분석 및 검사 지원 |
-| `eslint-config-prettier` | ESLint와 Prettier의 충돌 방지 |
-| `eslint-plugin-prettier` | Prettier 규칙을 ESLint 규칙으로 통합 |
-| `@typescript-eslint/eslint-plugin` | 타입스크립트 지원 플러그인 |
-| `@typescript-eslint/parser` | 타입스크립트 코드 분석 및 검사 지원 |
+| 패키지 | 설명 | 비고 |
+| --- | --- | --- |
+| `eslint` | ESLint 코어 패키지 / 코드 품질 확인 및 버그, 안티패턴(Anti-pattern)을 감지 | |
+| `prettier` | Prettier 코어 패키지 / 코드 스타일 및 포맷팅 관리, 일관된 코드 스타일을 적용 가능 | |
+| `eslint-plugin-react` | React 지원 플러그인, 문법 분석 및 검사 지원 | |
+| `eslint-config-prettier` | ESLint와 Prettier의 충돌 방지 | |
+| `eslint-plugin-prettier` | Prettier 규칙을 ESLint 규칙으로 통합 | |
+| `@typescript-eslint/eslint-plugin` | 타입스크립트 지원 플러그인 | |
+| `@typescript-eslint/parser` | 타입스크립트 코드 분석 및 검사 지원 | |
+| `eslint-plugin-react-hooks` | React Hooks 사용 규칙을 강제, 실수를 방지에 도움이 되는 규칙 제공 | Vite에 포함됨 |
+| `eslint-plugin-react-refresh` | React Refresh 사용 규칙 제공 | Vite에 포함됨 |
 
 설치가 완료되면, 프로젝트 루트 경로에 `.eslintrc.json` 파일을 생성하고 다음과 같이 내용을 추가합니다.
 
@@ -119,12 +118,13 @@ $ npm i -D eslint prettier eslint-plugin-vue eslint-config-prettier eslint-plugi
 {
   "extends": [
     "eslint:recommended",
-    "plugin:vue/vue3-recommended",
+    "plugin:react/recommended",
     "plugin:prettier/recommended"
   ],
-  "rules": {
-    // ...
-  }
+  "plugins": [
+    "react",
+    "prettier"
+  ]
 }
 ```
 
@@ -133,41 +133,15 @@ $ npm i -D eslint prettier eslint-plugin-vue eslint-config-prettier eslint-plugi
   "extends": [
     "eslint:recommended",
     "plugin:@typescript-eslint/recommended",
-    "plugin:vue/vue3-recommended",
+    "plugin:react/recommended",
     "plugin:prettier/recommended"
+  ],
+  "plugins": [
+    "react",
+    "prettier"
   ],
   "parserOptions": {
     "parser": "@typescript-eslint/parser"
-  },
-  "rules": {
-    // ...
-  }
-}
-```
-
-필요한 경우, `*.vue` 파일의 `<template>`이나 `<script>` 등에서 사용할 커스텀 규칙을 덮어쓸 수 있습니다.
-자세한 규칙은 [ESLint plugin for Vue.js / Rules](https://eslint.vuejs.org/rules/) 에서 확인할 수 있습니다.
-
-```json --path=/.eslintrc.json --caption=Vue 커스텀 규칙을 추가.
-{
-  // ...
-  "rules": {
-    "vue/html-closing-bracket-newline": ["error", {
-      "singleline": "never",
-      "multiline": "never"
-    }],
-    "vue/html-self-closing": ["error", {
-      "html": {
-        "void": "always",
-        "normal": "never",
-        "component": "always"
-      },
-      "svg": "always",
-      "math": "always"
-    }],
-    "vue/comment-directive": "off",
-    "vue/multi-word-component-names": "off",
-    "vue/no-v-html": "off"
   }
 }
 ```
@@ -204,17 +178,54 @@ VS Code에서 자동 포맷팅을 사용하려면, 다음 옵션을 사용자 �
 
 ![사용자 설정 열기(JSON)](./assets/s6.JPG)
 
+현재 프로젝트에서만 사용하는 사용자 설정(지역)을 통해 `*.jsx`, `*.tsx` 파일에 대한 자동 포맷팅을 사용할 수 있습니다.
+프로젝트의 루트 경로에 `.vscode/settings.json` 폴더와 파일을 생성해 다음과 같이 내용을 추가할 수 있습니다.
+
+```json --path=/.vscode/settings.json --caption=자바스크립트인 경우.
+{
+  "[javascript]": {
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[javascriptreact]": {
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  }
+}
+```
+
+```json --path=/.vscode/settings.json --caption=타입스크립트인 경우.
+{
+  "[javascript]": {
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[javascriptreact]": {
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[typescript]": {
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[typescriptreact]": {
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  }
+}
+```
+
 ## 경로 별칭 구성
 
 경로 별칭(Path Alias)을 사용하면, 프로젝트 내의 파일을 쉽게 참조할 수 있어 편리합니다.
 
-```ts --path=/vite.config.ts
+```tsx --path=/vite.config.ts
 import { defineConfig } from 'vite'
-import vue from '@vitejs/plugin-vue'
+import react from '@vitejs/plugin-react'
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [vue()],
+  plugins: [react()],
   resolve: {
     alias: [
       { find: '~', replacement: '/src' },
@@ -224,16 +235,14 @@ export default defineConfig({
 })
 ```
 
-```vue --path=/src/components/a/b/c/MyComponent.vue --line-active=3 --line-error=2 --caption=경로 별칭 사용 예시
-<script setup lang="ts">
-// import { useMovieStore } from '../../../../store/movie'
-import { useMovieStore } from '~/store/movie'
-</script>
+```tsx --path=/src/components/a/b/c/MyComponent.tsx --line-active=2 --line-error=1 --caption=경로 별칭 사용 예시
+// import type { Routes } from '../../../../routes'
+import type { Routes } from '~/routes'
+```
 
-<style scoped lang="scss">
+```scss --path=/src/components/a/b/c/MyComponent.module.scss --caption=경로 별칭 사용 예시
 @import 'node_modules/swiper/scss';
 @import 'node_modules/swiper/scss/autoplay';
-</style>
 ```
 
 타입스크립트에서도 경로 인식이 가능하도록, 다음과 같이 구성 옵션을 추가합니다.
