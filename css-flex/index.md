@@ -1,6 +1,7 @@
 ---
 id: Ha29GI
 filename: css-flex
+image: https://picsum.photos/id/406/1200/800
 title: CSS Flex 완벽 가이드
 createdAt: 2018-11-01
 updatedAt: 2023-11-15

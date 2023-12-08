@@ -1,6 +1,7 @@
 ---
-filename: vue3-vite-starter
 id: aBLqC5
+filename: vue3-vite-starter
+image: https://picsum.photos/id/1047/1200/800
 title: Vite로 시작하는 Vue 프로젝트
 createdAt: 2023-11-30
 group: Vue

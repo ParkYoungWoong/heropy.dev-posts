@@ -1,6 +1,7 @@
 ---
 id: XLGqke
 filename: chrome-remote-desktop-install-guide-for-mentoring
+image: https://picsum.photos/id/149/1200/800
 title: 멘토링을 위한 구글 크롬 원격 데스크톱 설치 및 사용 가이드
 createdAt: 2023-11-04
 group: 시작하기

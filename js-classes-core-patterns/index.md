@@ -1,6 +1,7 @@
 ---
-filename: js-classes-core-patterns
 id: CPE3zl
+filename: js-classes-core-patterns
+image: https://picsum.photos/id/954/1200/800
 title: JS 클래스 핵심 패턴
 createdAt: 2024-12-07
 group:  JS

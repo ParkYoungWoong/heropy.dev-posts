@@ -1,6 +1,7 @@
 ---
 id: c6ROLZ
 filename: css-grid
+image: https://picsum.photos/id/320/1200/800
 author: ParkYoungWoong
 title: CSS Grid 완벽 가이드
 createdAt: 2019-08-01

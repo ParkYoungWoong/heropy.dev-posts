@@ -1,6 +1,7 @@
 ---
-filename: react-vite-starter
 id: 6iFzkB
+filename: react-vite-starter
+image: https://picsum.photos/id/411/1200/800
 title: Vite로 시작하는 React 프로젝트
 createdAt: 2023-11-30
 group: React

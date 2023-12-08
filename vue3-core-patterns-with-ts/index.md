@@ -1,6 +1,7 @@
 ---
-filename: vue3-core-patterns-with-ts
 id: zDWwNL
+filename: vue3-core-patterns-with-ts
+image: https://picsum.photos/id/497/1200/800
 title: Vue 핵심 패턴 (Composition API)
 createdAt: 2023-11-29
 group: Vue

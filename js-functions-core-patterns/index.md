@@ -1,6 +1,7 @@
 ---
-filename: js-functions-core-patterns
 id: N6phSt
+filename: js-functions-core-patterns
+image: https://picsum.photos/id/663/1200/800
 title: JS 함수 핵심 패턴
 createdAt: 2023-12-03
 group: JS
