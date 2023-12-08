@@ -613,7 +613,7 @@ console.log(neo.name) // 'Neo'
 `instanceof` 키워드를 통해, 어떤 클래스의 인스턴스인지를 포함해 그 클래스의 상속 체인까지 확인할 수 있습니다.
 혹은, 인스턴스의 `.contructor` 속성으로 특정 클래스의 인스턴스인지 확인할 수도 있습니다.
 
-```js --line-active=16-18,20 --line-error=21,22
+```js --line-active=14-16,18 --line-error=19,20
 class User {
   constructor(name) {
     this.name = name

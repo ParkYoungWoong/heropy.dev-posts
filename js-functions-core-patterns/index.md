@@ -224,7 +224,7 @@ console.log(sum()) // NaN <= undefined + 1
 ```js --line-error=6-8,12-14
 const user = {
   name: 'HEROPY',
-  age: 85,
+  age: 85
 }
 
 // function getName(user) {
@@ -269,7 +269,7 @@ console.log(getSecond(numbers)) // 2
 // function getFifth([,,,,e]) {
 //   return e
 // }
-function getFirst(items) {
+function getFifth(items) {
   return items[4]
 }
 console.log(getFifth(fruits)) // 'Strawberry'
@@ -944,7 +944,7 @@ useConsole('error')('Error: system failure..')
 ```
 
 위 예제의 커링을 다음과 같이 수정하면, 훨씬 유용합니다.
-useConsole 함수 호출의 반환 함수를 각 변수에 할당해, 필요할 때마다 호출할 수 있습니다.
+`useConsole` 함수 호출의 반환 함수를 각 변수에 할당해, 필요할 때마다 호출할 수 있습니다.
 
 ```js --caption=커링을 사용한 경우.
 function useConsole(level) {
