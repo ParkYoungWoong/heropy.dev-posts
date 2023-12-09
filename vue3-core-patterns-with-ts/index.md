@@ -2,7 +2,7 @@
 id: zDWwNL
 filename: vue3-core-patterns-with-ts
 image: https://picsum.photos/id/497/1200/800
-title: Vue 핵심 패턴 (Composition API)
+title: Vue Composition API 핵심 패턴 w. 타입스크립트
 createdAt: 2023-11-29
 group: Vue
 author:
@@ -15,7 +15,7 @@ description:
   Vue 3버전의 기초 문법 학습이 끝났다면, Composition API와 타입스크립트를 사용한 핵심 패턴을 빠르게 탐색해 보세요!
 ---
 
-# Vue 핵심 패턴 (Composition API)
+# Vue Composition API 핵심 패턴 w. 타입스크립트
 
 이 글은 Vue 3버전의 기초 문법 학습을 전제하여, 핵심 패턴을 빠르게 탐색할 수 있도록 구성했습니다.
 파편화된 핵심 정보를 모으고 [공식 문서](https://vuejs.org/guide/introduction.html)와 다른 새로운 예제를 제공하지만, 설명은 함축적입니다.
