@@ -21,6 +21,10 @@ description:
 파편화된 핵심 정보를 모으고 [공식 문서](https://vuejs.org/guide/introduction.html)와 다른 새로운 예제를 제공하지만, 설명은 함축적입니다.
 또한 이 글은 [Vite.js](https://vitejs.dev/) 'Vue > TypeScript' 템플릿을 기준으로 설명하며, Composition API와 타입스크립트를 사용합니다.
 
+/// message-box --icon=lightbulb
+이 글은 ['Vite로 시작하는 Vue 프로젝트'](/p/aBLqC5)를 기반으로 설명합니다.
+///
+
 ## Composition VS Options
 
 Options API는 `data`, `methods`와 같이 강제되는 옵션을 사용해서 자바스크립트 이해도가 높지 않아도 쉽게 배우고 사용할 수 있습니다.

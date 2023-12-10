@@ -15,7 +15,9 @@ description:
 
 # React 핵심 패턴
 
+/// message-box --icon=lightbulb
 이 글은 [Vite로 시작하는 React 프로젝트](/p/6iFzkB)를 기반으로 설명합니다.
+///
 
 ## JSX 컴포넌트 구조
 
