@@ -2,7 +2,7 @@
 id: 6iFzkB
 filename: react-vite-starter
 image: https://picsum.photos/id/411/1200/800
-title: Vite로 시작하는 React 프로젝트
+title: React 프로젝트 시작하기 w. Vite
 createdAt: 2023-11-30
 group: React
 author:
@@ -14,7 +14,7 @@ description:
   Vite.js 빌드 도구를 사용해 React 프로젝트를 시작하는 방법을 살펴보며, 자바스크립트와 타입스크립트 프로젝트에서의 구성을 구분해 설명합니다.
 ---
 
-# Vite로 시작하는 React 프로젝트
+# React 프로젝트 시작하기 w. Vite
 
 Vite.js 빌드 도구를 사용해 React 프로젝트를 시작하는 방법을 설명합니다.
 자바스크립트와 타입스크립트 프로젝트에서의 구성을 구분하고 있습니다.
