@@ -1,9 +1,10 @@
 ---
-image: https://picsum.photos/id/159/1200/800
-filename: js-async-core-patterns
 id: Zr4RfI
+filename: js-async-core-patterns
+image: https://heropy.dev/postAssets/Zr4RfI/main.jpg
 title: JS 비동기 핵심 패턴
 createdAt: 2023-12-14
+updatedAt: 2023-12-15
 group: JS
 author:
   - ParkYoungWoong
@@ -14,8 +15,6 @@ tags:
 description: 
   동기적으로 동작하는 코드와 비동기적으로 동작하는 코드의 차이점을 알아보고, 비동기 코드를 작성할 때 사용하는 여러 핵심 패턴을 알아봅니다.
 ---
-
-# JS 비동기 핵심 패턴
 
 동기적으로 동작하는 코드와 비동기적으로 동작하는 코드의 차이점을 알아보고, 비동기 코드를 작성할 때 사용하는 여러 핵심 패턴을 알아봅니다.
 
@@ -378,7 +377,7 @@ a()
 다음은 `Promise` 클래스로 작성한 함수와 `.then()` 메소드를 사용해 영화 정보를 순차적으로 가져오는 예제입니다.
 
 ```js
-const getMovies = (title, callback) => {
+const getMovies = (title) => {
   return new Promise(resolve => {
     fetch(`https://omdbapi.com/?apikey=7035c60c&s=${title}`)
       .then(res => res.json())
@@ -439,7 +438,7 @@ a()
 다음은 `Promise` 클래스로 작성한 함수와 `async`와 `await` 키워드를 사용해 영화 정보를 순차적으로 가져오는 예제입니다.
 
 ```js
-const getMovies = (title, callback) => {
+const getMovies = (title) => {
   return new Promise(resolve => {
     fetch(`https://omdbapi.com/?apikey=7035c60c&s=${title}`)
       .then(res => res.json())
@@ -473,35 +472,57 @@ const getMovies = (title, callback) => {
 
 ## Promise
 
-`Promise` 클래스를 생성자 함수로 호출하면, 비동기 함수를 랩핑한 `promise` 인스턴스를 반환합니다.
-이 `promise` 인스턴스는 `.then()` 메소드나 `await` 키워드로 사용하며, 이때 비동기 함수의 실행부터 완료까지의 각 상태를 가지게 됩니다.
+`Promise` 클래스를 생성자 함수로 호출하면, 비동기 함수를 랩핑한 프로미스(약속) 인스턴스(`promise`)를 반환합니다.
+이 프로미스(약속) 인스턴스는 `.then()` 메소드나 `await` 키워드로 사용하며, 이때 비동기 함수의 실행부터 완료까지의 각 상태를 가지게 됩니다.
 
-- 대기(Pending): 이행이나 거부 직전까지의 상태.
-- 이행(Fulfilled): 동작이 성공적으로 완료됨.
-- 거부(Rejected): 동작이 실패함.
+- 대기(Pending): 약속한 동작이 시작된 후, 약속이 이행되거나 거부되기 전까지 기다리는 상태.
+- 이행(Fulfilled): 약속한 동작이 정상적으로 완료됨, 약속을 이행함.
+- 거부(Rejected): 약속한 동작이 완료되지 못함, 약속의 이행을 거부함.
 
 ```js --line-active=6,8
 function 함수(resolve, reject) {
-  loading = true // 대기(..)
-  // ...
-
-  if (error) {
-    reject() // 거부(X)
-  }
-  resolve() // 이행(O)
-  loading = false
+  // ... 대기(..)
+  if (error) reject(에러) // 거부(X)
+  resolve(데이터) // 이행(O)
 }
 
 const promise = new Promise(함수)
+```
 
-promise.then()
-// or
+`resolve(데이터)` 호출의 인수(`데이터`)는, `.then()` 메소드의 콜백 매개변수로 전달되거나 `await` 키워드의 반환값으로 사용됩니다.
+`reject(에러)` 호출의 인수(`에러`)는, `.catch()` 메소드 콜백 매개변수로 전달되거나 `try/catch` 구문의 `catch` 블록의 에러변수로 전달됩니다.
+
+```js --caption=.then() 메소드를 사용하는 경우.
+promise
+  .then(데이터 => {})
+
+// 또는,
+
+promise
+  .then(데이터 => {})
+  .catch(에러 => {})
+  .finally(() => {})
+```
+
+```js --caption=async/await 키워드를 사용하는 경우.
 ;(async () {
-  await promise
+  const 데이터 = await promise
+})()
+
+// 또는,
+
+;(async () {
+  try {
+    const 데이터 = await promise
+  } catch (에러) {
+    //
+  } finally {
+    //
+  }
 })()
 ```
 
-## 에러 핸들링
+### 에러 핸들링
 
 비동기 코드에서 문제가 발생하는 상황에 동작할 내용을 등록(에러 핸들링, Error Handling)해야 하는 경우가 있습니다.
 
@@ -641,7 +662,7 @@ let loading = true
 })()
 ```
 
-## 반복문에서 비동기 처리
+### 반복문에서 비동기 처리
 
 비동기 함수를 반복 호출하는 경우, `for` 반복문(`of`, `in` 포함)을 사용해야 이전 작업이 완료된 후 다음 작업이 실행됩니다.
 `.forEach()`, `.map()` 등의 반복 메소드는 이전 작업의 완료 여부와 상관없이 실행되기 때문에, 비동기 함수의 반복 호출에 적합하지 않습니다.
@@ -668,6 +689,273 @@ titles.forEach(async title => {
   for (const title of titles) {
     const movies = await getMovies(title)
     console.log(title, movies)
+  }
+})()
+```
+
+### 정적 메소드
+
+#### Promise.all
+
+제공되는 배열 내의 모든 약속(프로미스)을 동시에 실행해, 모두 이행되기까지 기다립니다.
+단, 약속이 하나라도 거부되면, 첫 거부의 이유(값)로 모든 약속이 함께 거부됩니다.
+
+```js
+const getMovies = (title) => {
+  return new Promise((resolve, reject) => {
+    if (!title) {
+      reject('검색어를 제공해야 합니다!')
+    }
+    fetch(`https://omdbapi.com/?apikey=7035c60c&s=${title}`)
+      .then(res => res.json())
+      .then(({ Search }) => {
+        resolve(Search)
+      })
+  })
+}
+```
+
+```js --line-active=6-8,16-18 --line-error=9-11,19-21 --caption=모두 이행되는 경우.
+const frozen = getMovies('frozen')
+const avengers = getMovies('avengers')
+const avatar = getMovies('avatar')
+
+Promise.all([frozen, avengers, avatar])
+  .then(res => {
+    console.log(res) // [Frozen[], Avengers[], Avatar[]]
+  })
+  .catch(err => { // 실행되지 않음!
+    console.error(err)
+  })
+
+// 또는,
+
+;(async () => {
+  try {
+    const res = await Promise.all([frozen, avengers, avatar])
+    console.log(res) // [Frozen[], Avengers[], Avatar[]]
+  } catch (err) { // 실행되지 않음!
+    console.error(err)
+  }
+})()
+```
+
+```js --line-active=2,9-11,19-21 --line-error=6-8,18 --caption=거부가 포함된 경우.
+const frozen = getMovies('frozen')
+const avengers = getMovies() // 거부되는 프로미스!
+const avatar = getMovies('avatar')
+
+Promise.all([frozen, avengers, avatar])
+  .then(res => { // 실행되지 않음!
+    console.log(res)
+  })
+  .catch(err => {
+    console.error(err) // Error: 검색어를 제공해야 합니다.
+  })
+
+// 또는,
+
+;(async () => {
+  try {
+    const res = await Promise.all([frozen, avengers, avatar])
+    console.log(res) // 실행되지 않음!
+  } catch (err) {
+    console.error(err) // Error: 검색어를 제공해야 합니다.
+  }
+})()
+```
+
+#### Promise.allSettled
+
+제공되는 배열 내의 모든 약속을 동시에 실행해, 모든 이행되거나 거부되기까지 기다립니다.
+앞서 살펴본 `.all()`과 다르게, 거부가 있더라도 모든 프로미스는 완료됩니다.
+그리고 각 약속의 이행/거부 상태와 값을 반환합니다.
+
+```ts --caption=Promise.allSettled의 반환 타입
+type AllSettledResult = {
+  status: 'fulfilled' | 'rejected' // 이행 또는 거부 상태
+  value?: any // 이행된 값
+  reason?: any // 거부된 이유(값)
+}[]
+```
+
+```js
+const frozen = getMovies('frozen')
+const avengers = getMovies() // 거부되는 프로미스!
+const avatar = getMovies('avatar')
+
+Promise.allSettled([frozen, avengers, avatar])
+  .then(res => {
+    console.log(res)
+    // [
+    //   { status: 'fulfilled', value: Frozen[] }, 
+    //   { status: 'rejected', reason: '검색어를 입력하세요.' }, 
+    //   { status: 'fulfilled', value: Avatar[] }
+    // ]
+  })
+
+// 또는,
+
+;(async () => {
+  const res = await Promise.allSettled([frozen, avengers, avatar])
+  console.log(res)
+  // [
+  //   { status: 'fulfilled', value: Frozen[] }, 
+  //   { status: 'rejected', reason: '검색어를 입력하세요.' }, 
+  //   { status: 'fulfilled', value: Avatar[] }
+  // ]
+})()
+```
+
+#### Promise.race
+
+제공되는 배열 내의 모든 약속을 동시에 실행해, 가장 먼저 이행되거나 거부된 약속을 하나만 반환합니다.
+
+/// message-box --icon=info
+'race'라는 단어에서 알 수 있듯이, 선착순입니다.
+///
+
+```js
+const getMovies = (title, delay = 0) => {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      if (!title) {
+        reject('검색어를 입력하세요.')
+      }
+      fetch(`https://omdbapi.com/?apikey=7035c60c&s=${title}`)
+        .then(res => res.json())
+        .then(({ Search }) => {
+          resolve(Search)
+        })
+    }, delay)
+  })
+}
+
+const frozen = getMovies('frozen', 1000) // 1초
+const avengers = getMovies(null, 3000) // 3초, 거부되는 프로미스!
+const avatar = getMovies('avatar', 2000) // 2초
+
+Promise.race([frozen, avengers, avatar])
+  .then(res => {
+    console.log(res) // Frozen[]
+  })
+  .catch(err => {
+    console.error(err)
+  })
+
+// 또는,
+
+;(async () => {
+  try {
+    const res = await Promise.race([frozen, avengers, avatar])
+    console.log(res) // Frozen[]
+  } catch (err) {
+    console.error(err)
+  }
+})()
+```
+
+#### Promise.any
+
+제공되는 배열 내의 모든 약속을 동시에 실행해, 가장 먼저 이행된 약속을 하나만 반환합니다.
+이행된 프로미스가 하나라도 있는 경우, 거부된 프로미스는 무시합니다.
+만약 모든 프로미스가 거부된 경우, `AggregateError`를 반환합니다.
+
+/// message-box --icon=info
+`.race()`와 마찬가지로 선착순이지만, 거부된 약속은 무시하고 이행된 약속만 취급합니다.
+///
+
+```js
+const getMovies = (title, delay = 0) => {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      if (!title) {
+        reject('검색어를 입력하세요.')
+      }
+      fetch(`https://omdbapi.com/?apikey=7035c60c&s=${title}`)
+        .then(res => res.json())
+        .then(({ Search }) => {
+          resolve(Search)
+        })
+    }, delay)
+  })
+}
+
+const frozen = getMovies('frozen', 2000) // 2초
+const avengers = getMovies(null, 1000) // 1초, 거부되는 프로미스!
+const avatar = getMovies('avatar', 3000) // 3초
+
+Promise.any([frozen, avengers, avatar])
+  .then(res => {
+    console.log(res) // Frozen[]
+  })
+
+// 또는,
+
+;(async () => {
+  const res = await Promise.any([frozen, avengers, avatar])
+  console.log(res) // Frozen[]
+})()
+```
+
+```js --caption=모든 프로미스가 거부된 경우.
+const frozen = getMovies(null, 2000) // 2초, 거부되는 프로미스!
+const avengers = getMovies(null, 1000) // 1초, 거부되는 프로미스!
+const avatar = getMovies(null, 3000) // 3초, 거부되는 프로미스!
+
+Promise.any([frozen, avengers, avatar])
+  .then(res => {
+    console.log(res) // AggregateError: All promises were rejected
+  })
+
+// 또는,
+
+;(async () => {
+  const res = await Promise.any([frozen, avengers, avatar])
+  console.log(res) // AggregateError: All promises were rejected
+})()
+```
+
+#### Promise.resolve
+
+무조건 이행되는 약속을 반환합니다.
+
+```js --line-active=4,10-11 --line-error=5,12-13
+const promise = Promise.resolve(123)
+
+promise
+  .then((res) => console.log(res)) // 123
+  .catch((err) => console.log(err)) // 실행되지 않음!
+
+// 또는,
+
+;(async () => {
+  try {
+    console.log(await promise) // 123
+  } catch (err) {
+    console.log(err) // 실행되지 않음!
+  }
+})()
+```
+
+#### Promise.reject
+
+무조건 거부되는 약속을 반환합니다.
+
+```js --line-active=5,12-14 --line-error=4,10-11
+const promise = Promise.reject('거부됨!')
+
+promise
+  .then((res) => console.log(res)) // 실행되지 않음!
+  .catch((err) => console.log(err)) // '거부됨!'
+
+// 또는,
+
+;(async () => {
+  try {
+    console.log(await promise) // 실행되지 않음!
+  } catch (err) {
+    console.log(err) // '거부됨!'
   }
 })()
 ```

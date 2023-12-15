@@ -13,8 +13,6 @@ description:
   React 기본 문법의 다양한 사용 패턴을 살펴봅니다.
 ---
 
-# React 핵심 패턴
-
 /// message-box --icon=lightbulb
 이 글은 [Vite로 시작하는 React 프로젝트](/p/6iFzkB)를 기반으로 설명합니다.
 ///

@@ -1,7 +1,7 @@
 ---
 id: XLGqke
 filename: chrome-remote-desktop-install-guide-for-mentoring
-image: https://picsum.photos/id/149/1200/800
+image: https://heropy.dev/postAssets/XLGqke/main.jpg
 title: 구글 크롬 원격 데스크톱 설치 및 사용 가이드
 createdAt: 2023-11-04
 group: 시작하기
@@ -10,10 +10,8 @@ author:
 tags:
   - Remote Desktop
 description: 
-  구글 크롬(Google Chrome) 원격 데스크톱을 통해 멘티(학생)의 화면을 멘토(강사)에게 공유하고 그 화면을 제어할 수 있습니다. 설치 및 환경 구성 등의 일부 과정이 필요하므로, 멘토링 사전에 준비하는 것을 추천합니다.
+  구글 크롬(Google Chrome) 원격 데스크톱을 통해 멘티(학생)의 화면을 멘토(강사)에게 공유하고 그 화면을 제어하는 과정을 설명합니다.
 ---
-
-# 구글 크롬 원격 데스크톱 설치 및 사용 가이드
 
 구글 크롬(Google Chrome) 원격 데스크톱을 통해 멘티(학생)의 화면을 멘토(강사)에게 공유하고 그 화면을 제어할 수 있습니다.
 이하 내용과 같이 설치 및 환경 구성 등의 일부 과정이 필요하므로, 멘토링 사전에 준비하는 것을 추천합니다.

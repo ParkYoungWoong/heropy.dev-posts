@@ -1,7 +1,7 @@
 ---
-image: https://picsum.photos/id/20/1200/800
-filename: js-bundler-essentials
 id: x8iedW
+filename: js-bundler-essentials
+image: https://heropy.dev/postAssets/x8iedW/main.jpg
 title: 번들러와 빌드 도구의 이해
 createdAt: 2023-12-10
 group: JS
@@ -16,8 +16,6 @@ tags:
 description: 
   Webpack이나 Parcel, Rollup 등의 번들러(Bundler)는 현대적인 웹 개발의 필수적인 도구로, 번들러의 기본 개념, 동작 원리, 간단한 예제 등을 살펴보고, 추가로 빌드 도구의 개념과 예제도 같이 살펴봅니다.
 ---
-
-# 번들러와 빌드 도구의 이해
 
 Webpack이나 Parcel, Rollup 등의 번들러(Bundler)는 현대적인 웹 개발의 필수적인 도구입니다.
 최근 들어 번들러의 직접적인 사용보다는, Vite.js이나 Snowpack.js 같은 빌드 도구 혹은 Next.js, Nuxt, Sveltekit 등 프레임워크를 통해 간접적으로 사용하는 경우가 많아졌지만, 번들러의 기본 개념과 동작 원리를 이해하는 것은 여전히 중요합니다.

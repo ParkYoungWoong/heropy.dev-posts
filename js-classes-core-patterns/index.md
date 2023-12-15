@@ -1,7 +1,7 @@
 ---
 id: CPE3zl
 filename: js-classes-core-patterns
-image: https://picsum.photos/id/954/1200/800
+image: https://heropy.dev/postAssets/CPE3zl/main.jpg
 title: JS 클래스 핵심 패턴
 createdAt: 2024-12-07
 group:  JS
@@ -13,8 +13,6 @@ tags:
 description: 
   자바스크립트는 객체 지향 프로그래밍에서의 프로토타입(Prototype) 기반 언어로 프로토타입 무엇인지 이해하고, ES2015부터 추가된 클래스(Class) 문법의 핵심적인 패턴을 살펴봅니다.
 ---
-
-# JS 클래스 핵심 패턴
 
 자바스크립트는 객체 지향 프로그래밍에서의 프로토타입(Prototype) 기반 언어로 ES2015부터 클래스(Class) 문법이 추가되었습니다.
 하지만 자바스크립트는 여전히 프로토타입 기반으로 클래스 기반이 아닙니다.

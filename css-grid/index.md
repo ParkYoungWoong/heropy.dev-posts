@@ -1,7 +1,7 @@
 ---
 id: c6ROLZ
 filename: css-grid
-image: https://picsum.photos/id/320/1200/800
+image: https://heropy.dev/postAssets/c6ROLZ/main.jpg
 author: ParkYoungWoong
 title: CSS Grid 완벽 가이드
 createdAt: 2019-08-01
@@ -13,8 +13,6 @@ tags:
 description: 
   CSS Grid는 2차원 레이아웃 시스템을 제공하는 CSS 기술로, 웹페이지의 요소를 행과 열로 구성된 그리드 형태로 배치할 수 있게 해줍니다. 복잡한 레이아웃도 쉽게 구현할 수 있어, 정밀한 디자인 작업에 적합합니다.
 ---
-
-# CSS Grid 완벽 가이드
 
 CSS Grid(그리드)는 2차원(행과 열)의 레이아웃 시스템을 제공합니다.
 Flexible Box도 훌륭하지만 비교적 단순한 1차원 레이아웃을 위하며, 좀 더 복잡한 레이아웃을 위해 우리는 CSS Grid를 사용할 수 있습니다.

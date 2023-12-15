@@ -1,7 +1,7 @@
 ---
 id: N6phSt
 filename: js-functions-core-patterns
-image: https://picsum.photos/id/663/1200/800
+image: https://heropy.dev/postAssets/N6phSt/main.jpg
 title: JS 함수 핵심 패턴
 createdAt: 2023-12-03
 group: JS
@@ -13,8 +13,6 @@ tags:
 description:
   자바스크립트 함수에 대한 기본적인 사용 방법부터 관련 용어, 고급 기법 등의 관련된 다양한 함수 패턴과 여러 개념을 살펴봅니다.
 ---
-
-# JS 함수 핵심 패턴
 
 자바스크립트에서 함수(Function)는 1급 객체(First-class object) 혹은 1급 시민(First-class citizen)이라고 부릅니다.
 이는 함수를 변수에 할당하거나, 함수를 다른 함수의 인수(값)로 전달하는 등의 방법으로 사용할 수 있다는 것입니다.

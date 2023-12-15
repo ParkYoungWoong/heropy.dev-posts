@@ -1,7 +1,7 @@
 ---
 id: Ha29GI
 filename: css-flex
-image: https://picsum.photos/id/406/1200/800
+image: https://heropy.dev/postAssets/Ha29GI/main.jpg
 title: CSS Flex 완벽 가이드
 createdAt: 2018-11-01
 updatedAt: 2023-11-15
@@ -14,8 +14,6 @@ tags:
 description:
   CSS Flex는 효율적인 레이아웃 설계를 위한 기술로, 컨테이너 내 항목의 공간 배분과 정렬을 유연하게 관리합니다. 이를 통해 반응형 디자인 레이아웃이 쉬워지고 복잡한 계산 없이도 요소를 원하는 대로 배치할 수 있습니다.
 ---
-
-# CSS Flex 완벽 가이드
 
 대부분 사이트는 전체 레이아웃이 수직 구성이며 '위-아래'로 스크롤 하여 사용합니다.
 레이아웃을 구성할 때 가장 많이 사용하는 요소(Elements)들이 기본적으로 블록(Block) 개념으로 표시(Display)되며 이는 뷰(View)에 수직(위에서 아래로)으로 쌓이기 때문에 수직 구성은 상대적으로 쉽게 만들 수 있습니다.
