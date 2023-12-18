@@ -1,7 +1,7 @@
 ---
 id: OidQSe
 filename: react-core-patterns
-image: https://picsum.photos/id/326/1200/800
+image: https://heropy.dev/postAssets/OidQSe/main.jpg
 title: React 핵심 패턴
 createdAt: 2023-12-10
 group: React

@@ -1,7 +1,7 @@
 ---
 id: zDWwNL
 filename: vue3-core-patterns-with-ts
-image: https://picsum.photos/id/450/1200/800
+image: https://heropy.dev/postAssets/zDWwNL/main.jpg
 title: Vue Composition API 핵심 패턴 w. 타입스크립트
 createdAt: 2023-11-29
 group: Vue

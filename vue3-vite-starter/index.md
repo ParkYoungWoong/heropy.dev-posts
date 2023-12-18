@@ -1,7 +1,7 @@
 ---
 id: aBLqC5
 filename: vue3-vite-starter
-image: https://picsum.photos/id/1047/1200/800
+image: https://heropy.dev/postAssets/aBLqC5/main.jpg
 title: Vue 프로젝트 시작하기 w. Vite
 createdAt: 2023-11-30
 group: Vue

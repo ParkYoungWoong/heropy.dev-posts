@@ -1,7 +1,7 @@
 ---
 id: 6iFzkB
 filename: react-vite-starter
-image: https://picsum.photos/id/411/1200/800
+image: https://heropy.dev/postAssets/6iFzkB/main.jpg
 title: React 프로젝트 시작하기 w. Vite
 createdAt: 2023-11-30
 group: React

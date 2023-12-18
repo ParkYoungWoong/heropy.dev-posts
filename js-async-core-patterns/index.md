@@ -959,3 +959,46 @@ promise
   }
 })()
 ```
+
+## 이미지 로드 예제
+
+이미지를 요청하고 가져와 화면에 출력하기 전에, 로딩 애니메이션을 보여주는 예제입니다.
+메모리상의 이미지 요소에서 `load` 이벤트가 발생하면, 로딩 애니메이션을 제거하고 이미지를 화면에 출력합니다.
+
+```html
+<style>
+  .loader {
+    width: 40px;
+    height: 40px;
+    border: 4px solid royalblue;
+    border-top-color: transparent;
+    border-radius: 50%;
+    animation: loader 1s infinite linear;
+  }
+  @keyframes loader {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+</style>
+<div id="image">
+  <div class="loader"></div>
+</div>
+```
+
+```js
+function loadImage(src) {
+  return new Promise((resolve, reject) => {
+    const img = new Image()
+    img.src = src
+    img.addEventListener('load', () => resolve(img))
+    img.addEventListener('error', () => reject(new Error(`이미지 로드에 실패하였습니다: ${src}`)))
+  })
+}
+
+;(async () => {
+  const imgEl = await loadImage('https://picsum.photos/2000')
+  const imgContainerEl = document.querySelector('#image')
+  imgContainerEl.innerHTML = ''
+  imgContainerEl.append(imgEl)
+})()
+```

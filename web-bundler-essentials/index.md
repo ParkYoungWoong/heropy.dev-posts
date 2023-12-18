@@ -1,10 +1,10 @@
 ---
 id: x8iedW
-filename: js-bundler-essentials
+filename: web-bundler-essentials
 image: https://heropy.dev/postAssets/x8iedW/main.jpg
 title: 번들러와 빌드 도구의 이해
 createdAt: 2023-12-10
-group: JS
+group: Web
 author:
   - ParkYoungWoong
 tags:
