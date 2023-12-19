@@ -429,7 +429,6 @@ async function sendFile(file) {
 
   const res = await fetch('URL주소', {
     method: '메소드',
-    // headers: { 'Content-Type': 'multipart/form-data' }, // 생략 가능!
     body: formData
   })
   return await res.json()
@@ -444,7 +443,6 @@ async function sendFile(file) {
   const res = await axios({
     url: 'URL주소',
     method: '메소드',
-    // headers: { 'Content-Type': 'multipart/form-data' }, // 생략 가능!
     data: formData
   })
   return res.data
