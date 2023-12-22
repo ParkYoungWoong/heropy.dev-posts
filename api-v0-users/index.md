@@ -15,7 +15,7 @@ description:
   가짜 사용자 정보(Mock Data)가 필요할 때 사용할 수 있는 REST API를 제공합니다. JSON 형식으로 사용자 정보를 조회, 생성, 수정, 삭제(CRUD / Create, Read, Update, Delete)할 수 있습니다.
 ---
 
-가짜 사용자 정보(Mock Data)가 필요할 때 사용할 수 있는 REST API를 제공합니다.
+[HEROPY.DEV](https://heropy.dev)는 가짜 사용자 정보(Mock Data)가 필요할 때 사용할 수 있는 REST API를 제공합니다.
 JSON 형식으로 사용자 정보를 조회, 생성, 수정, 삭제(CRUD / Create, Read, Update, Delete)할 수 있습니다.
 또한 Base64 이미지 데이터를 전송해, 사용자 프로필 사진을 등록하거나 삭제할 수 있습니다.
 
@@ -70,7 +70,7 @@ interface ResponseValue {
         "name": "neo.jpg",
         "size": 517122,
         "mimeType": "image/jpeg",
-        "url": "https://picsum.photos/id/406/400/400"
+        "url": "https://picsum.photos/id/406/400"
       }
     },
     {
@@ -85,7 +85,7 @@ interface ResponseValue {
         "name": "trinity.jpg",
         "size": 102392,
         "mimeType": "image/jpeg",
-        "url": "https://picsum.photos/id/201/400/400"
+        "url": "https://picsum.photos/id/201/400"
       }
     },
     {
@@ -161,7 +161,7 @@ interface RequestBody {
 ```
 
 ```json --caption=응답 데이터 예시
- {
+{
   "id": "ywTTX",
   "name": "ParkYoungWoong",
   "age": 25,
@@ -211,7 +211,7 @@ interface ResponseValue {
 ```
 
 ```json --caption=응답 데이터 예시
- {
+{
   "id": "ywTTX",
   "name": "Neo",
   "age": 85,
@@ -224,7 +224,7 @@ interface ResponseValue {
     "name": "neo.jpg",
     "size": 517122,
     "mimeType": "image/jpeg",
-    "url": "https://picsum.photos/id/406/400/400" // 샘플 이미지
+    "url": "https://picsum.photos/id/406/400" // 샘플 이미지
   }
 }
 ```
@@ -300,7 +300,7 @@ interface ResponseValue {
     "name": "neo.jpg",
     "size": 517122,
     "mimeType": "image/jpeg",
-    "url": "https://picsum.photos/id/406/400/400" // 샘플 이미지
+    "url": "https://picsum.photos/id/406/400" // 샘플 이미지
   }
 }
 ```
@@ -338,7 +338,7 @@ interface ResponseValue {
 ```
 
 ```json --caption=응답 데이터 예시
- {
+{
   "id": "ywTTX",
   "name": "Neo",
   "age": 85,
@@ -351,7 +351,31 @@ interface ResponseValue {
     "name": "neo.jpg",
     "size": 517122,
     "mimeType": "image/jpeg",
-    "url": "https://picsum.photos/id/406/400/400" // 샘플 이미지
+    "url": "https://picsum.photos/id/406/400" // 샘플 이미지
   }
+}
+```
+
+## 사용자 정의 HTTP 상태 코드
+
+모든 요청은 `200`~`599` 사이의 HTTP 상태 코드를 임의로 지정할 수 있으며, 그에 맞는 응답을 받을 수 있습니다.
+다양한 상태 코드를 테스트해보고 싶다면, [HTTP Status Dogs](https://httpstatusdogs.com/)를 참고하세요.
+
+요청 헤더에 `Request-Status` 정보를 추가합니다.
+
+```js
+import axios from 'axios'
+
+try {
+  const { data } = await axios({
+    url: 'https://api.heropy.dev/v0/users',
+    method: 'GET',
+    headers: {
+      'Request-Status': 444
+    }
+  })
+} catch (err) {
+  console.error(err.response.status) // 444
+  console.error(err.response.data.message) // '444: 잘못된 요청입니다.'
 }
 ```
