@@ -2,9 +2,9 @@
 id: 5PlGxB
 filename: api-v0-users
 image: https://heropy.dev/postAssets/5PlGxB/main.jpg
-title: 사용자 정보(JSON)
+title: 사용자 정보 API
 createdAt: 2023-12-21
-group: Open API
+group: HEROPY API
 author:
   - ParkYoungWoong
 tags:
@@ -15,9 +15,9 @@ description:
   가짜 사용자 정보(Mock Data)가 필요할 때 사용할 수 있는 REST API를 제공합니다. JSON 형식으로 사용자 정보를 조회, 생성, 수정, 삭제(CRUD / Create, Read, Update, Delete)할 수 있습니다.
 ---
 
-[HEROPY.DEV](https://heropy.dev)는 가짜 사용자 정보(Mock Data)가 필요할 때 사용할 수 있는 REST API를 제공합니다.
+[HEROPY.DEV](https://heropy.dev)는 테스트용 가짜 사용자 정보(Mock Data)가 필요할 때 사용할 수 있는 REST API를 제공합니다.
 JSON 형식으로 사용자 정보를 조회, 생성, 수정, 삭제(CRUD / Create, Read, Update, Delete)할 수 있습니다.
-또한 Base64 이미지 데이터를 전송해, 사용자 프로필 사진을 등록하거나 삭제할 수 있습니다.
+또한 이미지를 Base64 형식으로 전송해 사용자 프로필 사진을 등록하거나 삭제하는 기능을 테스트할 수 있습니다.
 
 ## 사용자 목록 조회
 
@@ -106,6 +106,8 @@ interface ResponseValue {
 
 새로운 사용자를 생성합니다.
 생성한 사용자가 목록을 조회할 때 포함되지는 않습니다.
+응답으로 반환한 데이터는 생성한 사용자의 정보입니다.
+`photo` 속성은 업로드한 이미지의 정보를 반환하지만, 접근 가능한 주소(`url`)는 샘플 주소입니다.
 
 ```curl
 curl https://api.heropy.dev/v0/users
@@ -173,7 +175,7 @@ interface RequestBody {
     "name": "profile.jpg",
     "size": 236172,
     "mimeType": "image/jpeg",
-    "url": "https://picsum.photos/400" // 샘플 이미지
+    "url": "https://picsum.photos/id/21/400"
   }
 }
 ```
@@ -205,7 +207,7 @@ interface ResponseValue {
     name: string
     size: number
     mimeType: string
-    url: string
+    url: string // 샘플 이미지 주소
   }
 }
 ```
@@ -224,7 +226,7 @@ interface ResponseValue {
     "name": "neo.jpg",
     "size": 517122,
     "mimeType": "image/jpeg",
-    "url": "https://picsum.photos/id/406/400" // 샘플 이미지
+    "url": "https://picsum.photos/id/406/400"
   }
 }
 ```
@@ -233,6 +235,7 @@ interface ResponseValue {
 
 사용자 ID를 통해 기본 사용자 목록에서 특정 사용자 정보를 수정합니다.
 수정한 사용자 정보가 목록을 조회할 때 반영되지는 않습니다.
+사용자 프로필 사진(`photo`)을 삭제하는 경우, `null` 값을 전송합니다.
 
 ```curl
 curl https://api.heropy.dev/v0/users/:userId
@@ -282,7 +285,7 @@ interface ResponseValue {
     name: string
     size: number
     mimeType: string
-    url: string
+    url: string // 샘플 이미지 주소
   }
 }
 ```
@@ -332,7 +335,7 @@ interface ResponseValue {
     name: string
     size: number
     mimeType: string
-    url: string
+    url: string // 샘플 이미지 주소
   }
 }
 ```
@@ -359,9 +362,7 @@ interface ResponseValue {
 ## 사용자 정의 HTTP 상태 코드
 
 모든 요청은 `200`~`599` 사이의 HTTP 상태 코드를 임의로 지정할 수 있으며, 그에 맞는 응답을 받을 수 있습니다.
-다양한 상태 코드를 테스트해보고 싶다면, [HTTP Status Dogs](https://httpstatusdogs.com/)를 참고하세요.
-
-요청 헤더에 `Request-Status` 정보를 추가합니다.
+`Request-Status` 요청 헤더에 원하는 상태 코드를 지정합니다.
 
 ```js
 import axios from 'axios'

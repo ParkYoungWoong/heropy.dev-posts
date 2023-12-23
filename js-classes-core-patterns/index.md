@@ -3,7 +3,7 @@ id: CPE3zl
 filename: js-classes-core-patterns
 image: https://heropy.dev/postAssets/CPE3zl/main.jpg
 title: JS 클래스 핵심 패턴
-createdAt: 2024-12-07
+createdAt: 2023-12-07
 group:  JS
 author: 
   - ParkYoungWoong
