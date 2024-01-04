@@ -4,7 +4,7 @@ filename: css-grid
 image: https://heropy.dev/postAssets/c6ROLZ/main.jpg
 author: ParkYoungWoong
 title: CSS Grid 완벽 가이드
-createdAt: 2019-08-01
+createdAt: 2019-01-01
 updatedAt: 2023-11-16
 group: CSS
 tags:

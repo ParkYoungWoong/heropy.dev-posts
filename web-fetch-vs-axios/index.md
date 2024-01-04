@@ -174,13 +174,13 @@ fetch(`https://jsonplaceholder.typicode.com/users`)
 
 CDN으로 연결하거나,
 
-```html --caption=CDN
+```html --caption=Axios CDN
 <script src="https://cdn.jsdelivr.net/npm/axios@1.6.2/dist/axios.min.js"></script>
 ```
 
 NPM으로 설치해서 사용할 수 있습니다.
 
-```bash --caption=NPM
+```bash --caption=Axios NPM
 $ npm i axios
 ```
 

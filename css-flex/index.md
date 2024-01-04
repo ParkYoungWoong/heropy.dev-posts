@@ -3,7 +3,7 @@ id: Ha29GI
 filename: css-flex
 image: https://heropy.dev/postAssets/Ha29GI/main.jpg
 title: CSS Flex 완벽 가이드
-createdAt: 2018-11-01
+createdAt: 2018-01-01
 updatedAt: 2023-11-15
 group: CSS
 author: 
