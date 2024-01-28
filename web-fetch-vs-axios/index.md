@@ -4,6 +4,7 @@ filename: web-fetch-vs-axios
 image: https://heropy.dev/postAssets/QOWqjV/main.jpg
 title: 데이터 통신을 위한, Fetch 함수와 Axios 라이브러리
 createdAt: 2023-12-16
+updatedAt: 2024-01-28
 group: Web
 author:
   - ParkYoungWoong
@@ -69,28 +70,37 @@ URL은 특정 자원이 인터넷 상의 어디에 위치하는지를 나타내�
 같은 URL이라도 요청 종류(Method)에 따라 서버의 처리 내용과 응답 결과가 달라집니다.
 또한 서버에서 지원하지 않는 메소드는 사용할 수 없습니다.
 
-```js
+```js --caption=여러 요청 종류(Method)의 예시
 // 모든 사용자 조회
-fetch('https://example.dev/users', {
+fetch('https://api.heropy.dev/v0/users', {
   method: 'GET' // 혹은 생략 가능!
 })
+// 혹은
+fetch('https://api.heropy.dev/v0/users')
 
 // 새로운 사용자 생성
-fetch('https://example.dev/users', {
+fetch('https://api.heropy.dev/v0/users', {
   method: 'POST',
-  headers: {
-    'Content-type': 'application/json'
-  },
   body: JSON.stringify({
     name: 'HEROPY',
-    age: 85
+    age: 85,
+    emails: ['thesecon@gmail.com']
   })
 })
 
-// 모든 사용자 삭제
-fetch('https://example.dev/users', {
-  method: 'DELETE'
+// 사용자 정보 수정
+fetch('https://api.heropy.dev/v0/users/ywTTX', {
+  method: 'PUT',
+  body: JSON.stringify({
+    name: "HEROPY",
+    emails: ['thesecon@gmail.com']
+  })
 })
+
+// 사용자 삭제
+fetch('https://api.heropy.dev/v0/users/ywTTX', {
+    method: 'DELETE'
+  })
 ```
 
 ### Headers
@@ -100,7 +110,7 @@ fetch('https://example.dev/users', {
 다음과 같이 객체 형태로 작성합니다.
 
 ```js
-fetch('https://example.dev/users', {
+fetch('https://api.heropy.dev/v0/users', {
   headers: {
     'Content-type': 'application/json',
     Apikey: 'KDnREmPe9B1',
@@ -122,7 +132,7 @@ IETF(Internet Engineering Task Force)에서는 `X-` 접두사 없이 커스텀 �
 주로, 문자(JSON)나 [FormData](https://developer.mozilla.org/ko/docs/Web/API/FormData)를 전송합니다.
 
 ```js
-fetch('https://example.dev/users', {
+fetch('https://api.heropy.dev/v0/users', {
   method: 'POST',
   headers: {
     'Content-type': 'application/json'
@@ -163,9 +173,9 @@ HTTP 상태 코드는 다음과 같이 5가지 범주로 나뉩니다.
 `Promise` 기반으로 비동기 통신을 지원하며, 별도의 설치 없이 바로 사용할 수 있습니다.
 
 ```js
-fetch(`https://jsonplaceholder.typicode.com/users`)
+fetch('https://api.heropy.dev/v0/users')
   .then(res => res.json())
-  .then(data => console.log(data)) // User[]
+  .then(data => console.log(data)) // { total: 7, users: User[] }
 ```
 
 `axios`는 2015년 경에 첫 릴리즈된 HTTP 클라이언트 라이브러리입니다. 
@@ -187,8 +197,8 @@ $ npm i axios
 ```js
 import axios from 'axios'
 
-axios.get(`https://jsonplaceholder.typicode.com/users`)
-  .then(res => console.log(res.data)) // User[]
+axios.get('https://api.heropy.dev/v0/users')
+  .then(res => console.log(res.data)) // { total: 7, users: User[] }
 ```
 
 `fetch`와 `axios`는 모두 현대적인 웹 개발에서 데이터 통신을 위해 널리 사용되지만, 각 장점과 사용 방식이 다릅니다.
@@ -205,8 +215,8 @@ axios.get(`https://jsonplaceholder.typicode.com/users`)
 
 ```js --caption=fetch
 ;(async () => {
-  // const res = await fetch('https://jsonplaceholder.typicode.com/posts', { method: 'GET' })
-  const res = await fetch('https://jsonplaceholder.typicode.com/posts')
+  // const res = await fetch('https://api.heropy.dev/v0/users', { method: 'GET' })
+  const res = await fetch('https://api.heropy.dev/v0/users')
   const data = await res.json()
   console.log(data)
 })()
@@ -220,9 +230,9 @@ axios.get(`https://jsonplaceholder.typicode.com/users`)
 import axios from 'axios'
 
 ;(async () => {
-  // const res = await axios({ url: 'https://jsonplaceholder.typicode.com/posts', method: 'GET' })
-  // const res = await axios.get('https://jsonplaceholder.typicode.com/posts')
-  const res = await axios('https://jsonplaceholder.typicode.com/posts')
+  // const res = await axios({ url: 'https://api.heropy.dev/v0/users', method: 'GET' })
+  // const res = await axios.get('https://api.heropy.dev/v0/users')
+  const res = await axios('https://api.heropy.dev/v0/users')
   console.log(res.data)
 })()
 ```
@@ -300,15 +310,16 @@ console.log(queries.toString()) // 'apikey=7035c60c&s=avengers'
 
 ```js
 ;(async () => {
-  const res = await fetch('https://jsonplaceholder.typicode.com/posts', {
+  const res = await fetch('https://api.heropy.dev/v0/users', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
-      title: 'Hello world!',
-      body: 'The quick brown fox jumps over the lazy dog.',
-      userId: 1
+      name: 'HEROPY',
+      age: 85,
+      isValid: true,
+      emails: ['thesecon@gmail.com']
     })
   })
   const data = await res.json()
@@ -322,15 +333,16 @@ console.log(queries.toString()) // 'apikey=7035c60c&s=avengers'
 ```js
 ;(async () => {
   const res = await axios({
-    url: 'https://jsonplaceholder.typicode.com/posts',
+    url: 'https://api.heropy.dev/v0/users',
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
     data: {
-      title: 'Hello world!',
-      body: 'The quick brown fox jumps over the lazy dog.',
-      userId: 1
+      name: 'HEROPY',
+      age: 85,
+      isValid: true,
+      emails: ['thesecon@gmail.com']
     }
   })
   console.log(res.data)
@@ -346,20 +358,19 @@ URL이나 헤더, 바디 등 명세에 따라 다양한 방식으로 전달할 �
 따로 의미를 구분하지 않고 `PUT`만 사용하는 경우도 많습니다.
 ///
 
-다음 예제에서는, 수정할 게시물의 ID(`2`)를 URL에 포함하고 있습니다.
+다음 예제에서는, 수정할 사용자 정보의 ID(`ywTTX`)를 URL에 포함하고 있습니다.
 
 ```js --line-active=3
 ;(async () => {
   const res = await axios({
-    url: 'https://jsonplaceholder.typicode.com/posts/2',
+    url: 'https://api.heropy.dev/v0/users/ywTTX',
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
     },
     data: {
-      title: 'Hello World!',
-      body: 'The quick brown fox jumps over the lazy dog.',
-      userId: 1
+      name: "HEROPY",
+      emails: ['thesecon@gmail.com']
     }
   })
   console.log(res.data)
@@ -373,7 +384,7 @@ URL이나 헤더, 바디 등 명세에 따라 다양한 방식으로 전달할 �
 
 ```js --caption=fetch
 ;(async () => {
-  const res = await fetch('https://jsonplaceholder.typicode.com/posts/2', {
+  const res = await fetch('https://api.heropy.dev/v0/users/ywTTX', {
     method: 'DELETE'
   })
   const data = await res.json()
@@ -384,7 +395,7 @@ URL이나 헤더, 바디 등 명세에 따라 다양한 방식으로 전달할 �
 ```js --caption=axios
 ;(async () => {
   const res = await axios({
-    url: 'https://jsonplaceholder.typicode.com/posts/2',
+    url: 'https://api.heropy.dev/v0/users/ywTTX',
     method: 'DELETE'
   })
   console.log(res.data)
@@ -516,13 +527,16 @@ function toBase64(file) {
 ```js --line-active=2,9 --caption=fetch
 async function sendFile(file) {
   const base64 = await toBase64(file)
-  const res = await fetch('URL주소', {
-    method: '메소드',
+  const res = await fetch('https://api.heropy.dev/v0/users/ywTTX', {
+    method: 'PUT',
     headers: {
       'Content-Type': 'application/json' 
     },
     body: JSON.stringify({ 
-      file: base64 
+      photo: {
+        name: file.name,
+        data: base64
+      }
     })
   })
   return await res.json()
@@ -533,13 +547,16 @@ async function sendFile(file) {
 async function sendFile(file) {
   const base64 = await toBase64(file)
   const res = await axios({
-    url: 'URL주소',
-    method: '메소드',
+    url: 'https://api.heropy.dev/v0/users/ywTTX',
+    method: 'PUT',
     headers: { 
       'Content-Type': 'application/json' 
     },
     data: {
-      file: base64
+      photo: {
+        name: file.name,
+        data: base64
+      }
     }
   })
   return res.data
@@ -609,7 +626,7 @@ async function sendFile(file) {
 `fetch` 함수는 기본적으로 시간 초과 설정이 없으므로, 별도의 작업이 필요합니다.
 다음과 같이 `Promise.race` 정적 메소드를 통해, 먼저 처리되는 약속을 반환하도록 함수를 작성하고 사용할 수 있습니다.
 
-```js --line-active=1,16 --caption=fetch
+```js --line-active=1,14 --caption=fetch
 function fetchWithTimeout(url, options, timeout = 1000) {
   return Promise.race([
     fetch(url, options),
@@ -621,31 +638,27 @@ function fetchWithTimeout(url, options, timeout = 1000) {
 
 ;(async () => {
   try {
-    await fetchWithTimeout('URL주소', {
-      method: '메소드',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name: 'HEROPY' })
-    }, 3000)
+    await fetchWithTimeout('https://api.heropy.dev/v0/delay?t=3000', {
+      method: 'GET'
+    }, 2000)
   } catch (err) {
-    console.error('Error:', err)
+    console.log('Error:', err)
   }
 })()
 ```
 
 `axios`는 `timeout` 옵션을 통해 시간 초과 설정을 쉽게 추가할 수 있습니다.
 
-```js --line-active=8 --caption=axios
+```js --line-active=6 --caption=axios
 ;(async () => {
   try {
     await axios({
-      url: 'URL주소',
-      method: '메소드',
-      headers: { 'Content-Type': 'application/json' },
-      data: { name: 'HEROPY' },
-      timeout: 3000 // 3초
+      url: 'https://api.heropy.dev/v0/delay?t=3000',
+      method: 'GET',
+      timeout: 2000 // 2초
     })
   } catch (err) {
-    console.error('Error:', err)
+    console.log('Error:', err)
   }
 })()
 ```
@@ -659,15 +672,13 @@ function fetchWithTimeout(url, options, timeout = 1000) {
 `new AbortController()` 생성자 함수 호출로 반환된 인스턴스(`controller`)에서, `signal` 속성을 사용해 `fetch` 함수의 옵션으로 전달합니다
 필요할 때, `controller.abort()` 메소드를 호출해 요청을 취소할 수 있습니다.
 
-```js --line-active=1,9,14-16,23
+```js --line-active=1,7,12-14,21
 const controller = new AbortController()
 
 ;(async () => {
   try {
-    const res = await fetch('URL주소', { 
-      method: '메소드',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name: 'HEROPY' }),
+    const res = await fetch('https://api.heropy.dev/v0/delay?t=3000', { 
+      method: 'GET',
       signal: controller.signal
     })
     const data = await res.json()
@@ -676,11 +687,11 @@ const controller = new AbortController()
     if (err.name === 'AbortError') {
       console.log('요청이 취소되었습니다!')
     }
-    console.error(err)
+    console.log(err)
   }
 })()
 
-document.querySelector('button.cancel')
+document.querySelector('h1')
   .addEventListener('click', () => {
     controller.abort() // 요청 취소!
   })
@@ -692,16 +703,14 @@ document.querySelector('button.cancel')
 `axios.CancelToken`을 사용하는 방식이 내장되어 있었지만, `0.22.0` 버전부터 더 이상 사용되지 않습니다.
 ///
 
-```js --line-active=1,10,14-16,23
+```js --line-active=1,8,12-14,20
 const controller = new AbortController()
 
 ;(async () => {
   try {
     const res = await axios({ 
-      url: 'URL주소',
-      method: '메소드',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ name: 'HEROPY' }),
+      url: 'https://api.heropy.dev/v0/delay?t=3000',
+      method: 'GET',
       signal: controller.signal
     })
     console.log(res.data)
@@ -709,7 +718,6 @@ const controller = new AbortController()
     if (err.name === 'AbortError') {
       console.log('요청이 취소되었습니다!')
     }
-    console.error(err)
   }
 })()
 
@@ -734,10 +742,10 @@ API 명세에 따라, 쿠키(Cookies)와 기본 인증 헤더(Basic Authorizatio
 
 ```js --line-active=6 --caption=fetch
 ;(async () => {
-  const res = await fetch('URL주소', {
-    method: '메소드',
+  const res = await fetch('https://api.heropy.dev/v0/users', { 
+    method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ name: 'HEROPY' }),
+    body: JSON.stringify({ name: 'HEROPY', age: 85 }),
     credentials: 'include'
   })
   const data = await res.json()
@@ -751,10 +759,10 @@ API 명세에 따라, 쿠키(Cookies)와 기본 인증 헤더(Basic Authorizatio
 ```js --line-active=7 --caption=axios
 ;(async () => {
   const res = await axios({
-    url: 'URL주소',
-    method: '메소드',
+    url: 'https://api.heropy.dev/v0/users',
+    method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    data: { name: 'HEROPY' },
+    data: { name: 'HEROPY', age: 85 },
     withCredentials: true
   })
   console.log(res.data)
@@ -762,7 +770,7 @@ API 명세에 따라, 쿠키(Cookies)와 기본 인증 헤더(Basic Authorizatio
 ```
 
 수동으로 포함하고 싶은 경우, 다음과 같이 헤더 정보를 직접 추가할 수도 있습니다.
-역시 API 명세에 따라 다릅니다.
+API 명세에 따라 사용 방법은 다를 수 있습니다.
 
 /// message-box --icon=info
 `Authorization: 'Bearer ...'`는 JWT(JSON Web Tokens) 등과 같은 현대적인 인증 메커니즘에서 널리 사용되는 방식입니다.
@@ -772,13 +780,13 @@ API 명세에 따라, 쿠키(Cookies)와 기본 인증 헤더(Basic Authorizatio
 ```js --line-active=7
 ;(async () => {
   const res = await axios({
-    url: 'URL주소',
-    method: '메소드',
+    url: 'https://api.heropy.dev/v0/users',
+    method: 'POST',
     headers: {
       'Content-Type': 'application/json',
       Authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjlQS3I...',
     },
-    data: { name: 'HEROPY' }
+    data: { name: 'HEROPY', age: 85 }
   })
   console.log(res.data)
 })()
@@ -792,7 +800,7 @@ API 명세에 따라, 쿠키(Cookies)와 기본 인증 헤더(Basic Authorizatio
 
 ```js --caption=fetch
 function api(method, endpoint, data) {
-  const url = 'https://api.heropy.dev' + endpoint
+  const url = 'https://api.heropy.dev/v0' + endpoint
   const timeout = 2000
   const options = {
     method,
@@ -825,7 +833,7 @@ api('DELETE', `/users/${userId}`)
 
 ```js --caption=axios
 const api = axios.create({
-  baseURL: 'https://api.heropy.dev',
+  baseURL: 'https://api.heropy.dev/v0',
   timeout: 2000,
   headers: {
     Apikey: 'KDnREmPe9B1',
@@ -856,7 +864,7 @@ $ npm i node-fetch
 ```js --caption=fetch
 import fetch from 'node-fetch'
 
-fetch(`https://jsonplaceholder.typicode.com/users`)
+fetch(`https://api.heropy.dev/v0/users`)
   .then(res => res.json())
   .then(data => console.log(data)) // User[]
 ```
@@ -870,10 +878,6 @@ $ npm i axios
 ```js --caption=axios
 import axios from 'axios'
 
-axios.get(`https://jsonplaceholder.typicode.com/users`)
+axios.get(`https://api.heropy.dev/v0/users`)
   .then(res => console.log(res.data)) // User[]
 ```
-
-
-
-
