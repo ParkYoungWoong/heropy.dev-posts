@@ -12,7 +12,7 @@ tags:
   - Supabase
   - Next.js
 description: 
-  Hello world!  
+  오픈소스 백엔드 서비스인 Supabase의 PostgreSQL 데이터베이스와 Prisma를 사용해 Next.js 프로젝트를 빠르고 쉽게 구성하고 다루는 방법을 알아봅니다.
 ---
 
 ## Supabase 소개
