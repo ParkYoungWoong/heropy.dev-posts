@@ -4,6 +4,7 @@ filename: db-supabase-starter
 image: https://heropy.dev/postAssets/bCffI2/main.jpg
 title: Supabase Database, Prisma로 빠르게 시작하기 w. Next.js
 createdAt: 2024-03-24
+updatedAt: 2024-03-27
 group: DB
 author:
   - ParkYoungWoong
@@ -339,12 +340,12 @@ export async function GET() {
 여기에서는 행을 수정할 때의 시간을 저장하도록 `updated_at` 열을 추가해 보겠습니다.
 `/prisma/schema.prisma` 파일을 다음과 같이 직접 수정합니다.
 
-타입은 선택적(Optional) `DateTime`이고 `@updatedAt`와 `@db.Timestamptz(6)` 데코레이터를 사용해 Timezone으로 업데이트 시간을 자동으로 저장하도록 설정합니다.
+타입은 선택적(Optional) `DateTime?`이고 `@updatedAt`와 `@db.Timestamptz(6)` 데코레이터를 사용해 Timezone으로 업데이트 시간을 자동으로 저장하도록 설정합니다.
 
 /// message-box --icon=warning
 `DateTime?`의 `?` 기호가 있는 것을 주의하세요!
 지금까지의 과정을 통해서 기존에 추가한 2개의 행이 있기 때문에, 새로운 `updated_at` 열을 필수적(Required)으로 설정하고 스키마를 내보내면, 기존 테이블 구조와의 충돌로 테이블 데이터를 모두 잃을 수 있습니다.
-이런 경우 필요하다면, 선택적(Optional) 타입으로 열을 추가하고 이후 다른 행의 해당 열에 데이터를 모두 채운 후 필수적 타입으로 변경해야 합니다.
+이런 경우, 필요하다면 선택적(Optional) 타입으로 열을 추가하고 이후 다른 행의 해당 열에 데이터를 모두 채운 후 필수적 타입으로 변경해야 합니다.
 ///
 
 ```plaintext --path=/prisma/schema.prisma --line-active=6
@@ -440,27 +441,26 @@ prisma.post.update({
 
 | 메소드 | 설명 |
 | --- | --- |
-| `findUnique` | 고유 열(Unique)을 기반으로 단일 행을 찾습니다. |
-| `findFirst` | 첫 번째 행을 찾습니다. |
-| `findMany` | 여러 행을 찾습니다. |
+| `findUnique` | 고유(Unique) 열을 기반으로 단일 행을 찾습니다. |
+| `findFirst` | 조건의 첫 번째 행을 찾습니다. |
+| `findMany` | 조건의 여러 행을 찾습니다. |
 | `create` | 새로운 행을 생성합니다. |
 | `createMany` | 여러 행을 생성합니다. |
-| `upsert` | 특정 행을 찾아 수정하거나, 없으면 새로 생성합니다. |
-| `update` | 특정 행을 수정합니다. |
-| `updateMany` | 여러 행을 수정합니다. |
-| `delete` | 특정 행을 삭제합니다. |
-| `deleteMany` | 여러 행을 삭제합니다. |
-| `count` | 특정 행의 개수를 반환합니다. |
-| `aggregate` | 특정 행의 집계 정보를 반환합니다. |
-| `groupBy` | 특정 열을 기준으로 그룹화된 정보를 반환합니다. |
+| `upsert` | 행을 찾아 수정하거나, 없으면 새로 생성합니다. |
+| `update` | 조건의 행을 수정합니다. |
+| `updateMany` | 조건의 여러 행을 수정합니다. |
+| `delete` | 조건의 행을 삭제합니다. |
+| `deleteMany` | 조건의 여러 행을 삭제합니다. |
+| `count` | 조건의 행 개수를 반환합니다. |
+| `aggregate` | 조건의 행 집계 정보를 반환합니다. |
+| `groupBy` | 열을 기준으로 그룹화된 정보를 반환합니다. |
 
 | 옵션 | 설명 |
 | --- | --- |
-| `select` | 특정 열을 선택합니다. |
-| `include` | 관계된 열을 선택합니다. |
-| `relationLoadStrategy` | 관계된 열을 로드하는 전략을 선택합니다. |
-| `where` | 특정 조건을 만족하는 행을 찾습니다. |
-| `orderBy` | 특정 열을 기준으로 정렬합니다. |
-| `distinct` | 중복된 행을 제거합니다. |
+| `select` | 열을 선택합니다. |
+| `include` | 관계(Relation) 열을 선택합니다. |
+| `where` | 조건 행을 찾습니다. |
+| `orderBy` | 열을 기준으로 정렬합니다. |
+| `distinct` | 중복 행을 제거합니다. |
 
 
