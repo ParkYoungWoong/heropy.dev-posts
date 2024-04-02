@@ -4,6 +4,7 @@ filename: react-core-patterns
 image: https://heropy.dev/postAssets/OidQSe/main.jpg
 title: React 핵심 패턴
 createdAt: 2023-12-10
+updatedAt: 2024-04-02
 group: React
 author:
   - ParkYoungWoong
@@ -959,7 +960,7 @@ export default function App() {
 }
 ```
 
-다음과 같이, 전개 연산자(Spread operator, `...`)를 사용해 폴스루 속성을 원하는 요소에 연결할 수 있습니다.
+다음과 같이, 전개 연산자(Spread operator, `...`)를 사용해 나머지 매개변수(Rest parameters)로 폴스루 속성을 원하는 요소에 연결할 수 있습니다.
 
 ```jsx --path=/src/components/TextField.jsx --line-active=1,7 --caption=...restProps
 export default function TextField({ label = '', hint = '', value, onChange, ...restProps }) {
@@ -983,6 +984,38 @@ export default function TextField({ label = '', hint = '', value, onChange, ...r
         </div>
       )}
     </div>
+  )
+}
+```
+
+### 슬롯
+
+컴포넌트의 템플릿 특정 위치에 다른 컴포넌트나 요소를 삽입할 수 있는 기능을 슬롯(Slot)이라고 합니다.
+`children`이라는 약속된 Prop을 사용해 슬롯을 구현할 수 있습니다.
+
+```jsx --path=/src/components/Button.jsx
+export default function Button({ children, loading = false, ...restProps }) {
+  return (
+    <button 
+      className={loading ? 'loading' : ''} 
+      {...restProps}>
+      {children}
+    </button>
+  )
+}
+```
+
+```jsx --path=/src/App.jsx
+import { useState } from 'react'
+import Button from './components/TextField'
+
+export default function App() {
+  const [loading, setLoading] = useState(false)
+  return (
+    <>
+      <Button>취소</Button>
+      <Button loading={loading}>확인</Button>
+    </>
   )
 }
 ```
@@ -1087,6 +1120,24 @@ export default function Hello({ message = '' }) {
   }  
 }
 .message {
+  font-size: 20px;
+  opacity: .7;
+}
+```
+
+#### 전역 스타일
+
+만약 모듈 안에서 일부 전역 스타일을 적용하고 싶다면, 다음과 같이 `:global` 선택자를 사용할 수 있습니다.
+
+```css --path=/src/components/Hello.module.css
+.title {
+  font-size: 40px;
+  span {
+    font-weight: bold;
+    color: royalblue;
+  } 
+}
+:global .message {
   font-size: 20px;
   opacity: .7;
 }

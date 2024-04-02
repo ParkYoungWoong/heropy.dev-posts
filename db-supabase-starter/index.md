@@ -77,8 +77,7 @@ npx create-next-app@latest supabase-test
     ✔ Would you like to use Tailwind CSS? … No
     ✔ Would you like to use `src/` directory? … No
     ✔ Would you like to use App Router? (recommended) … Yes
-    ✔ Would you like to customize the default import alias (@/*)? … Yes
-    ✔ What import alias would you like configured? … ~/*
+    ✔ Would you like to customize the default import alias (@/*)? … No
 
 cd supabase-test
 npm i -D prisma

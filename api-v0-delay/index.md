@@ -4,7 +4,7 @@ filename: api-v0-delay
 id: 71PGfA
 title: 지연 응답 API
 createdAt: 2024-01-28
-updatedAt: 2024-02-14
+updatedAt: 2024-04-03
 group: HEROPY API
 author:
   - ParkYoungWoong
@@ -21,7 +21,7 @@ description:
 ## 지연 응답(GET)
 
 원하는 시간을 ms(밀리초) 단위로 `t` 파라미터에 작성해 요청하면, 그 시간 후 응답을 받을 수 있습니다.
-지연 시간은 최대 5초(5000ms)까지 지정할 수 있습니다.
+지연 시간은 최대 5초(5000ms)까지 지정할 수 있으며, 기본값은 1초(1000ms)입니다.
 
 ```curl
 curl https://api.heropy.dev/v0/delay?t=DELEY_TIME
@@ -34,7 +34,7 @@ curl https://api.heropy.dev/v0/delay?t=DELEY_TIME
   const res = await fetch('https://api.heropy.dev/v0/delay?t=3000')
   console.timeEnd('시간') // 시간: 3021.283935546875 ms
   const data = await res.json()
-  console.log(data) // 3초 지연된 응답입니다.
+  console.log(data.message) // 3초 지연된 응답입니다.
 })()
 ```
 
@@ -45,18 +45,24 @@ __요청 데이터 타입 및 예시:__
 __응답 데이터 타입 및 예시:__
 
 ```ts --caption=응답 데이터 타입
-type ResponseValue = string
+type ResponseValue = {
+  message: string
+  time: string // ISO 8601
+}
 ```
 
 ```json --caption=응답 데이터 예시
-"3초 지연된 응답입니다."
+{
+  "message": "3초 지연된 응답입니다.",
+  "time": "2024-04-02T15:42:24.083Z"
+}
 ```
 
 ## 지연 응답(POST)
 
 원하는 시간을 ms(밀리초) 단위로 `t` 파라미터에 작성해 요청하면, 그 시간 후 응답을 받을 수 있습니다.
 또한 POST 메소드 요청 본문(body)에 작성한 정보를 그대로 응답합니다.
-지연 시간은 최대 5초(5000ms)까지 지정할 수 있습니다.
+지연 시간은 최대 5초(5000ms)까지 지정할 수 있으며, 기본값은 1초(1000ms)입니다.
 
 ```curl
 curl https://api.heropy.dev/v0/delay?t=DELEY_TIME
@@ -74,8 +80,8 @@ curl https://api.heropy.dev/v0/delay?t=DELEY_TIME
     })
   })
   console.timeEnd('시간') // 시간: 3021.283935546875 ms
-  const { _message, data } = await res.json()
-  console.log(_message, data)
+  const { message, time, data } = await res.json()
+  console.log(message, time, data)
 })()
 ```
 
@@ -96,14 +102,16 @@ __응답 데이터 타입 및 예시:__
 
 ```ts --caption=응답 데이터 타입
 type ResponseValue = {
-  _message: string
+  message: string
+  time: string // ISO 8601
   data: any
 }
 ```
 
 ```json --caption=응답 데이터 예시
 {
-  "_message": "3초 지연된 응답입니다.",
+  "message": "3초 지연된 응답입니다.",
+  "time": "2024-04-02T15:42:24.083Z",
   "data": {
     "name": "HEROPY",
     "age": 85

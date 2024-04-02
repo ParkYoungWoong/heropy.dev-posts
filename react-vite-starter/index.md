@@ -84,7 +84,9 @@ $ npm run dev
 ESLint와 Prettier를 사용하기 위해 VS Code에서 각 확장 프로그램을 설치합니다.
 설치 후에는 VS Code를 재시작하는 것이 좋습니다.
 
-![ESLint](./assets/s2.JPG) ![Prettier - Code formatter](./assets/s3.JPG)
+![ESLint](./assets/s2.JPG) 
+
+![Prettier - Code formatter](./assets/s3.JPG)
 
 ### 패키지 설치 및 구성
 
