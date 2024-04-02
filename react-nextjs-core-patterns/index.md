@@ -3,7 +3,7 @@ id: n7JHmI
 filename: react-nextjs-core-patterns
 image: https://heropy.dev/postAssets/n7JHmI/main.jpg
 title: Next.js 핵심 정리
-createdAt: 2024-04-02
+createdAt: 2024-04-03
 group: React
 author:
   - ParkYoungWoong

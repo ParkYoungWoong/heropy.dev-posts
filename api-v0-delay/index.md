@@ -4,7 +4,7 @@ filename: api-v0-delay
 id: 71PGfA
 title: 지연 응답 API
 createdAt: 2024-01-28
-updatedAt: 2024-04-03
+updatedAt: 2024-04-02
 group: HEROPY API
 author:
   - ParkYoungWoong
