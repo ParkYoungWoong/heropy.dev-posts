@@ -17,7 +17,9 @@ description:
 ## 개요
 
 /// message-box --icon=info
-이 글은 Next.js 14.1.4 버전을 기준으로 작성되었습니다.
+이 글은 Next.js `14.2.0-canary.54` 버전을 기준으로 작성되었습니다.
+Next.js의 최신 버전은 `create-next-app@latest`로, 카나리아 버전은 `create-next-app@canary`로 설치합니다.
+카나리아 버전은 안정화 직전의 최신 라이브 테스트 버전으로, 일부 최신 기능이나 이슈 해결이 포함되어 있습니다.
 ///
 
 ### Next.js란?
@@ -31,7 +33,7 @@ Next.js을 사용하면, [React](https://react.dev/)의 기본 기능을 확장�
 각 질문에 `Yes` 또는 `No`로 답변하며, 여기에서는 TypeScript와 ESLint를 사용하고 Tailwind CSS는 사용하지 않습니다.
 
 ```bash
-npx create-next-app@latest <프로젝트이름>
+npx create-next-app@canary <프로젝트이름>
     ✔ Would you like to use TypeScript? … Yes  # 타입스크립트 사용 여부
     ✔ Would you like to use ESLint? … Yes  # ESLint 사용 여부
     ✔ Would you like to use Tailwind CSS? … No  # Tailwind CSS 사용 여부
@@ -337,9 +339,15 @@ export default function Header() {
 - `false`: 미리 가져오지 않습니다.
 
 ```tsx
-<Link href={someLink}>이동~</Link>
-<Link prefetch={true} href={someLink}>이동~</Link>
-<Link prefetch={false} href={someLink}>이동~</Link>
+export default function Links() {
+  return (
+    <>
+      <Link href={someLink}>이동~</Link>
+      <Link prefetch={true} href={someLink}>이동~</Link>
+      <Link prefetch={false} href={someLink}>이동~</Link>
+    </>
+  )
+}
 ```
 
 /// message-box --icon=info
@@ -490,7 +498,7 @@ http://localhost:3000/delay
 
 /// message-box --icon=warning
 사용자 입력의 유효성 검사나 잘못된 API 요청 등 클라이언트에서 발생하는 에러 상황까지 처리하기 위해, `error.tsx`는 클라이언트 컴포넌트여야 합니다.
-따라서 컴포넌트 상단에 `"use client"` 선언이 필요합니다.
+따라서 컴포넌트 상단에 `'use client'` 선언이 필요합니다.
 ///
 
 ```plaintext --caption=프로젝트 구조
@@ -561,30 +569,30 @@ http://localhost:3000/helloworld
 
 ### 비동기 컴포넌트 스트리밍
 
-다음 예제에서 `async/page.tsx` 파일은 3초 후에 페이지를 출력하는 비동기 컴포넌트이고, `A`와 `B` 컴포넌트 또한 각각 5초와 2초 후에 내용을 출력하는 비동기 컴포넌트입니다.
-그러면 이 페이지로 접근했을 때, `로딩 중...`이라는 메시지는 8초 동안 표시되고 그 후에 `A`와 `B` 컴포넌트가 동시에 출력됩니다.
-`B` 컴포넌트는 2초 만에 출력할 수 있지만, `A` 컴포넌트의 영향으로 5초 후에 같이 출력됩니다.
+다음 예제에서 `async/page.tsx` 파일은 3초 후에 페이지를 출력하는 비동기 컴포넌트이고, `Abc`와 `Xyz` 컴포넌트 또한 각각 5초와 2초 후에 내용을 출력하는 비동기 컴포넌트입니다.
+그러면 이 페이지로 접근했을 때, `로딩 중...`이라는 메시지는 8초 동안 표시되고 그 후에 `Abc`와 `Xyz` 컴포넌트가 동시에 출력됩니다.
+`Xyz` 컴포넌트는 2초 만에 출력할 수 있지만, `Abc` 컴포넌트의 영향으로 5초 후에 같이 출력됩니다.
 
 ```plaintext --caption=프로젝트 구조
 ├─app
 │  ├─async
-│  │  ├─A.tsx
-│  │  ├─B.tsx
+│  │  ├─Abc.tsx
+│  │  ├─Xyz.tsx
 │  │  ├─loading.tsx
 │  │  └─page.tsx
 ```
 
-```tsx --path=/app/async/A.tsx --caption=5초 후에 페이지를 출력하는 컴포넌트 A
+```tsx --path=/app/async/A.tsx --caption=5초 후에 페이지를 출력하는 컴포넌트 Abc
 export default async function A() {
   await new Promise(resolve => setTimeout(resolve, 5000))
-  return <h2>컴포넌트 A</h2>
+  return <h2>Abc 컴포넌트!</h2>
 }
 ```
 
-```tsx --path=/app/async/B.tsx --caption=2초 후에 페이지를 출력하는 컴포넌트 B
+```tsx --path=/app/async/B.tsx --caption=2초 후에 페이지를 출력하는 컴포넌트 Xyz
 export default async function B() {
   await new Promise(resolve => setTimeout(resolve, 2000))
-  return <h2>컴포넌트 B</h2>
+  return <h2>Xyz 컴포넌트!</h2>
 }
 ```
 
@@ -594,16 +602,17 @@ export default function Loading() {
 }
 ```
 
-```tsx --path=/app/async/page.tsx --caption=컴포넌트 A와 B를 출력하는 페이지
-import A from './A'
-import B from './B'
+```tsx --path=/app/async/page.tsx --caption=컴포넌트 Abc와 Xyz를 출력하는 페이지
+import Abc from './Abc'
+import Xyz from './Xyz'
 
-export default async function AsyncPage() {
+export default async function Page() {
   await new Promise(resolve => setTimeout(resolve, 3000))
   return (
     <>
-      <A />
-      <B />
+      <h1>페이지!</h1>
+      <Abc />
+      <Xyz />
     </>
   )
 }
@@ -611,26 +620,326 @@ export default async function AsyncPage() {
 
 `<Suspense>` 컴포넌트를 사용해 비동기 컴포넌트를 스트리밍하면, 각 컴포넌트가 준비되는 대로 출력할 수 있습니다.
 `fallback` Prop을 통해 각 비동기 컴포넌트의 로딩 UI를 출력할 수도 있습니다.
-다음 예제는 `로딩 중...`이라는 메시지가 3초 동안 표시되고 그 후에 `A`와 `B` 컴포넌트가 각각 2초와 5초 후에 따로 출력됩니다.
+다음 예제는 `로딩 중...`이라는 메시지가 3초 동안 표시되고 그 후에 `Abc`와 `Xyz` 컴포넌트가 각각 2초와 5초 후에 따로 출력됩니다.
 
-```tsx --path=/app/async/page.tsx --line-active=1,9-14 --caption=컴포넌트 A와 B를 출력하는 페이지
+```tsx --path=/app/async/page.tsx --line-active=1,9-14 --caption=컴포넌트 Abc와 Xyz를 출력하는 페이지
 import { Suspense } from 'react'
-import A from './A'
-import B from './B'
+import Abc from './Abc'
+import Xyz from './Xyz'
 
-export default async function AsyncPage() {
+export default async function Page() {
   await new Promise(resolve => setTimeout(resolve, 3000))
   return (
     <>
-      <Suspense fallback={<p>A 로딩 중..</p>}>
-        <A />
+      <h1>페이지!</h1>
+      <Suspense fallback={<p>ABC 로딩 중..</p>}>
+        <Abc />
       </Suspense>
-      <Suspense fallback={<p>B 로딩 중..</p>}>
-        <B />
+      <Suspense fallback={<p>XYZ 로딩 중..</p>}>
+        <Xyz />
       </Suspense>
     </>
   )
 }
+```
+
+## 고급 라우팅 패턴
+
+### 경로 그룹
+
+`/app` 폴더 내 기본적인 폴더는 항상 URL 경로로 매핑되지만,
+소괄호(`()`)를 사용해 URL 경로에 영향을 주지 않는 폴더(경로) 그룹을 만들 수 있습니다.
+이 그룹은 특히, 각자의 레이아웃(`layout.tsx`)을 가질 수 있기 때문에, 경로에 맞는 여러 레이아웃 제공을 제공할 수 있습니다.
+
+```plaintext --line-active=2,5,6,14,15 --caption=프로젝트 구조
+├─app
+│  ├─(about)
+│  │  ├─about
+│  │  │  └─page.tsx
+│  │  └─layout.tsx  <== (about) 그룹에서만 동작하는 레이아웃
+│  ├─(movie)
+│  │  ├─movies
+│  │  │  ├─[movieId]
+│  │  │  │  └─page.tsx
+│  │  │  └─page.tsx
+│  │  ├─poster
+│  │  │  └─[movieId]
+│  │  │     └─page.tsx
+│  │  └─layout.tsx  <== (movie) 그룹에서만 동작하는 레이아웃
+│  ├─layout.tsx  <== 루트 레이아웃
+│  └─page.tsx
+```
+
+```tsx --path=/app/(about)/layout.tsx
+export default function Layout({
+  children
+}: {
+  children: React.ReactNode
+}) {
+  return (
+    <>
+      <h1>About Group</h1>
+      {children}
+    </>
+  )
+}
+```
+
+```tsx --path=/app/(movie)/layout.tsx
+export default function Layout({
+  children
+}: {
+  children: React.ReactNode
+}) {
+  return (
+    <>
+      <h1>Movie Group</h1>
+      {children}
+    </>
+  )
+}
+```
+
+### 경로 병렬 처리
+
+`@` 접두사의 폴더는 URL 경로에 영향을 주지 않는 페이지로, 하나의 레이아웃에서 동시에 처리(Parallel Routes)할 수 있습니다.
+이는 '이름을 가진 슬롯' 방식으로, `page.tsx` 컴포넌트가 같은 레벨 `layout.tsx`의 `children` Prop으로 전달되는 것처럼, `@abc/page.tsx` 컴포넌트는 `layout.tsx`의 `abc` Prop으로, `@xyz/page.tsx` 컴포넌트는 `xyz` Prop으로 전달됩니다.
+
+![경로 병렬 처리(Parallel Routes)](./assets/s11.avif)
+
+```plaintext --line-active=3-9 --caption=프로젝트 구조
+├─app
+│  ├─async
+│  │  ├─@abc
+│  │  │  ├─loading.tsx
+│  │  │  └─page.tsx
+│  │  ├─@xyz
+│  │  │  ├─loading.tsx
+│  │  │  └─page.tsx
+│  │  ├─layout.tsx
+│  │  ├─loading.tsx
+│  │  └─page.tsx
+```
+
+```tsx --path=/app/async/@abc/loading.tsx
+export default function Loading() {
+  return <p>ABC 로딩 중..</p>
+}
+```
+
+```tsx --path=/app/async/@abc/page.tsx --caption=layout.abc로 전달되는 페이지
+export default async function Abc() {
+  await new Promise(resolve => setTimeout(resolve, 5000))
+  return <h2>ABC 컴포넌트!</h2>
+}
+```
+
+```tsx --path=/app/async/@xyz/loading.tsx
+export default function Loading() {
+  return <p>XYZ 로딩 중..</p>
+}
+```
+
+```tsx --path=/app/async/@xyz/page.tsx  --caption=layout.xyz로 전달되는 페이지
+export default async function XYZ() {
+  await new Promise(resolve => setTimeout(resolve, 2000))
+  return <h2>XYZ 컴포넌트!</h2>
+}
+```
+
+```tsx --path=/app/async/layout.tsx --line-active=3,4,7,8,13,14
+export default function Layout({
+  children,
+  abc,
+  xyz
+}: {
+  children: React.ReactNode
+  abc: React.ReactNode
+  xyz: React.ReactNode
+}) {
+  return (
+    <>
+      {children}
+      {abc}
+      {xyz}
+    </>
+  )
+}
+```
+
+```tsx --path=/app/async/loading.tsx
+export default function Loading() {
+  return <h2>로딩 중...</h2>
+}
+```
+
+```tsx --path=/app/async/page.tsx --caption=layout.children으로 전달되는 페이지
+export default async function Page() {
+  await new Promise(resolve => setTimeout(resolve, 3000))
+  return <h1>페이지!</h1>
+}
+```
+
+앞서 '비동기 컴포넌트 스트리밍'에서 살펴본 `<Suspense>` 컴포넌트 활용 예제와 비슷하지만,
+경로를 컴포넌트처럼 활용한다는 
+
+```tsx --path=/app/async/page.tsx --caption=컴포넌트 A와 B를 출력하는 페이지
+import { Suspense } from 'react'
+import Abc from './Abc'
+import Xyz from './Xyz'
+
+export default async function Page() {
+  await new Promise(resolve => setTimeout(resolve, 3000))
+  return (
+    <>
+      <h1>페이지!</h1>
+      <Suspense fallback={<p>ABC 로딩 중..</p>}>
+        <Abc />
+      </Suspense>
+      <Suspense fallback={<p>XYZ 로딩 중..</p>}>
+        <Xyz />
+      </Suspense>
+    </>
+  )
+}
+```
+
+### 경로 가로채기
+
+Next.js에서는 경로 가로채기(Intercepting Routes) 기능을 통해 현재 레이아웃에서 다른 URL 경로를 출력할 수 있습니다.
+
+경로 가로채기의 `(..)` 같은 이름 규칙은, 상대 경로(`../`, `./`)와 유사하지만, 폴더가 아닌 세그먼트를 기준으로 합니다.
+예를 들어 '경로 그룹'은 URL에 매핑되지 않으므로, `/app/a/b/(group)/(..)x` 폴더 경로는 `/a/x` URL 경로와 일치합니다.
+
+폴더 경로 | URL 일치 | 설명
+---|---|---
+`/app/a/b/(.)x` | `/a/b/x` | 같은 레벨 세그먼트
+`/app/a/b/(..)x` | `/a/x` | 상위 레벨 세그먼트
+`/app/a/b/(...)x` | `/x` | 루트 레벨 세그먼트
+
+![경로 가로채기(Intercepting Routes)](./assets/s12.avif)
+
+```plaintext --caption=프로젝트 구조
+├─app
+│  ├─a
+│  │  └─b
+│  │     └─c
+│  │        ├─@xWrap
+│  │        │  ├─(...)x
+│  │        │  │  └─page.tsx
+│  │        │  └─page.tsx
+│  │        ├─layout.tsx
+│  │        └─page.tsx
+│  └─x
+│    └─page.tsx
+```
+
+가로챈 경로를 출력하려면, 병렬 처리가 필요합니다.
+`..@xWrap/page.tsx`는 `null`을 반환해 화면에 따로 표시하지 않고, 가로챈 경로의 페이지(`@xWrap/(...)x/page.tsx`)를 출력하는 용도로 사용합니다.
+
+```tsx --path=/app/a/b/c/@xWrap/(...)x/page.tsx
+export default function XPage() {
+  return <h1>X Page 가로챔!</h1>
+}
+```
+
+```tsx --path=/app/a/b/c/@xWrap/page.tsx
+export default function xWrap() {
+  return null
+}
+```
+
+```tsx --path=/app/a/b/c/layout.tsx
+export default function CLayout({
+  children,
+  xWrap
+}: {
+  children: React.ReactNode
+  xWrap: React.ReactNode
+}) {
+  return (
+    <>
+      {children}
+      {xWrap}
+    </>
+  )
+}
+```
+
+```tsx --path=/app/a/b/c/page.tsx
+import Link from 'next/link'
+
+export default function CPage() {
+  return <Link href="/x">가로채기!</Link>
+}
+```
+
+```tsx --path=/app/x/page.tsx
+export default function XPage() {
+  return <h1>X Page</h1>
+}
+```
+
+```plaintext --caption=위 URL로 접근해서, '가로채기!' 링크를 클릭해보세요!
+http://localhost:3000/a/b/c
+```
+
+### API
+
+`/app/api` 폴더 내 구조를 통해 API 엔드포인트를 정의할 수 있고, `'GET'`이나 `'POST'` 등의 여러 HTTP 메소드 요청을 처리할 수 있습니다.
+이 폴더 구조는 `page.tsx` 등의 기본 파일 규칙이 아닌, `route.ts` 파일을 사용합니다.
+
+```plaintext --caption=프로젝트 구조
+├─app
+│  ├─api
+│  │  ├─movies
+│  │  │  └─[movieId]
+│  │  │     └─route.ts
+│  │  └─users
+│  │     └─route.ts
+```
+
+```ts --path=/app/api/movies/[movieId]/route.ts --caption=영화 상세 정보 API
+import type { NextRequest } from 'next/server'
+
+type Context = {
+  params: { movieId: string }
+}
+
+export async function GET(request: NextRequest, context: Context) {
+  const { movieId } = context.params // 동적 경로
+  const res = await fetch(`https://omdbapi.com/?apikey=7035c60c&i=${movieId}`)
+  const data = await res.json()
+  return Response.json(data)
+}
+```
+
+```ts --path=/app/api/users/route.ts --caption=사용자 목록 API
+import { type NextRequest } from 'next/server'
+
+type User = {
+  id: string
+  name: string
+  age: number
+}
+
+const users: User[] = [
+  { id: '1', name: 'Neo', age: 85 },
+  { id: '2', name: 'Evan', age: 57 },
+  { id: '3', name: 'Lewis', age: 22 }
+]
+
+export async function GET(request: NextRequest) {
+  const searchParams = request.nextUrl.searchParams // 쿼리스트링
+  const sort = (searchParams.get('sort') || 'name') as keyof User
+  users.sort((a, b) => (a[sort] > b[sort] ? 1 : -1))
+  return Response.json(users)
+}
+```
+
+```plaintext --caption=위 URL로 접근해보세요!
+http://localhost:3000/api/movies/tt4520988
+http://localhost:3000/api/users?sort=age
 ```
 
 ## 데이터 가져오기 및 캐시
