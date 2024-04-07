@@ -240,7 +240,7 @@ $ npx ts-node main.ts
 ## TypeScript on NodeJS!
 ```
 
-## 타입 기본(Types)
+## 타입
 
 ### 타입 지정
 
@@ -297,7 +297,7 @@ console.log(sum)
 
 ### 타입 선언
 
-#### 불린: Boolean
+#### Boolean
 
 단순한 참(`true`)/거짓(`false`) 값을 나타냅니다.
 
@@ -306,7 +306,7 @@ let isBoolean: boolean
 let isDone: boolean = false
 ```
 
-#### 숫자: Number
+#### Number
 
 모든 부동 소수점 값을 사용할 수 있습니다.
 ES6에 도입된 2진수 및 8진수 리터럴도 지원합니다.
@@ -322,7 +322,7 @@ let infinity: number = Infinity
 let nan: number = NaN
 ```
 
-#### 문자열: String
+#### String
 
 문자열을 나타냅니다.
 작은따옴표(`'`), 큰따옴표(`"`) 뿐만 아니라 ES6의 템플릿 문자열도 지원합니다.
@@ -335,7 +335,7 @@ let myColor: string = `My color is ${red}.`
 let yourColor: string = 'Your color is' + green
 ```
 
-#### 배열: Array
+#### Array
 
 순차적으로 값을 가지는 일반 배열을 나타냅니다.
 배열은 다음과 같이 두 가지 방법으로 타입을 선언할 수 있습니다.
@@ -416,7 +416,7 @@ arrB[0] = 123 // Error - TS2542: Index signature in type 'readonly number[]' onl
 arrB.push(123) // Error - TS2339: Property 'push' does not exist on type 'readonly number[]'.
 ```
 
-#### 튜플: Tuple
+#### Tuple
 
 Tuple 타입은 배열과 매우 유사합니다.
 차이점이라면 <strong>정해진 타입의 고정된 길이(length) 배열</strong>을 표현합니다.
@@ -481,7 +481,7 @@ let a: readonly [string, number] = ['Hello', 123]
 a[0] = 'World' // Error - TS2540: Cannot assign to '0' because it is a read-only property.
 ```
 
-#### 열거형: Enum
+#### Enum
 
 Enum은 숫자 혹은 문자열 값 집합에 이름(Member)을 부여할 수 있는 타입으로, 값의 종류가 일정한 범위로 정해져 있는 경우 유용합니다.
 
@@ -537,7 +537,7 @@ console.log(Color.Red) // red
 console.log(Color['Green']) // green
 ```
 
-#### 모든 타입: Any
+#### Any
 
 Any는 모든 타입을 의미합니다.
 따라서 일반적인 자바스크립트 변수와 동일하게 어떤 타입의 값도 할당할 수 있습니다.
@@ -558,7 +558,7 @@ const list: any[] = [1, true, 'Anything!']
 
 강한 타입 시스템의 장점을 유지하기 위해 Any 사용을 엄격하게 금지하려면, 컴파일 옵션 `"noImplicitAny": true`를 통해 Any 사용 시 에러를 발생시킬 수 있습니다.
 
-#### 알 수 없는 타입: Unknown
+#### Unknown
 
 Any와 같이 최상위 타입인 Unknown은 알 수 없는 타입을 의미합니다.
 Any와 같이 Unknown에는 어떤 타입의 값도 할당할 수 있지만, Unknown을 다른 타입에는 할당할 수 없습니다.
@@ -577,7 +577,7 @@ let v3: any = u // OK!
 let v4: number = u as number // 타입을 단언하면 할당할 수 있습니다.
 ```
 
-#### 객체: Object
+#### Object
 
 기본적으로 `typeof` 연산자가 `"object"`로 반환하는 모든 타입을 나타냅니다.
 
@@ -630,7 +630,7 @@ let userB: IUser = {
 }
 ```
 
-#### Null과 Undefined
+#### Null, Undefined
 
 기본적으로 Null과 Undefined는 모든 타입의 하위 타입으로, 다음과 같이 각 타입에 할당할 수 있습니다.
 심지어 서로의 타입에도 할당 가능합니다.
@@ -695,7 +695,7 @@ const never: [] = []
 never.push(3) // Error - TS2345: Argument of type '3' is not assignable to parameter of type 'never'.
 ```
 
-#### 유니언(Union)
+#### Union
 
 2개 이상의 타입을 허용하는 경우, 이를 유니언(Union)이라고 합니다.
 `|`(vertical bar)를 통해 타입을 구분하며, `()`는 선택 사항입니다.
@@ -707,7 +707,7 @@ union = 123
 union = false // Error - TS2322: Type 'false' is not assignable to type 'string | number'.
 ```
 
-#### 인터섹션(Intersection)
+#### Intersection
 
 
 `&`(ampersand)를 사용해 2개 이상의 타입을 조합하는 경우, 이를 인터섹션(Intersection)이라고 합니다.
@@ -736,7 +736,7 @@ const neo: IUser & IValidation = {
 }
 ```
 
-#### 함수(Function)
+#### Function
 
 함수는 선언과 동시에 타입을 지정할 수 있습니다.
 
@@ -776,9 +776,9 @@ async function getMovie(title: string): Promise<Movie[]> {
 }
 ```
 
-### 타입 추론(Inference)
+### 타입 추론
 
-명시적으로 타입 선언이 되어있지 않은 경우, 타입스크립트는 타입을 추론해 제공합니다!
+명시적으로 타입 선언이 되어있지 않은 경우, 타입스크립트는 타입을 추론(Inference)해 제공합니다!
 개념은 매우 단순하지만, 아주 중요합니다!
 
 > [추론]: 어떠한 판단을 근거로 삼아 다른 판단을 이끌어 냄.
@@ -812,10 +812,10 @@ function add(a: number, b: number = 2): number {
 따라서 이를 활용해 모든 곳에 타입을 명시할 필요는 없으며, 많은 경우 더 좋은 코드 가독성을 제공할 수 있습니다.
 ///
 
-### 타입 단언(Assertions)
+### 타입 단언
 
 타입스크립트가 타입 추론을 통해 판단할 수 있는 타입의 범주를 넘는 경우, 더 이상 추론하지 않도록 지시할 수 있습니다.
-이를 '타입 단언'이라고 하며, 이는 프로그래머가 타입스크립트보다 타입에 대해 더 잘 이해하고 있는 상황을 의미합니다.
+이를 '타입 단언'(Type Assertions)이라고 하며, 이는 프로그래머가 타입스크립트보다 타입에 대해 더 잘 이해하고 있는 상황을 의미합니다.
 
 > [단언]: 주저하지 아니하고 딱 잘라 말함.
 
@@ -904,7 +904,7 @@ document.querySelector('.menu-item').innerHTML
 document.querySelector('.menu-item')!.innerHTML
 ```
 
-### 타입 가드(Guards)
+### 타입 가드
 
 다음 예제와 같이 `val`의 타입을 매번 보장하기 위해 타입 단언을 여러 번 사용하게 되는 경우가 있습니다.
 
@@ -997,7 +997,7 @@ function sounds(ani: Cat | Dog) {
 }
 ```
 
-## 인터페이스(interface)
+## 인터페이스
 
 인터페이스(Interface)는 타입스크립트 여러 객체를 정의하는 일종의 규칙이며 구조입니다.
 다음과 같이 `interface` 키워드와 함께 사용합니다.
@@ -1062,7 +1062,7 @@ let user: IUser = {
 }
 ```
 
-### 읽기 전용 속성(Readonly properties)
+### 읽기 전용 속성
 
 `readonly` 키워드를 사용하면 초기화된 값을 유지해야 하는 <strong>읽기 전용 속성을 정의</strong>할 수 있습니다.
 
@@ -1269,7 +1269,7 @@ const smith = makeSon(Smith, 7) // Error - TS2345: Argument of type 'typeof Smit
 getFullName(smith)
 ```
 
-### 인덱싱 가능 타입(Indexable types)
+### 인덱싱 가능 타입
 
 우리는 인터페이스를 통해 특정 속성(메소드 등)의 타입을 정의할 순 있지만, 수많은 속성을 가지거나 단언할 수 없는 임의의 속성이 포함되는 구조에서는 기존의 방식만으론 한계가 있습니다. 이런 상황에서 유용한 인덱스 시그니처(Index signature)에 대해서 살펴봅시다.
 
@@ -1433,9 +1433,9 @@ const fullName: IFullName = {
 }
 ```
 
-## 타입 별칭(Type Aliases)
+## 타입 별칭
 
-`type` 키워드를 사용해 새로운 타입 조합을 만들 수 있습니다.
+`type` 키워드를 사용해 새로운 타입 조합을 만들 수 있으며, 이를 타입 별칭(Type Alias)이라고 합니다.
 하나 이상의 타입을 조합해 별칭(이름)을 부여하며, 정확히는 조합한 각 타입들을 참조하는 별칭을 만드는 것입니다.
 일반적인 경우 둘 이상의 조합으로 구성하기 위해 유니온을 많이 사용합니다.
 
@@ -1469,9 +1469,9 @@ function someFunc(arg: MyType): YourType {
 }
 ```
 
-## 제네릭(Generic)
+## 제네릭
 
-Generic은 재사용을 목적으로 함수나 클래스의 선언 시점이 아닌, <strong>사용 시점에 타입을 선언</strong>할 수 있는 방법을 제공합니다.
+제네릭(Generic)은 재사용을 목적으로 함수나 클래스의 선언 시점이 아닌, <strong>사용 시점에 타입을 선언</strong>할 수 있는 방법을 제공합니다.
 
 > 타입을 인수로 받아서 사용한다고 이해하면 쉽습니다.
 
@@ -1529,7 +1529,7 @@ toArray('1', '2')
 toArray(1, '2') // Error
 ```
 
-### 제약 조건(Constraints)
+### 제약 조건
 
 인터페이스나 타입 별칭을 사용하는 제네릭을 작성할 수도 있습니다.
 다음 예제는 별도의 제약 조건(Constraints)이 없어서 모든 타입이 허용됩니다.
@@ -1605,7 +1605,7 @@ interface IUser<T extends U> {
 }
 ```
 
-### 조건부 타입(Conditional Types)
+### 조건부 타입
 
 제약 조건과 다르게 '타입 구현' 영역에서 사용하는 `extends`는 삼항 연산자(Conditional ternary operator)를 사용할 수 있습니다.
 이를 조건부 타입(Conditional Types)이라고 하며 다음과 같은 문법을 가집니다.
@@ -1868,7 +1868,7 @@ function someFn(this: ICat, greeting: string) {
 someFn.call(cat, 'Hello') // Hello Lucy
 ```
 
-### 오버로드(Overloads)
+### 오버로드
 
 타입스크립트의 '함수 오버로드(Overloads)'는 이름은 같지만 매개변수 타입과 반환 타입이 다른 여러 함수를 가질 수 있는 것을 말합니다.
 함수 오버로드를 통해 다양한 구조의 함수를 생성하고 관리할 수 있습니다.
@@ -1963,9 +1963,9 @@ cat = new Cat('Lucy')
 console.log(cat.getName()) // Cat name is Lucy.
 ```
 
-### 클래스 수식어(Modifiers)
+### 클래스 수식어
 
-타입스크립트와 관련된 클래스 수식어들을 살펴봅시다.
+타입스크립트와 관련된 클래스 수식어(Modifiers)들을 살펴봅시다.
 
 클래스 멤버(속성, 메소드)에서 사용할 수 있는 접근 제어자(Access Modifiers)들이 있습니다.
 각 접근 제어자들의 차이점을 이해해 봅시다.
@@ -2146,7 +2146,7 @@ class Cat {
 }
 ```
 
-### 추상(Abstract) 클래스
+### 추상 클래스
 
 추상(Abstract) 클래스는 다른 클래스가 파생될 수 있는 기본 클래스로, 인터페이스와 굉장히 유사합니다.
 `abstract`는 클래스뿐만 아니라 속성과 메소드에도 사용할 수 있습니다.
@@ -2201,7 +2201,7 @@ abstract class Animal {
 
 `?` 키워드를 사용하는 여러 선택적(Optional) 개념에 대해서 살펴봅시다.
 
-### 매개 변수(Parameters)
+### 매개 변수
 
 우선, 타입을 선언할 때 선택적 매개 변수(Optional Parameter)를 지정할 수 있습니다.
 다음 예제를 보면 `?` 키워드를 사용해 `y`를 선택적 매개 변수로 지정했습니다.
@@ -2226,7 +2226,7 @@ const sum = add(2, undefined)
 console.log(sum)
 ```
 
-### 속성과 매소드(Properties and Methods)
+### 속성과 매소드
 
 `?` 키워드를 속성(Properties)과 메소드(Methods) 타입 선언에도 사용할 수 있습니다.
 다음은 인터페이스 파트에서 살펴봤던 예제입니다.
@@ -2279,7 +2279,7 @@ abstract class CUser {
 타입스크립트의 모듈을 이해하기 위해선 자바스크립트 모듈에 대한 이해가 선행되어야 합니다.
 타입스크립트 공식 문서의 많은 부분이 이 자바스크립트 모듈에 대한 설명을 포함하고 있는데, 여기서는 타입스크립트가 가지는 모듈 개념의 차이점에 대해서만 살펴보려고 합니다.
 
-### 내보내기(export)와 가져오기(import)
+### 내보내기와 가져오기
 
 자바스크립트 모듈의 내보내기(export)와 가져오기(import)에 대해 이해가 부족하다면 다음 MDN 문서를 우선 참고하시길 바랍니다.
 https://developer.mozilla.org/ko/docs/Web/JavaScript/Reference/Statements/export
@@ -2327,7 +2327,7 @@ import * as ABC from 'abc'
 import ABC from 'abc'
 ```
 
-### 모듈의 타입 선언(Ambient module declaration)
+### 모듈의 타입 선언
 
 타입스크립트의 외부 자바스크립트 모듈 사용에 대해서 알아봅시다.
 간단한 프로젝트를 생성하고 외부 모듈로 [Lodash](https://lodash.com/)를 설치해 사용해 보겠습니다.
@@ -2340,7 +2340,7 @@ $ npm install lodash
 
 `main.ts`에서 Lodash 모듈의 `camelCase` API를 사용해 콘솔 출력하는 아주 단순한 코드를 작성합니다.
 하지만 다음과 같이 '가져오기(import)' 단계에서 에러가 발생합니다.
-이는 타입스크립트 컴파일러가 확인할 수 있는 모듈의 타입 선언(Ambient module declaration)이 없기 때문입니다.
+이는 타입스크립트 컴파일러가 확인할 수 있는 모듈의 타입 선언이 없기 때문입니다.
 
 ```ts
 // main.ts
@@ -2928,13 +2928,3 @@ neo.getName() // Neo
 함수 `makeNeo`의 인수로 사용되는 메소드 `getName`은 내부에서 `this.name`을 사용하고 있기 때문에 `ThisType`을 통해 명시적으로 `this` 컨텍스트를 설정해 줍니다.
 단, `ThisType`은 별도의 타입을 반환하지 않기 때문에 `makeNeo` 반환 값(`{ name: 'Neo', ...methods }`)에 대한 타입이 정상적으로 추론(Inference)되지 않습니다.
 따라서 `as IUser`와 같이 따로 타입을 단언(Assertions)해야 `neo.getName`을 정상적으로 호출할 수 있습니다.
-
-## 참고 자료(References)
-
-https://www.typescriptlang.org/docs/home.html
-https://www.tutorialsteacher.com/typescript
-https://hyunseob.github.io/2017/12/12/typescript-type-inteference-and-type-assertion/
-https://jsdev.kr/t/typescript-interface/3168
-[https://github.com/microsoft/TypeScript/wiki/'this'-in-TypeScript](https://github.com/microsoft/TypeScript/wiki/'this'-in-TypeScript)
-https://github.com/Microsoft/TypeScript-Handbook/issues/180
-https://medium.com/naver-fe-platform/%ED%83%80%EC%9E%85%EC%8A%A4%ED%81%AC%EB%A6%BD%ED%8A%B8-%EC%BB%B4%ED%8C%8C%EC%9D%BC%EB%9F%AC%EA%B0%80-%EB%AA%A8%EB%93%88-%ED%83%80%EC%9E%85-%EC%84%A0%EC%96%B8%EC%9D%84-%EC%B0%B8%EC%A1%B0%ED%95%98%EB%8A%94-%EA%B3%BC%EC%A0%95-5bfc55a88bb6
