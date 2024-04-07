@@ -133,6 +133,19 @@ ESLint 구성을 다음과 같이 수정합니다.
 }
 ```
 
+```json --path=/.vscode/settings.json --caption=Module S?CSS를 사용하는 경우.
+{
+  "[css]": {
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[scss]": {
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  }
+}
+```
+
 ### Server vs Client
 
 Next.js에서는 서버 컴포넌트(Server Component)와 클라이언트 컴포넌트(Client Component)를 구분해 코드 일부가 서버 혹은 클라이언트에서 출력될 수 있도록 만들 수 있습니다.
@@ -915,7 +928,7 @@ export async function GET(request: NextRequest, context: Context) {
 ```
 
 ```ts --path=/app/api/users/route.ts --caption=사용자 목록 API
-import { type NextRequest } from 'next/server'
+import type { NextRequest } from 'next/server'
 
 type User = {
   id: string
