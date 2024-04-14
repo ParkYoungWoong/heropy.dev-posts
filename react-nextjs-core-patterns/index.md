@@ -4,6 +4,7 @@ filename: react-nextjs-core-patterns
 image: https://heropy.dev/postAssets/n7JHmI/main.jpg
 title: Next.js 핵심 정리
 createdAt: 2024-04-03
+updatedAt: 2024-04-14
 group: React
 author:
   - ParkYoungWoong
@@ -17,7 +18,7 @@ description:
 ## 개요
 
 /// message-box --icon=info
-이 글은 Next.js `14.2.0-canary.54` 버전을 기준으로 작성되었습니다.
+이 글은 Next.js `14.2.1` 버전을 기준으로 작성되었습니다.
 Next.js의 최신 버전은 `create-next-app@latest`로, 카나리아 버전은 `create-next-app@canary`로 설치합니다.
 카나리아 버전은 안정화 직전의 최신 라이브 테스트 버전으로, 일부 최신 기능이나 이슈 해결이 포함되어 있습니다.
 ///
@@ -33,7 +34,7 @@ Next.js을 사용하면, [React](https://react.dev/)의 기본 기능을 확장�
 각 질문에 `Yes` 또는 `No`로 답변하며, 여기에서는 TypeScript와 ESLint를 사용하고 Tailwind CSS는 사용하지 않습니다.
 
 ```bash
-npx create-next-app@canary <프로젝트이름>
+npx create-next-app@latest <프로젝트이름>
     ✔ Would you like to use TypeScript? … Yes  # 타입스크립트 사용 여부
     ✔ Would you like to use ESLint? … Yes  # ESLint 사용 여부
     ✔ Would you like to use Tailwind CSS? … No  # Tailwind CSS 사용 여부
@@ -44,7 +45,7 @@ npx create-next-app@canary <프로젝트이름>
 
 /// message-box --icon=info
 'App Router'는 Next.js 13버전부터 사용할 수 있게 된 방식으로, 보다 복잡한 라우팅 요구사항과 애플리케이션 상태 관리를 위해 설계되었습니다.
-일부 장단점이 있지만, 대부분의 경우 Pages Router 보다 최신의 App Router를 사용하는 것을 추천합니다.
+일부 장단점이 있지만, 대부분의 경우 Pages Router 보다 최신의 App Router를 사용하는 것을 추천합니다!
 ///
 
 ### SCSS
@@ -474,6 +475,20 @@ http://localhost:3000/movies/tt4154796
 http://localhost:3000/movies/tt1630029
 ```
 
+앞서 살펴본 것처럼 `[이름]` 폴더로 단순한 동적 경로 일치도 가능하고, 다음 예시와 같이 모든 하위 경로의 동적 일치(`[...이름]`)나 선택적 동적 일치(`[[...이름]]`) 패턴도 사용할 수 있습니다.
+
+폴더 구조 예시 | URL 예시 | `params` 값
+--- | --- | ---
+`app/movies/[hello]/page.tsx` | `/movies/foo` | `{ hello: 'foo' }`
+`app/movies/[hello]/page.tsx` | `/movies/bar` | `{ hello: 'bar' }`
+`app/movies/[hello]/[world]/page.tsx` | `/movies/foo/bar` | `{ hello: 'foo', world: 'bar' }`
+`app/movies/[...hello]/page.tsx` | `/movies/foo` | `{ hello: ['foo'] }`
+`app/movies/[...hello]/page.tsx` | `/movies/foo/bar` | `{ hello: ['foo', 'bar'] }`
+`app/movies/[...hello]/page.tsx` | `/movies/foo/bar/baz` | `{ hello: ['foo', 'bar', baz] }`
+`app/movies/[[...hello]]/page.tsx` | `/movies` | `{}`
+`app/movies/[[...hello]]/page.tsx` | `/movies/foo` | `{ hello: ['foo'] }`
+`app/movies/[[...hello]]/page.tsx` | `/movies/foo/bar` | `{ hello: ['foo', 'bar'] }`
+
 ### 로딩
 
 페이지 출력을 준비하는 동안, 먼저 로딩 상태를 표시할 수 있습니다.
@@ -895,6 +910,58 @@ export default function XPage() {
 
 ```plaintext --caption=위 URL로 접근해서, '가로채기!' 링크를 클릭해보세요!
 http://localhost:3000/a/b/c
+```
+
+### 미들웨어
+
+루트 경로에 생성하는 단일 `/middleware.ts` 파일을 통해, 특정 경로로 이동하기 전에 서버 측에서 실행되는 코드를 제공할 수 있습니다.
+주로 인증 및 권한 확인이 필요한 페이지를 구분하는 데 사용되며, 응답 헤더 및 쿠키 설정, Redirect, Rewrite 등의 작업도 가능합니다.
+그리고 미들웨어는 호출이 끝나야 경로 접근이 가능하기 때문에, 너무 복잡하거나 오래 걸리는 작업은 피해야 합니다.
+
+```ts --path=/middleware.ts --caption=미들웨어 기본 구조
+import { NextResponse } from 'next/server'
+import type { NextRequest } from 'next/server'
+
+export async function middleware(request: NextRequest) {
+  // console.log('Middleware!')
+  return NextResponse.next()
+}
+```
+
+```ts --path=/middleware.ts --caption=미들웨어 예시
+import { auth } from '@/auth'
+import { NextResponse } from 'next/server'
+import type { NextRequest } from 'next/server'
+
+export async function middleware(request: NextRequest) {
+  if (
+    // 로그인이 필요한 페이지 확인
+    isMatch(request.nextUrl.pathname, [
+      '/dashboard',
+      '/myaccount',
+      '/settings',
+      '...'
+    ])
+  ) {
+    const session = await auth()
+    if (session) {
+      return NextResponse.next()
+    }
+    return NextResponse.redirect(new URL('/signin', request.url))
+  }
+  return NextResponse.next()
+}
+
+// 일치하는 경로에서만 미들웨어가 호출됩니다.
+// 내보내기를 생략하면, 모든 경로에서 미들웨어가 호출됩니다.
+export const config = {
+  matcher: ['/:path*'] // 명시적 모든 경로 일치
+  // matcher: ['/dashboard/:path*', '/myaccount/:path*', '/settings/:path*'] // 특정 경로만 일치
+}
+
+function isMatch(pathname: string, matchers: string[]) {
+  return matchers.some(matcher => pathname.startsWith(matcher))
+}
 ```
 
 ### API

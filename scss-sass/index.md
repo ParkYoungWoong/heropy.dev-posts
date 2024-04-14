@@ -4,6 +4,7 @@ filename: scss-sass
 image: https://heropy.dev/postAssets/Y7OrPe/main.jpg
 title: SCSS/Sass 완벽 가이드
 createdAt: 2018-01-31
+updatedAt: 2024-04-07
 group: CSS
 author:
   - ParkYoungWoong
