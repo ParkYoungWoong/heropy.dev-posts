@@ -4,7 +4,7 @@ filename: react-nextjs-core-patterns
 image: https://heropy.dev/postAssets/n7JHmI/main.jpg
 title: Next.js 핵심 정리
 createdAt: 2024-04-03
-updatedAt: 2024-04-14
+updatedAt: 2024-04-19
 group: React
 author:
   - ParkYoungWoong
@@ -48,7 +48,7 @@ npx create-next-app@latest <프로젝트이름>
 일부 장단점이 있지만, 대부분의 경우 Pages Router 보다 최신의 App Router를 사용하는 것을 추천합니다!
 ///
 
-### SCSS
+#### SCSS
 
 Next.js에서 SCSS를 사용하기 위해 다음 패키지를 설치합니다.
 설치 후 바로 `*.scss` 파일을 사용할 수 있습니다.
@@ -57,7 +57,7 @@ Next.js에서 SCSS를 사용하기 위해 다음 패키지를 설치합니다.
 npm i -D sass
 ```
 
-### Prettier
+#### Prettier
 
 다음 VS Code 확장 프로그램이 설치되어 있어야 합니다.
 
@@ -96,7 +96,7 @@ ESLint 구성을 다음과 같이 수정합니다.
 }
 ```
 
-#### 자동 포맷팅 설정
+##### 자동 포맷팅 설정
 
 프로젝트의 루트 경로에 `.vscode/settings.json` 폴더와 파일을 생성해 다음과 같이 내용을 추가할 수 있습니다.
 
@@ -847,6 +847,51 @@ Next.js에서는 경로 가로채기(Intercepting Routes) 기능을 통해 현�
 
 ![경로 가로채기(Intercepting Routes)](./assets/s12.avif)
 
+/// message-box --icon=warning
+만약 경로 가로채기 작업이 개발 서버에서 적용되지 않는 경우, `.next` 폴더 삭제 후 개발 서버를 재시작하는 것을 추천합니다.
+///
+
+```plaintext --caption=프로젝트 구조
+├─app
+│  ├─a
+│  │  └─b
+│  │     └─c
+│  │        ├─(...)x
+│  │        │  └─page.tsx
+│  │        └─page.tsx
+│  └─x
+│    └─page.tsx
+```
+
+```tsx --path=/app/a/b/c/(...)x/page.tsx
+export default function XPage() {
+  return <h1>Intercepted X Page!!</h1>
+}
+```
+
+```tsx --path=/app/a/b/c/page.tsx
+import Link from 'next/link'
+
+export default function CPage() {
+  return (
+    <>
+      <h1>C Page</h1>
+      <Link href="/x">가로채기!</Link>
+    </>
+  )
+}
+```
+
+```tsx --path=/app/x/page.tsx
+export default function XPage() {
+  return <h1>X Page..</h1>
+}
+```
+
+```plaintext --caption=위 URL로 접근해서, '가로채기!' 링크를 클릭해보세요!
+http://localhost:3000/a/b/c
+```
+
 ```plaintext --caption=프로젝트 구조
 ├─app
 │  ├─a
@@ -862,14 +907,7 @@ Next.js에서는 경로 가로채기(Intercepting Routes) 기능을 통해 현�
 │    └─page.tsx
 ```
 
-가로챈 경로를 출력하려면, 병렬 처리가 필요합니다.
 `..@xWrap/page.tsx`는 `null`을 반환해 화면에 따로 표시하지 않고, 가로챈 경로의 페이지(`@xWrap/(...)x/page.tsx`)를 출력하는 용도로 사용합니다.
-
-```tsx --path=/app/a/b/c/@xWrap/(...)x/page.tsx
-export default function XPage() {
-  return <h1>X Page 가로챔!</h1>
-}
-```
 
 ```tsx --path=/app/a/b/c/@xWrap/page.tsx
 export default function xWrap() {
@@ -892,24 +930,6 @@ export default function CLayout({
     </>
   )
 }
-```
-
-```tsx --path=/app/a/b/c/page.tsx
-import Link from 'next/link'
-
-export default function CPage() {
-  return <Link href="/x">가로채기!</Link>
-}
-```
-
-```tsx --path=/app/x/page.tsx
-export default function XPage() {
-  return <h1>X Page</h1>
-}
-```
-
-```plaintext --caption=위 URL로 접근해서, '가로채기!' 링크를 클릭해보세요!
-http://localhost:3000/a/b/c
 ```
 
 ### 미들웨어
@@ -935,12 +955,11 @@ import type { NextRequest } from 'next/server'
 
 export async function middleware(request: NextRequest) {
   if (
-    // 로그인이 필요한 페이지 확인
+    // 로그인(인증)이 필요한 페이지 확인
     isMatch(request.nextUrl.pathname, [
       '/dashboard',
       '/myaccount',
-      '/settings',
-      '...'
+      '/settings'
     ])
   ) {
     const session = await auth()
@@ -953,14 +972,42 @@ export async function middleware(request: NextRequest) {
 }
 
 // 일치하는 경로에서만 미들웨어가 호출됩니다.
-// 내보내기를 생략하면, 모든 경로에서 미들웨어가 호출됩니다.
+// `config` 내보내기를 생략하면, 모든 경로에서 미들웨어가 호출됩니다.
 export const config = {
-  matcher: ['/:path*'] // 명시적 모든 경로 일치
-  // matcher: ['/dashboard/:path*', '/myaccount/:path*', '/settings/:path*'] // 특정 경로만 일치
+  matcher: ['/dashboard/:path*', '/myaccount/:path*', '/settings/:path*'] // 특정 경로만 일치
+  // matcher: ['/:path*'] // 명시적 모든 경로 일치
 }
 
 function isMatch(pathname: string, matchers: string[]) {
   return matchers.some(matcher => pathname.startsWith(matcher))
+}
+```
+
+만약 더 복잡한 경로 매칭을 원한다면, `path-to-regexp` 라이브러리를 사용할 수 있습니다.
+
+```bash
+npm i path-to-regexp
+```
+
+```ts --path=/middleware.ts --line-active=7-9,17-19
+// ...
+import { match } from 'path-to-regexp'
+
+export async function middleware(request: NextRequest) {
+  if (
+    isMatch(request.nextUrl.pathname, [
+      '/dashboard/:path*',
+      '/myaccount/:path+',
+      '/settings/user/:userId'
+    ])
+  ) {
+    // ...
+  }
+  return NextResponse.next()
+}
+
+function isMatch(pathname: string, urls: string[]) {
+  return urls.some(url => !!match(url)(pathname))
 }
 ```
 
@@ -1106,6 +1153,107 @@ http://localhost:3000/delay?revalidate=true
 http://localhost:3000/delay
 ```
 
+### 서버 액션
+
+Next.js는 서버에서만 실행되는 함수(Server Actions)를 작성할 수 있습니다.
+다음과 같이, 모듈 상단에 `'use server'` 지시어를 추가하고 서버 액션를 작성합니다.
+
+```ts --path=/serverActions/index.ts --line-active=1
+'use server'
+
+export async function wait(duration = 1000): Promise<{ message: string }> {
+  console.log(`Run 'wait' function`)
+  return new Promise(resolve =>
+    setTimeout(() => resolve({ message: `Waited for ${duration}ms` }), duration)
+  )
+}
+```
+
+다음과 같이, 서버 컴포넌트에서 서버 액션(함수)를 가져와 사용할 수 있습니다.
+`Run 'wait' function` 메시지는 서버 콘솔에만 출력됩니다.
+
+```tsx --path=/app/server/page.tsx --line-active=1,4
+import { wait } from '@/serverActions'
+
+export default async function ServerPage() {
+  const { message } = await wait(3000)
+  return <h1>{message}</h1>
+}
+```
+
+```tsx --path=/app/server/loading.tsx
+export default function ServerLoading() {
+  return <h1>Loading...</h1>
+}
+```
+
+다음과 같이, 클라이언트 컴포넌트에서도 서버 액션를 가져와 사용할 수 있습니다.
+역시, `Run 'wait' function` 메시지는 서버 콘솔에만 출력됩니다.
+
+```tsx --path=/app/client/page.tsx --line-active=1,2,9
+'use client'
+import { wait } from '@/serverActions'
+import { useState, useEffect } from 'react'
+
+export default function ClientPage() {
+  const [message, setMessage] = useState('')
+  const [loading, setLoading] = useState(true)
+  useEffect(() => {
+    wait(3000).then(({ message }) => {
+      setMessage(message)
+      setLoading(false)
+    })
+  }, [])
+  return <h1>{loading ? 'Loading...' : message}</h1>
+}
+```
+
+특히, 서버 액션은 `<form>` 요소의 `action` 속성으로 호출하는 것이 가능해, 양식(Forms) 작업에서 유용합니다.
+
+```tsx --path=/app/signin --line-active=7
+import { signIn } from '@/serverActions'
+
+export default function Page() {
+  return (
+    <>
+      <h1>로그인</h1>
+      <form action={signIn}>
+        <label>
+          Email
+          <input
+            name="email"
+            type="email"
+          />
+        </label>
+        <label>
+          Password
+          <input
+            name="password"
+            type="password"
+          />
+        </label>
+        <button type="submit">SIGN IN!</button>
+      </form>
+    </>
+  )
+}
+```
+
+```ts --path=/serverActions/index.ts
+'use server'
+import { redirect } from 'next/navigation'
+
+export async function signIn(formData: FormData) {
+  const email = formData.get('email')
+  const password = formData.get('password')
+  console.log(email, password)
+  
+  // ...
+
+  redirect('/') // 로그인 성공 시, 메인 페이지로 이동!
+}
+```
+
 ## 최적화
 
 Next.js에는 애플리케이션 속도나 웹 바이탈을 향상시킬 수 있는 여러 최적화 기능이 내장되어 있습니다.
@@ -1228,6 +1376,26 @@ body {
 }
 h1, h2, h3 {
   font-family: var(--font-oswald);
+}
+```
+
+#### Pretendard
+
+[Pretendard](https://github.com/orioncactus/pretendard) 웹 폰트를 사용하는 경우, 다음과 같이 구성할 수 있습니다.
+
+```bash
+npm i pretendard
+```
+
+```ts --path=/app/layout.tsx
+import 'pretendard/dist/web/variable/pretendardvariable-dynamic-subset.css'
+import '@/styles/global.scss'
+// ...
+```
+
+```scss --path=/styles/global.scss
+body {
+  font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
 }
 ```
 
@@ -1407,7 +1575,8 @@ function fetchMovie(id: string, plot?: 'short' | 'full'): DetailedMovie {
 
 ## 배포
 
-Next.js 프로젝트는, [Vercel](https://vercel.com/) 서비스를 사용해 배포하는 것이 가장 효율적이며 추천되는 방법입니다.
+Next.js 프로젝트는 AWS, GCP, Azure 등의 다른 클라우드 서비스로도 배포할 수 있지만,
+Next.js는 [Vercel](https://vercel.com/) 팀에서 개발/관리하는 프레임워크이니, Vercel 서비스로 배포하는 것이 가장 효율적이며 추천되는 방법입니다.
 
 우선 프로젝트를 원격 저장소(GitHub)에 업로드하고 Vercel에 로그인한 후 프로젝트를 추가합니다.
 

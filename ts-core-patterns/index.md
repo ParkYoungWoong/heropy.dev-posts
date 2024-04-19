@@ -4,7 +4,7 @@ filename: ts-core-patterns
 image: https://heropy.dev/postAssets/WhqSC8/main.jpg
 title: 한눈에 보는 타입스크립트
 createdAt: 2023-11-30
-updatedAt: 2024-04-07
+updatedAt: 2024-04-19
 group: TS
 author:
   - ParkYoungWoong
@@ -2273,6 +2273,94 @@ abstract class CUser {
   abstract validate?(): boolean
 }
 ```
+
+## Satisfies
+
+타입스크립트에서는 객체의 타입을 만족하는지 확인하는 `satisfies` 키워드를 제공합니다.
+`name`과 `age` 속성이 필수인 `User` 인터페이스를 기준으로 몇 가지 예제를 살펴봅시다.
+
+```ts
+interface User {
+  name: string
+  age: number
+}
+```
+
+다음 예제에서, `userA`에 할당하는 객체는 `User` 타입과 일치하지 않지만, 타입 단언으로 에러가 발생하지 않습니다.
+`userB`는 선언을 통해 `User` 타입이어야 하므로, `User` 타입과 일치하지 않는 객체는 할당할 수 없어 에러가 발생합니다.
+`userC`에 할당하는 객체는 `satisfies` 키워드로 `User` 타입을 만족하는지 확인하며, 만족하지 않기 때문에 에러가 발생합니다.
+결국, 타입 단언은 개발자의 실수로 안전하지 않을 수 있고, 타입을 직접 선언하는 것이 가장 안전하며, `satisfies` 키워드는 타입 만족만 확인하니 그다지 유용해 보이지 않습니다.
+
+```ts --line-error=7,14
+// Pass.. 안전하지 않은 타입 '단언'..
+const userA = { 
+  name: 'Neo' 
+} as User
+
+// Error! 안전한 타입 '선언'!
+const userB: User = {
+  name: 'Neo' 
+}
+
+// Error! 안전한 타입 '만족'!
+const userC = { 
+  name: 'Neo' 
+} satisfies User
+```
+
+다음 예제에서, `userD`의 `info` 속성에 할당하는 객체는 `User` 타입과 일치하지 않지만, 타입 단언으로 에러가 발생하지 않습니다.
+`userE`는 `info` 속성이 `User` 타입이길 원하지만, 문법적으로 객체 속성에 직접 타입을 선언할 수는 없습니다.
+`userF`는 `info` 속성에 할당하는 객체가 `satisfies` 키워드로 `User` 타입을 만족하는지 확인하며, 만족하지 않기 때문에 에러가 발생합니다.
+결국, `satisfies` 키워드는 객체 내부 타입을 만족하는지 확인할 수 있기에 유용합니다.
+
+```ts --line-error=26,27
+// Pass.. 안전하지 않은 내부 객체 타입 '단언'..
+const userD = { 
+  info: { 
+    name: 'Neo', 
+    age: 85,
+    isValid: true
+  } as User, 
+  photo: null 
+}
+
+// Pass.. 문법적으로 '선언'할 수 없는 내부 객체 타입..
+const userE = { 
+  info: { 
+    name: 'Neo', 
+    age: 85, 
+    isValid: true 
+  }, 
+  photo: null 
+}
+
+// Error! 안전한 내부 객체 타입 '만족'!
+const userF = { 
+  info: { 
+    name: 'Neo', 
+    age: 85, 
+    isValid: true 
+  } satisfies User,
+  photo: null 
+}
+```
+
+주의할 점은 `satisfies` 키워드는 대상의 타입 만족을 확안할 뿐, 타입 지정하는 것은 아니기에 다음과 같이 사용할 수 있습니다.
+`satisfies`는 타입 만족을 확인하며, `as`는 타입을 지정(단언)하는 역할을 합니다.
+
+```ts --line-error=6,7
+// Error! 안전한 내부 객체 타입 '만족'! 후 '단언'
+const userF = { 
+  info: { 
+    name: 'Neo', 
+    age: 85, 
+    isValid: true 
+  } satisfies User as User,
+  photo: null 
+}
+```
+
+
 
 ## 모듈
 
