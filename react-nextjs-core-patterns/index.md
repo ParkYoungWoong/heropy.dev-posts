@@ -1016,6 +1016,7 @@ function isMatch(pathname: string, urls: string[]) {
 `/app/api` 폴더 내 구조를 통해 API 엔드포인트를 정의할 수 있고, `'GET'`이나 `'POST'` 등의 여러 HTTP 메소드 요청을 처리할 수 있습니다.
 이 폴더 구조는 `page.tsx` 등의 기본 파일 규칙이 아닌, `route.ts` 파일을 사용합니다.
 
+
 ```plaintext --caption=프로젝트 구조
 ├─app
 │  ├─api
@@ -1044,24 +1045,34 @@ export async function GET(request: NextRequest, context: Context) {
 ```ts --path=/app/api/users/route.ts --caption=사용자 목록 API
 import type { NextRequest } from 'next/server'
 
-type User = {
+interface ResponseValue {
+  total: number
+  users: User[]
+}
+interface User {
   id: string
   name: string
   age: number
+  isValid: boolean
+  // ...
 }
 
-const users: User[] = [
-  { id: '1', name: 'Neo', age: 85 },
-  { id: '2', name: 'Evan', age: 57 },
-  { id: '3', name: 'Lewis', age: 22 }
-]
-
-export async function GET(request: NextRequest) {
+export async function POST(request: NextRequest) {
+  // const body = await request.json() // 요청 바디
   const searchParams = request.nextUrl.searchParams // 쿼리스트링
   const sort = (searchParams.get('sort') || 'name') as keyof User
-  users.sort((a, b) => (a[sort] > b[sort] ? 1 : -1))
+
+  // API: https://www.heropy.dev/p/5PlGxB
+  const res = await fetch('https://api.heropy.dev/v0/users')
+  const { users } = (await res.json()) as ResponseValue
+  users.sort((a, b) => {
+    const av = a[sort] || 0
+    const bv = b[sort] || 0
+    return av > bv ? 1 : -1
+  })
   return Response.json(users)
 }
+
 ```
 
 ```plaintext --caption=위 URL로 접근해보세요!
