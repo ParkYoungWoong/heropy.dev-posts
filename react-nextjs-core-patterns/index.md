@@ -1085,6 +1085,8 @@ http://localhost:3000/api/users?sort=age
 Next.js 프로젝트에서 회원가입이나 로그인 등의 사용자 인증 및 세션 관리를 위해 `next-auth` 라이브러리를 사용할 수 있습니다.
 인증과 관련된 자세한 내용은 [Auth.js(NextAuth.js) 핵심 정리](/p/MI1Khc)를 참고하세요.
 
+![Auth.js(NextAuth.js)](./assets/s13.JPG)
+
 ## 데이터 가져오기 및 캐시
 
 Next.js는 기본 `fetch` Web API를 확장해서, 서버에서 사용 가능하며 다양한 요청을 캐싱하거나 재검증하는 등의 추가 동작을 사용할 수 있습니다.
@@ -1588,6 +1590,23 @@ function fetchMovie(id: string, plot?: 'short' | 'full'): DetailedMovie {
 
 // 생략..
 ```
+
+만약 환경변수를 자동완성하려면, 다음과 같이 타이핑합니다.
+
+```ts --path=/types/env.d.ts
+export declare global {
+  namespace NodeJS {
+    interface ProcessEnv {
+      OMDB_API_KEY_KEY: string
+      NEXT_PUBLIC_BASE_URL: string
+      NEXT_PUBLIC_SITE_NAME: string
+    }
+  }
+}
+```
+
+![환경변수 자동완성](./assets/s14.JPG)
+
 
 ## 배포
 
