@@ -293,7 +293,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
 `<Header>` 컴포넌트는 다음과 같이 작성합니다.
 `auth` 비동기 함수(서버 액션)의 반환값은 사용자 세션 정보입니다.
-회원가입 및 로그인 후 이전 페이지로 리다이렉션하기 위해, 현재 페이지 URL을 `referer` 헤더로 가져와 사용합니다.
 로그아웃 후 `<Header>` 컴포넌트가 갱신되어야 하므로, `<form>` 요소에 `signOutWithForm` 서버 액션을 연결합니다.
 
 ```tsx --path=/components/Header.tsx
