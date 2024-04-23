@@ -93,9 +93,9 @@ description:
 `git show <브랜치>` | 특정 브랜치의 최신 버전 확인 | `git show dev`
 `git show <해시>` | 특정 버전 확인 | `git show 1a2b3c4d`
 `git blame <파일>` | 특정 파일의 작업자 확인 | `git blame ./src/main.js`
-`git blame -L <시작>,<종료> <파일>` | 시작부터 종료 줄까지 작업자 확인 | `git blame -L 10,20 ./src/main.js`
-`git blame -L <시작> <파일>` | 시작부터 마지막 줄까지 작업자 확인 | `git blame -L 10 ./src/main.js`
-`git blame -L ,<종료> <파일>` | 처음부터 종료 줄까지 작업자 확인 | `git blame -L ,20 ./src/main.js`
+`git blame -L <시작>,<종료> <파일>` | 특정 파일의 시작부터 종료 줄까지 작업자 확인 | `git blame -L 10,20 ./src/main.js`
+`git blame -L <시작> <파일>` | 특정 파일의 시작부터 마지막 줄까지 작업자 확인 | `git blame -L 10 ./src/main.js`
+`git blame -L ,<종료> <파일>` | 특정 파일의 처음부터 종료 줄까지 작업자 확인 | `git blame -L ,20 ./src/main.js`
 
 ## 브랜치 (Branch)
 
@@ -263,4 +263,5 @@ dev / xyz
 1. 충돌(Conflict) 발생 시 해결.
 1. `git add .`: 충돌 해결 후 스테이징.
 1. `git rebase --continue`: 재배치 계속 진행.
-1. 3~5 과정 반복 혹은 재배치 완료!
+1. 버전 메시지 수정 및 저장(`:wq`).
+1. 3~6번 과정 반복 및 재배치 완료!

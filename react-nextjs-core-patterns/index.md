@@ -809,7 +809,7 @@ export default async function Page() {
 ```
 
 앞서 '비동기 컴포넌트 스트리밍'에서 살펴본 `<Suspense>` 컴포넌트 활용 예제와 비슷하지만,
-경로를 컴포넌트처럼 활용한다는 
+경로를 컴포넌트처럼 활용한다는 점에서 차이가 있습니다. 
 
 ```tsx --path=/app/async/page.tsx --caption=컴포넌트 A와 B를 출력하는 페이지
 import { Suspense } from 'react'
