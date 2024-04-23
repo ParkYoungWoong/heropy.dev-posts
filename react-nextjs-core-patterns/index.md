@@ -1349,19 +1349,18 @@ Next.js는 지원하는 모든 글꼴 파일에 대한 자체 호스팅(automati
 ```ts --path=/styles/fonts.ts
 import { Roboto, Oswald } from 'next/font/google'
 
-const roboto = Roboto({
+export const roboto = Roboto({
   subsets: ['latin'], // 사용할 폰트 집합
   weight: ['400', '700'], // 사용할 폰트 두께
   display: 'swap', // 폰트 다운로드 전까지 기본 폰트 표시(성능 최적화)
   variable: '--font-roboto' // 사용할 CSS 변수 이름
 })
-const oswald = Oswald({
+export const oswald = Oswald({
   subsets: ['latin'],
   weight: ['500'],
   display: 'swap',
   variable: '--font-oswald'
 })
-export { roboto, oswald }
 ```
 
 각 요소의 `className` 속성으로 폰트를 적용할 수 있습니다.
@@ -1386,9 +1385,33 @@ export default function Headline() {
 }
 ```
 
-다음과 같이 CSS(SCSS) 파일에서, 위 폰트 초기화 단계에서 지정한 CSS 변수를 사용할 수도 있습니다.
+CSS 변수를 사용해 폰트를 적용하는 방법도 있습니다.
+우선 각 폰트의 CSS 변수를 루트 요소 등록합니다.
 
-```css --path=/style/global.css
+```tsx --path=/app/layout.tsx --line-active=1,2,12
+import { roboto, oswald } from '@/styles/fonts'
+import '@/styles/global.scss'
+
+export default function RootLayout({
+  children
+}: Readonly<{
+  children: React.ReactNode
+}>) {
+  return (
+    <html
+      lang="ko"
+      className={`${roboto.variable} ${oswald.variable}`}>
+      <body>
+        {children}
+      </body>
+    </html>
+  )
+}
+```
+
+이제, CSS(SCSS)에서 CSS 변수를 사용할 수 있습니다.
+
+```css --path=/styles/global.scss
 body {
   font-family: var(--font-roboto);
 }
@@ -1412,8 +1435,14 @@ import '@/styles/global.scss'
 ```
 
 ```scss --path=/styles/global.scss
+html {
+  --font-pretendard: 'Pretendard Variable', Pretendard, -apple-system,
+    BlinkMacSystemFont, system-ui, Roboto, 'Helvetica Neue', 'Segoe UI',
+    'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', 'Apple Color Emoji',
+    'Segoe UI Emoji', 'Segoe UI Symbol', sans-serif;
+}
 body {
-  font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
+  font-family: var(--font-pretendard);
 }
 ```
 
