@@ -4,6 +4,7 @@ filename: react-next-auth
 image: https://heropy.dev/postAssets/MI1Khc/main.jpg
 title: Auth.js(NextAuth.js) 핵심 정리
 createdAt: 2024-04-21
+updatedAt: 2024-04-25
 group: React
 author:
   - ParkYoungWoong
@@ -51,29 +52,46 @@ AUTH_SECRET="1234..."
 
 ### 기본 구성
 
-NextAuth() 호출로 반환되는 `handlers`, `signIn`, `signOut`, `auth`를 프로젝트에서 사용할 수 있습니다.
+NextAuth() 호출로 반환되는 `handlers`, `signIn`, `signOut`, `auth`, `update`를 프로젝트에서 사용할 수 있습니다.
 
 - `handlers`: 프로젝트의 인증 관리를 위한 API 라우트(`GET`, `POST` 함수) 객체입니다.
 - `signIn`: 사용자 로그인을 시도하는 비동기 함수입니다.
 - `signOut`: 사용자 로그아웃을 시도하는 비동기 함수입니다.
 - `auth`: 세션 정보를 반환하는 비동기 함수입니다.
+- `unstable_update(update)`: 세션 정보를 갱신하는 비동기 함수입니다.
+
+/// message-box --icon=warning
+`next-auth@beta`에서 `unstable_update` 함수는 Next.js 서버 코드(컴포넌트)에서 세션 정보를 갱신할 수 있는 실험적인 기능으로, 추후 `update` 이름으로 사용되거나 다른 방식으로 변경될 수 있습니다.
+///
 
 호출 옵션으로 다음과 같은 항목을 지정할 수 있습니다.
 `providers`를 제외하면, 모두 선택 항목입니다.
 
-- `providers`: Google, GitHub 등의 인증 공급자를 지정합니다.
+- `providers`: Credentials, Google, GitHub 등의 인증 공급자를 지정합니다.
 - `session`: 세션 관리 방식을 지정합니다.
 - `pages`: 사용자 정의 페이지 경로를 지정하며, 로그인 페이지의 기본값은 `/auth/signin`입니다.
 - `callbacks`: 인증 및 세션 관리 중 호출되는 각 핸들러를 지정합니다.
-- `callbacks.signIn`: 사용자 로그인을 시도했을 때 호출됩니다.
-- `callbacks.jwt`: JWT가 생성되거나 업데이트될 때 호출되며, 반환하는 값은 암호화되어 쿠키에 저장됩니다.
-- `callbacks.session`: 세션이 확인될 때마다 호출되며, 반환하는 값은 클라이언트에서 확인할 수 있습니다.
+- `callbacks.signIn`: 사용자 로그인을 시도했을 때 호출되며, `true`를 반환하면 로그인 성공, `false`를 반환하면 로그인 실패로 처리됩니다.
 - `callbacks.redirect`: 페이지 이동 시 호출되며, 반환하는 값은 리다이렉션될 URL입니다.
+- `callbacks.jwt`: JWT가 생성되거나 업데이트될 때 호출되며, 반환하는 값은 암호화되어 쿠키에 저장됩니다.
+- `callbacks.session`: `jwt` 콜백이 반환하는 `token`을 받아, 세션이 확인될 때마다 호출되며, 반환하는 값은 클라이언트에서 확인할 수 있습니다. (2번 이상 호출될 수 있습니다)
+
+각 콜백의 호출 순서는 다음과 같습니다.
+
+- 사용자가 로그인(회원가입) => `signIn` => (`redirect`) => `jwt` => `session`
+- 세션 업데이트 => `jwt` => `session`
+- 세션 확인 => `session`
 
 ```ts --path=/auth.ts
 import NextAuth from 'next-auth'
 
-export const { handlers, signIn, signOut, auth } = NextAuth({
+export const {
+  handlers,
+  signIn,
+  signOut,
+  auth,
+  unstable_update: update // Beta!
+} = NextAuth({
   providers: [
     // ...
   ],
@@ -82,7 +100,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     maxAge: 60 * 60 * 24 // 세션 만료 시간(sec)
   },
   pages: {
-    signIn: '/signin'
+    signIn: '/signin' // Default: '/auth/signin'
   },
   callbacks: {
     signIn: async () => {
@@ -98,16 +116,26 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 })
 ```
 
-콜백 URL을 사용하는 경우, 다음과 같이 `redirect` 콜백을 지정할 수 있습니다.
+콜백 URL(E.g, `?callbackUrl=/dashboard`)을 사용하는 경우, 다음과 같이 `redirect` 콜백을 지정할 수 있습니다.
+그리고 주의할 점은, `signIn(공급자, 옵션)` 함수를 호출할 때 `redirectTo` 옵션을 사용하지 않아야 합니다.
 
 ```ts --path=/auth.ts
 callbacks: {
+  // `url`은 다음과 같을 수 있습니다.
+  // '/abc'
+  // '/abc?callbackUrl=/xyz'
+  // 'https://heropy.dev/abc?callbackUrl=/xyz'
+  // 'https://heropy.dev/abc?callbackUrl=https://heropy.dev/xyz'
+  // ...
   redirect: async ({ url, baseUrl }) => {
     if (url.startsWith('/')) return `${baseUrl}${url}`
     if (url) {
       const { search, origin } = new URL(url)
       const callbackUrl = new URLSearchParams(search).get('callbackUrl')
-      if (callbackUrl) return callbackUrl
+      if (callbackUrl)
+        return callbackUrl.startsWith('/')
+          ? `${baseUrl}${callbackUrl}`
+          : callbackUrl
       if (origin === baseUrl) return url
     }
     return baseUrl
@@ -124,7 +152,7 @@ callbacks: {
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 import { match } from 'path-to-regexp'
-import { auth } from '@/auth'
+import { getSession } from '@/serverActions/auth' // import { auth } from '@/auth'
 
 const matchersForAuth = [
   '/dashboard/:path*',
@@ -135,9 +163,10 @@ const matchersForAuth = [
 
 export async function middleware(request: NextRequest) {
   if (isMatch(request.nextUrl.pathname, matchersForAuth)) {
-    return (await auth()) // 세션 정보 확인
+    return (await getSession()) // 세션 정보 확인
       ? NextResponse.next()
-      : NextResponse.redirect(new URL(`/signin?callbackUrl=${request.url}`, request.url))
+      : NextResponse.redirect(new URL('/signin', request.url))
+      // : NextResponse.redirect(new URL(`/signin?callbackUrl=${request.url}`, request.url))
   }
   return NextResponse.next()
 }
@@ -156,7 +185,7 @@ Auth.js는 `/api/auth/` 이하 경로에서 인증을 처리합니다.
 import { handlers } from '@/auth'
 
 export const { GET, POST } = handlers
-export const runtime = 'edge' // Optional
+// export const runtime = 'edge' // Optional!
 ```
 
 ### 서버 액션 구성
@@ -169,22 +198,27 @@ Next.js App Router의 클라이언트 컴포넌트는 `'use server'` 선언의 �
 
 ```ts --path=/serverActions/auth.ts
 'use server'
-import { redirect } from 'next/navigation'
-import { auth, signIn, signOut } from '@/auth'
+import { auth, signIn, signOut, update } from '@/auth'
 
 export const signInWithCredentials = async (formData: FormData) => {
+  await signIn('credentials', options)
   // ...
 }
 export const signInWithGoogle = async () => {
+  await signIn('google', options)
   // ...
 }
 export const signInWithGitHub = async () => {
+  await signIn('github', options)
   // ...
 }
 export const signOutWithForm = async (formData: FormData) => {
-  return await signOut()
+  await signOut()
 }
-export { auth }
+export {
+  auth as getSession, 
+  update as updateSession
+}
 ```
 
 ### 테스트 구성
@@ -239,25 +273,27 @@ export default async function Header() {
 ### 회원가입 및 로그인 구현
 
 `signInWithCredentials` 서버 액션에서 `signIn` 메소드를 `'credentials'`로 호출해, 사용자가 입력한 회원가입 혹은 로그인 정보를 전달합니다.
-그리고 회원가입 및 로그인이 성공하면 메인 페이지로 리다이렉션합니다.
+그리고 회원가입 및 로그인이 성공하면 메인 페이지로 리다이렉션하도록 `redirectTo` 옵션을 제공할 수 있습니다.
 
 ```ts --path=/serverActions/auth.ts
 'use server'
-import { redirect } from 'next/navigation'
-import { auth, signIn, signOut } from '@/auth'
+import { auth, signIn, signOut, update } from '@/auth'
 
 export const signInWithCredentials = async (formData: FormData) => {
   await signIn('credentials', {
     username: formData.get('username'),
     email: formData.get('email'),
-    password: formData.get('password')
+    password: formData.get('password'),
+    redirectTo: '/'
   })
-  redirect('/')
 }
 export const signOutWithForm = async (formData: FormData) => {
-  return await signOut()
+  await signOut()
 }
-export { auth }
+export {
+  auth as getSession, 
+  update as updateSession
+}
 ```
 
 기본적인 공급자 옵션은 다음과 같습니다.
@@ -265,11 +301,13 @@ export { auth }
 `authorize` 함수의 `credentials` 매개변수는 서버 액션에서 호출한 `signIn('credentials', 사용자정보)` 메소드의 두 번째 인수(`사용자정보`)입니다.
 또한 `authorize` 함수는 회원가입 및 로그인에 성공한 경우, 사용자의 ID(`id`), 표시 이름(`name`), 이메일(`email`), 프로필 이미지(`image`)의 정해진 속성으로 정보를 반환해야 합니다.
 
-```ts --path=/auth.ts --line-active=2,6-21
+```ts --path=/auth.ts --line-active=2,8-22
 import NextAuth from 'next-auth'
 import Credentials from 'next-auth/providers/credentials'
 
-export const { handlers, signIn, signOut, auth } = NextAuth({
+export const {
+  // ...
+} = NextAuth({
   providers: [
     Credentials({
       authorize: async credentials => {
@@ -292,15 +330,15 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 ```
 
 `<Header>` 컴포넌트는 다음과 같이 작성합니다.
-`auth` 비동기 함수(서버 액션)의 반환값은 사용자 세션 정보입니다.
+`getSession` 서버 액션의 반환값은 사용자 세션 정보입니다.
 로그아웃 후 `<Header>` 컴포넌트가 갱신되어야 하므로, `<form>` 요소에 `signOutWithForm` 서버 액션을 연결합니다.
 
 ```tsx --path=/components/Header.tsx
 import Link from 'next/link'
-import { auth, signOutWithForm } from '@/serverActions/auth'
+import { getSession, signOutWithForm } from '@/serverActions/auth'
 
 export default async function Header() {
-  const session = await auth()
+  const session = await getSession()
   return (
     <header>
       {session?.user && <div className="username">{session.user.name}</div>}
@@ -323,6 +361,8 @@ export default async function Header() {
   )
 }
 ```
+
+그리고 각 회원가입과 로그인 페이지를 다음과 같이 작성합니다.
 
 ```ts --path=/app/signup/page.tsx
 import { signInWithCredentials } from '@/serverActions/auth'
@@ -406,16 +446,17 @@ export default function SignInPage() {
 ### 액세스 토큰 관리
 
 프로젝트에서 API를 액세스 토큰과 함께 요청해야 하는 경우, 사용자 세션 정보에 액세스 토큰을 추가할 수 있습니다.
-`authorize` 함수에서 반환하는 사용자 정보에 `accessToken` 속성을 추가하고, 세션까지 전달될 수 있도록 다음과 같이 작성합니다.
-`authorize` 함수에서 반환하는 사용자 정보는 `callbacks.jwt` 함수의 `user` 변수로 전달되며,
-`callbacks.jwt` 함수에서 반환하는 토큰 정보는 `callbacks.session` 함수의 `token` 변수로 전달됩니다.
+`authorize` 함수에서 반환하는 사용자 정보에 `accessToken` 속성을 추가하고, 세션까지 전달해야 합니다.
+`authorize` 함수에서 반환하는 사용자 정보는, 로그인이 성공하면 `callbacks.jwt` 함수의 `user` 변수로 전달되고, `callbacks.jwt` 함수에서 반환하는 토큰 정보는 `callbacks.session` 함수의 `token` 변수로 전달됩니다.
 마지막으로 `callbacks.session` 함수에서 반환하는 세션 정보는 각 페이지에서 사용할 수 있습니다.
 
-```ts --path=/auth.ts --line-active=16,23,34-37,40-43
+```ts --path=/auth.ts --line-active=18,25,37-39,43-45
 import NextAuth from 'next-auth'
 import Credentials from 'next-auth/providers/credentials'
 
-export const { handlers, signIn, signOut, auth } = NextAuth({
+export const {
+  // ...
+} = NextAuth({
   providers: [
     Credentials({
       authorize: async credentials => {
@@ -446,13 +487,13 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       return true
     },
     jwt: async ({ token, user }) => {
-      if (user) {
+      if (user?.accessToken) {
         token.accessToken = user.accessToken
       }
       return token
     },
     session: async ({ session, token }) => {
-      if (typeof token.accessToken === 'string') {
+      if (token?.accessToken) {
         session.accessToken = token.accessToken
       }
       return session
@@ -464,31 +505,33 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
 `accessToken` 속성은 `next-auth` 라이브러리에 정의되지 않은 타입이므로, 다음과 같이 별도 타입 정의를 추가합니다.
 
-```ts --path=/types/next-auth.d.ts
+```ts --path=/types/auth.d.ts
 export declare module 'next-auth' {
   interface User {
-    accessToken?: string
+    accessToken: string
   }
   interface Session {
-    accessToken?: string
+    accessToken: string
+  }
+}
+export declare module '@auth/core/jwt' {
+  interface JWT {
+    accessToken: string
   }
 }
 ```
 
-다음과 같이 세션 정보의 액세스 코드를 활용할 수 있습니다.
+이제, 세션 정보의 액세스 코드를 다음과 같이 활용할 수 있습니다.
 
-```ts --line-active=16 --caption=액세스 코드와 함께 API 요청 예시
-import { redirect } from 'next/navigation'
-import { auth } from '@/serverActions/auth'
+```ts --path=/app/myaccount/page.tsx --line-active=13 --caption=액세스 코드와 함께 API 요청 예시
+import { getSession } from '@/serverActions/auth'
 
 interface ResponseValue {
   totalBalance: number
 }
 
-export default async function AccountPage() {
-  const session = await auth()
-  if (!session) return redirect('/signin?callbackUrl=/myaccount/')
-
+export default async function MyaccountPage() {
+  const session = await getSession()
   const res = await fetch('https://api.heropy.dev/banks/account', {
     method: 'GET',
     headers: {
@@ -502,16 +545,108 @@ export default async function AccountPage() {
 }
 ```
 
+### 세션 정보 갱신
+
+사용자 정보가 변경되었을 때, 세션 정보를 갱신하려면 `updateSession` 서버 액션을 다음과 같이 호출할 수 있습니다.
+
+```ts
+import { updateSession } from '@/serverActions/auth'
+
+await updateSession({
+  user: {
+    name: updatedUser.name,
+    image: updatedUser.image
+  }
+})
+```
+
+`updateSession` 서버 액션이 호출되면, `callbacks.jwt` 콜백이 호출되며, `trigger`와 `session` 속성으로 정보가 전달됩니다.
+`trigger`는 갱신 이벤트이고 `session`은 갱신된 세션 정보로, 다음과 같이 반환되는 토큰 정보에 갱신된 사용자 정보를 추가합니다.
+
+```ts --path=/auth.ts
+callbacks: {
+  jwt: async ({ token, user, trigger, session }) => {
+    if (user?.accessToken) {
+      token.accessToken = user.accessToken
+    }
+    if (trigger === 'update' && session) {
+      token = { ...token, ...session.user }
+    }
+    return token
+  }
+}
+```
+
+구성이 완료되면, 아래 예시와 같이 사용자 이름을 변경할 수 있는 페이지를 제공할 수 있습니다.
+
+```tsx --path=/app/myaccount/page.tsx
+import { getSession } from '@/serverActions/auth'
+import { updateUser } from '@/serverActions/user'
+
+export default async function MyaccountPage() {
+  const session = await getSession()
+  return (
+    <>
+      <form action={updateUser}>
+        <label>
+          사용자 이름
+          <input
+            name="username"
+            type="text"
+            defaultValue={session?.user?.name as string}
+          />
+        </label>
+        <button type="submit">수정</button>
+      </form>
+    </>
+  )
+}
+```
+
+`updateUser` 서버 액션은 다음 예시처럼 작성할 수 있습니다.
+
+```tsx --path=/serverActions/user.ts --line-active=22-27
+'use server'
+import { redirect } from 'next/navigation'
+import { getSession, updateSession } from '@/serverActions/auth'
+
+export async function updateUser(formData: FormData) {
+  const session = await getSession()
+  const res = await fetch(
+    'https://api.heropy.dev/auth/user',
+    {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        apikey: process.env.API_KEY as string,
+        Authorization: `Bearer ${session?.accessToken}`
+      },
+      body: JSON.stringify({
+        displayName: formData.get('username')
+      })
+    }
+  )
+  const updatedUser = await res.json()
+  await updateSession({
+    user: {
+      name: updatedUser.displayName
+    }
+  })
+  redirect('/myaccount') // 화면 출력 갱신
+}
+```
+
 ### 예외 처리
 
-회원가입 및 로그인 과정에서 발생하는 에러를 처리하려면, `CredentialsSignin` 클래스로 에러를 반환(`throw`)합니다.
+회원가입 및 로그인 과정에서 발생하는 에러를 처리하려면, 다음과 같이 `CredentialsSignin` 클래스로 에러를 반환(`throw`)합니다.
 
-```ts --path=/auth.ts --line-active=3,15-19,24-28
-import NextAuth from 'next-auth'
-import Credentials from 'next-auth/providers/credentials'
+```ts --path=/auth.ts --line-active=2,16-20,25-29
+// ...
 import { CredentialsSignin } from 'next-auth'
 
-export const { handlers, signIn, signOut, auth } = NextAuth({
+export const { 
+  // ...
+} = NextAuth({
   providers: [
     Credentials({
       authorize: async credentials => {
@@ -545,10 +680,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
 만약 에러 메시지를 별도의 페이지(`error.tsx`)에 출력하려면, 로그인과 회원가입 서버 액션에서 다음과 같이 에러 객체를 반환합니다.
 
-```tsx --path=/serverActions/auth.ts --line-active=4,13-17
-'use server'
-import { redirect } from 'next/navigation'
-import { auth, signIn, signOut } from '@/auth'
+```tsx --path=/serverActions/auth.ts --line-active=2,13-15
+// ...
 import { CredentialsSignin } from 'next-auth'
 
 export const signInWithCredentials = async (formData: FormData) => {
@@ -556,22 +689,19 @@ export const signInWithCredentials = async (formData: FormData) => {
     await signIn('credentials', {
       username: formData.get('username'),
       email: formData.get('email'),
-      password: formData.get('password')
+      password: formData.get('password'),
+      redirectTo: '/'
     })
   } catch (error) {
     if (error instanceof CredentialsSignin) {
       throw new Error(error.cause as unknown as string)
     }
   }
-  redirect('/')
 }
-export const signOutWithForm = async (formData: FormData) => {
-  return await signOut()
-}
-export { auth }
+// ...
 ```
 
-```tsx --path=/app/_error.tsx --caption=에러 페이지는 클라이언트 컴포넌트여야 합니다.
+```tsx --path=/app/error.tsx --caption=에러 페이지는 클라이언트 컴포넌트여야 합니다.
 'use client'
 export default function ErrorPage({ error }: { error: Error }) {
   return (
@@ -583,8 +713,9 @@ export default function ErrorPage({ error }: { error: Error }) {
 }
 ```
 
-만약 에러 메시지를 회원가입 및 로그인 페이지에서 출력하려면, 좀 더 작업이 필요합니다.
-`useFormState` 훅(Hook)으로 서버 액션을 연결하고 출력할 메시지를 상태로 관리합니다.
+만약 에러 메시지를 페이지 이동 없이 회원가입 또는 로그인 페이지에서 그대로 출력하려면,
+다음과 같이 `useFormState` 훅(Hook)으로 서버 액션을 연결하고 출력할 메시지를 상태로 관리합니다.
+`useFormState` 훅(Hook)은 클라이언트 컴포넌트에서만 사용할 수 있습니다.
 
 ```tsx --path=/app/signup/page.tsx --line-active=1,2,4,7-9,13,15,43
 'use client'
@@ -703,13 +834,11 @@ const { state, formAction } = useFormState(액션함수, 상태초깃값)
 const { pending, data, method, action } = useFormStatus()
 ```
 
-이제 서버 액션을 `<form>` 요소에 직접 연결하지 않으므로, `useFormState` 훅의 인수 타입에 맞게 서버 액션을 수정합니다.
-서버 액션은 `initialState` 타입과 일치하는 데이터를 반환해야 합니다.
+이제 서버 액션을 `<form>` 요소에 직접 연결하지 않으므로, `useFormState` 훅의 인수 타입에 맞게 서버 액션을 수정해야 합니다.
+그리고 서버 액션은 `initialState` 타입과 일치하는 데이터를 반환해야 합니다.
 
-```tsx --path=/serverActions/auth.ts --line-active=4,7,16-20
-'use server'
-import { redirect } from 'next/navigation'
-import { auth, signIn, signOut } from '@/auth'
+```tsx --path=/serverActions/auth.ts --line-active=5,15-19
+// ...
 import { CredentialsSignin } from 'next-auth'
 
 export const signInWithCredentials = async (
@@ -720,26 +849,24 @@ export const signInWithCredentials = async (
     await signIn('credentials', {
       username: formData.get('username'),
       email: formData.get('email'),
-      password: formData.get('password')
+      password: formData.get('password'),
+      redirectTo: '/'
     })
+    return { message: '' }
   } catch (error) {
     if (error instanceof CredentialsSignin) {
       return { message: error.cause as unknown as string }
     }
   }
-  redirect('/')
 }
-export const signOutWithForm = async (formData: FormData) => {
-  return await signOut()
-}
-export { auth }
+// ...
 ```
 
 ### 활용 예시
 
 좀 더 구체적인 활용 예시로, 다음과 같이 회원가입 및 로그인 API를 활용할 수도 있습니다.
 
-```ts --path=/auth.ts --line-active=25-28,30,31,38-66 --line-error=35
+```ts --path=/auth.ts --line-active=27-30,32-33,40-68
 import NextAuth from 'next-auth'
 import Credentials from 'next-auth/providers/credentials'
 import { CredentialsSignin } from 'next-auth'
@@ -758,7 +885,9 @@ interface ResponseValue {
   accessToken: string
 }
 
-export const { handlers, signIn, signOut, auth } = NextAuth({
+export const {
+  // ...
+} = NextAuth({
   providers: [
     Credentials({
       authorize: async credentials => {
@@ -810,10 +939,11 @@ async function _signIn(
 
 ## Google
 
+주로 '소셜 로그인'이라고 부르는 방식으로, `Google` 공급자를 통해 사용자의 구글 계정으로 회원가입 및 로그인을 구현할 수 있습니다.
+
 ### 클라이언트 ID 및 SECRET 발급
 
-Google OAuth를 사용해, 사용자가 Google 계정으로 로그인할 수 있도록 구현할 수 있습니다.
-우선 [Google Cloud Console](https://console.cloud.google.com/)로 접속해 프로젝트를 생성하고, OAuth 2.0 클라이언트 ID를 발급받아야 합니다.
+`Google` 공급자를 사용하려면, [Google Cloud Console](https://console.cloud.google.com/)로 접속해 프로젝트를 생성하고, OAuth 2.0 클라이언트 ID를 발급받아야 합니다.
 
 ![프로젝트 생성](./assets//s1.JPG)
 
@@ -876,23 +1006,26 @@ OAuth 클라이언트 만들기까 끝나면, 다음과 같이 클라이언트 I
 ### 회원가입 및 로그인 구현
 
 `signInWithGoogle` 서버 액션에서 `signIn` 메소드를 `'google'`로 호출합니다.
-'Credentials'에서 사용했던 `redirect` 함수 대신 `redirectTo` 옵션을 사용해, 로그인 후 리다이렉션될 페이지를 지정합니다.
+`redirectTo` 옵션을 사용해, 로그인 후 리다이렉션될 페이지를 지정할 수 있습니다.
 
 ```ts --path=/serverActions/auth.ts
 'use server'
-import { auth, signIn, signOut } from '@/auth'
+import { auth, signIn, signOut, update } from '@/auth'
 
 export const signInWithGoogle = async () => {
   await signIn('google', { redirectTo: '/' })
 }
 export const signOutWithForm = async (formData: FormData) => {
-  return await signOut()
+  await signOut()
 }
-export { auth }
+export {
+  auth as getSession, 
+  update as updateSession
+}
 ```
 
 Google OAuth를 사용하면, 별도의 회원가입 페이지를 제공하지 않아도 됩니다.
-다음과 같이 로그인 페이지에서만 '구글 로그인' 버튼을 제공합니다.
+다음과 같이 로그인 페이지에서만 '구글 로그인' 버튼을 제공하고, 로그인 사용자의 DB 존재 여부에 따라 회원가입 또는 로그인을 처리합니다.
 
 ```tsx --path=/app/signin/page.tsx
 import { signInWithGoogle } from '@/serverActions/auth'
@@ -911,16 +1044,18 @@ export default function SignInPage() {
 
 `Google` 공급자를 사용해, 앞서 만든 클라이언트 ID와 SECRET 값을 제공합니다.
 `signIn` 콜백에서 `account?.provider`가 `'google'`인 경우에, `Google` 공급자를 확인할 수 있으므로, 이때 회원가입이나 로그인을 처리합니다.
-`profile?.email_verified`가 `true`인 경우에만 로그인이 성공 처리되며, 나머지는 실패 처리됩니다.
+`profile?.email_verified`가 `true`인 경우에만 로그인이 성공 처리되며, 나머지는 실패 처리되도록 합니다.
 
-액세스 토큰 관리는 ['Credentials / 액세스 토큰 관리'](/p/MI1Khc#h3_%EC%95%A1%EC%84%B8%EC%8A%A4_%ED%86%A0%ED%81%B0_%EA%B4%80%EB%A6%AC)와 같습니다.
-만약 별도의 액세스 토큰 관리가 필요치 않은 경우, `jwt`와 `session` 콜백에서 토큰 관련 코드는 제거하세요.
+[액세스 토큰 관리](/p/MI1Khc#h3_%EC%95%A1%EC%84%B8%EC%8A%A4_%ED%86%A0%ED%81%B0_%EA%B4%80%EB%A6%AC)와 [세션 정보 갱신](/p/MI1Khc#h3_%EC%84%B8%EC%85%98_%EC%A0%95%EB%B3%B4_%EA%B0%B1%EC%8B%A0)은 앞서 확인한 'Credentials' 내용과 같습니다.
+만약 별도의 액세스 토큰 관리나 세션 정보 갱신이 필요치 않은 경우, `jwt`와 `session` 콜백에서 관련 코드를 제거하세요.
 
-```ts --path=/auth.ts --line-active=6-9,19-23 --line-error=27-29,33-35
+```ts --path=/auth.ts --line-active=8-11,21-27 --line-error=29-34,38-40
 import NextAuth from 'next-auth'
 import Google from 'next-auth/providers/google'
 
-export const { handlers, signIn, signOut, auth } = NextAuth({
+export const {
+  // ...
+} = NextAuth({
   providers: [
     Google({
       clientId: process.env.AUTH_GOOGLE_ID,
@@ -935,21 +1070,24 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     signIn: '/signin'
   },
   callbacks: {
-    signIn: async ({ account, profile , user}) => {
+    signIn: async ({ account, profile }) => {
       if (account?.provider === 'google') {
         // <사용자 확인 후 회원가입 또는 로그인...>
         return !!profile?.email_verified
       }
       return true
     },
-    jwt: async ({ token, user }) => {
-      if (user) {
+    jwt: async ({ token, user, trigger, session }) => {
+      if (user?.accessToken) {
         token.accessToken = user.accessToken
+      }
+      if (trigger === 'update' && session) {
+        token = { ...token, ...session.user }
       }
       return token
     },
     session: async ({ session, token }) => {
-      if (typeof token.accessToken === 'string') {
+      if (token?.accessToken) {
         session.accessToken = token.accessToken
       }
       return session
@@ -962,36 +1100,22 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
 `signIn` 함수에서 `true`가 아닌 경로(문자)를 반환하면, 로그인에 실패하고 해당 경로로 리다이렉션됩니다.
 
-```ts --path=/auth.ts --line-active=17-19
-import NextAuth from 'next-auth'
-import Google from 'next-auth/providers/google'
-
-export const { handlers, signIn, signOut, auth } = NextAuth({
-  providers: [
-    Google({
-      clientId: process.env.AUTH_GOOGLE_ID,
-      clientSecret: process.env.AUTH_GOOGLE_SECRET
-    })
-  ],
-  // ...
-  
-  callbacks: {
-    signIn: async ({ account, profile , user}) => {
-      if (account?.provider === 'google') {
-        // <사용자 확인 후 회원가입 또는 로그인...>
-        if (error) {
-          return `/error?message=${encodeURIComponent('<ERROR_MESSAGE>')}`
-        }
-        return !!profile?.email_verified
+```ts --path=/auth.ts --line-active=5-7
+callbacks: {
+  signIn: async ({ account, profile }) => {
+    if (account?.provider === 'google') {
+      // <사용자 확인 후 회원가입 또는 로그인...>
+      if (error) {
+        return `/error?message=${encodeURIComponent('<ERROR_MESSAGE>')}`
       }
-      return true
-    },
-    // ...
+      return !!profile?.email_verified
+    }
+    return true
   }
-})
+}
 ```
 
-리다이렉션은 실제 에러가 발생한 것이 아니므로, 메시지를 쿼리스트링으로 받아 출력하는 별도 페이지를 작성할 수 있습니다.
+리다이렉션은 실제 에러가 발생한 것이 아니므로, 메시지를 쿼리스트링으로 받아 출력하는 별도 에러 페이지를 작성해야 합니다.
 
 ```tsx --path=/app/error/page.tsx
 export default function ErrorPage({
@@ -1012,7 +1136,7 @@ export default function ErrorPage({
 
 좀 더 구체적인 활용 예시로, 다음과 같이 회원가입 및 로그인 등의 API를 활용할 수도 있습니다.
 
-```ts
+```ts --path=/auth.ts --line-active=32-48,71-82,84-112
 import NextAuth from 'next-auth'
 import Google from 'next-auth/providers/google'
 
@@ -1025,7 +1149,9 @@ interface ResponseValue {
   accessToken: string
 }
 
-export const { handlers, signIn, signOut, auth } = NextAuth({
+export const {
+  // ...
+} = NextAuth({
   providers: [
     Google({
       clientId: process.env.AUTH_GOOGLE_ID,
@@ -1043,9 +1169,11 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     signIn: async ({ account, profile, user }) => {
       if (account?.provider === 'google') {
         try {
+          // 사용자 확인
           const type = (await _existUser(user.email as string))
             ? 'login'
             : 'signup'
+          // 회원가입 또는 로그인 
           const _user = await _signIn(type, {
             token: account.access_token as string,
             email: profile?.email as string,
@@ -1061,14 +1189,17 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       }
       return true
     },
-    jwt: async ({ token, user }) => {
-      if (user) {
+    jwt: async ({ token, user, trigger, session }) => {
+      if (user?.accessToken) {
         token.accessToken = user.accessToken
+      }
+      if (trigger === 'update' && session) {
+        token = { ...token, ...session.user }
       }
       return token
     },
     session: async ({ session, token }) => {
-      if (typeof token.accessToken === 'string') {
+      if (token?.accessToken) {
         session.accessToken = token.accessToken
       }
       return session
