@@ -275,15 +275,20 @@ export default async function Header() {
 `signInWithCredentials` 서버 액션에서 `signIn` 메소드를 `'credentials'`로 호출해, 사용자가 입력한 회원가입 혹은 로그인 정보를 전달합니다.
 그리고 회원가입 및 로그인이 성공하면 메인 페이지로 리다이렉션하도록 `redirectTo` 옵션을 제공할 수 있습니다.
 
+/// message-box --icon=warning
+`signIn('credentials')` 함수의 옵션에서 `username` 같은 각 속성의 값은 문자로 변환됩니다.
+따라서 `formData.get('username')`이 `null`이면, `'null'` 문자로 전달되므로 주의해야 합니다.
+///
+
 ```ts --path=/serverActions/auth.ts
 'use server'
 import { auth, signIn, signOut, update } from '@/auth'
 
 export const signInWithCredentials = async (formData: FormData) => {
   await signIn('credentials', {
-    username: formData.get('username'),
-    email: formData.get('email'),
-    password: formData.get('password'),
+    username: formData.get('username') || '', // `'null'` 문자 방지
+    email: formData.get('email') || '',
+    password: formData.get('password') || '',
     redirectTo: '/'
   })
 }
@@ -364,7 +369,7 @@ export default async function Header() {
 
 그리고 각 회원가입과 로그인 페이지를 다음과 같이 작성합니다.
 
-```ts --path=/app/signup/page.tsx
+```ts --path=/app/signup/page.tsx --caption=회원가입 페이지
 import { signInWithCredentials } from '@/serverActions/auth'
 
 export default function SignUpPage() {
@@ -407,7 +412,7 @@ export default function SignUpPage() {
 }
 ```
 
-```ts --path=/app/signin/page.tsx
+```ts --path=/app/signin/page.tsx --caption=로그인 페이지
 import { signInWithCredentials } from '@/serverActions/auth'
 
 export default function SignInPage() {
