@@ -4,7 +4,7 @@ filename: react-nextjs-core-patterns
 image: https://heropy.dev/postAssets/n7JHmI/main.jpg
 title: Next.js 핵심 정리
 createdAt: 2024-04-03
-updatedAt: 2024-04-19
+updatedAt: 2024-04-26
 group: React
 author:
   - ParkYoungWoong
@@ -1337,6 +1337,27 @@ const nextConfig = {
 }
 
 export default nextConfig
+```
+
+`onLoad` 속성을 사용해 이미지 로딩이 완료되면 콜백을 호출할 수 있습니다.
+단, `onLoad` 속성은 클라이언트 컴포넌트에서 사용해야 합니다.
+
+```tsx --line-active=1,12
+'use client'
+// ...
+export default function Page() {
+  const [loaded, setLoaded] = useState(false)
+  // ...
+  return (
+    <Image
+      src={image.src}
+      alt={image.name}
+      width="100"
+      height="200"
+      onLoad={() => setLoaded(true)}
+    />
+  )
+}
 ```
 
 ### 폰트

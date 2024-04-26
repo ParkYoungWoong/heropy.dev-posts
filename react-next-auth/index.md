@@ -4,7 +4,7 @@ filename: react-next-auth
 image: https://heropy.dev/postAssets/MI1Khc/main.jpg
 title: Auth.js(NextAuth.js) 핵심 정리
 createdAt: 2024-04-21
-updatedAt: 2024-04-25
+updatedAt: 2024-04-26
 group: React
 author:
   - ParkYoungWoong
@@ -27,7 +27,6 @@ NextAuth.js v5는 기존 v4에서 Next.js App Router가 우선 지원되는 새�
 
 Auth.js(NextAuth.js)는 Next.js 프로젝트의 사용자 인증 및 세션 관리를 위한 라이브러리입니다.
 Google, GitHub 등의 다양한 인증 공급자를 지원하며, Next.js의 서버와 클라이언트 측 모두에서 인증 및 세션 관리를 손쉽게 처리할 수 있습니다.
-
 
 ## 설치 및 구성
 
@@ -685,7 +684,7 @@ export const {
 
 만약 에러 메시지를 별도의 페이지(`error.tsx`)에 출력하려면, 로그인과 회원가입 서버 액션에서 다음과 같이 에러 객체를 반환합니다.
 
-```tsx --path=/serverActions/auth.ts --line-active=2,13-15
+```tsx --path=/serverActions/auth.ts --line-active=2,13-18 --line-error=10,12
 // ...
 import { CredentialsSignin } from 'next-auth'
 
@@ -695,13 +694,15 @@ export const signInWithCredentials = async (formData: FormData) => {
       username: formData.get('username'),
       email: formData.get('email'),
       password: formData.get('password'),
-      redirectTo: '/'
+      // redirectTo: '/'  <= 이 속성은 try 문 안에서 동작하지 않습니다! Beta?
     })
+    // 로그인에 성공하면, 리다이렉션을 에러 캐치로 처리하므로 이 위치에 실행할 코드를 추가하지 마세요! Beta?
   } catch (error) {
     if (error instanceof CredentialsSignin) {
       throw new Error(error.cause as unknown as string)
     }
   }
+  redirect('/')
 }
 // ...
 ```
@@ -835,14 +836,14 @@ export default function SubmitButton({ name }: { name: string }) {
 ```
 
 ```ts --caption=useFormState와 useFormStatus Hook
-const { state, formAction } = useFormState(액션함수, 상태초깃값)
+const [state, formAction] = useFormState(액션함수, 상태초깃값)
 const { pending, data, method, action } = useFormStatus()
 ```
 
 이제 서버 액션을 `<form>` 요소에 직접 연결하지 않으므로, `useFormState` 훅의 인수 타입에 맞게 서버 액션을 수정해야 합니다.
 그리고 서버 액션은 `initialState` 타입과 일치하는 데이터를 반환해야 합니다.
 
-```tsx --path=/serverActions/auth.ts --line-active=5,15-19
+```tsx --path=/serverActions/auth.ts --line-active=5,16
 // ...
 import { CredentialsSignin } from 'next-auth'
 
@@ -854,15 +855,14 @@ export const signInWithCredentials = async (
     await signIn('credentials', {
       username: formData.get('username'),
       email: formData.get('email'),
-      password: formData.get('password'),
-      redirectTo: '/'
+      password: formData.get('password')
     })
-    return { message: '' }
   } catch (error) {
     if (error instanceof CredentialsSignin) {
       return { message: error.cause as unknown as string }
     }
   }
+  redirect('/')
 }
 // ...
 ```
@@ -1000,7 +1000,7 @@ http://localhost:3000/api/auth/callback/google
 
 ![](./assets//s11.JPG)
 
-OAuth 클라이언트 만들기까 끝나면, 다음과 같이 클라이언트 ID와 SECRET 값을 확인할 수 있습니다.
+OAuth 클라이언트 만들기가 끝나면, 다음과 같이 클라이언트 ID와 SECRET 값을 확인할 수 있습니다.
 
 ![현재는 유효하지 않은 클라이언트 ID와 SECRET 값입니다.](./assets//s10.JPG)
 
@@ -1141,7 +1141,7 @@ export default function ErrorPage({
 
 좀 더 구체적인 활용 예시로, 다음과 같이 회원가입 및 로그인 등의 API를 활용할 수도 있습니다.
 
-```ts --path=/auth.ts --line-active=32-48,71-82,84-112
+```ts --path=/auth.ts
 import NextAuth from 'next-auth'
 import Google from 'next-auth/providers/google'
 
@@ -1186,7 +1186,10 @@ export const {
           })
           user.accessToken = _user.accessToken
         } catch (error) {
-          if (error instanceof Error) {
+          if (
+            error instanceof CredentialsSignin &&
+            typeof error.cause === 'string'
+          ) {
             return `/error?message=${encodeURIComponent(error.message)}`
           }
         }
@@ -1250,8 +1253,8 @@ async function _signIn(
     }
   }
 
-  throw new Error(
-    (data as string) || '문제가 발생했습니다, 잠시 후 다시 시도하세요.'
-  )
+  throw new CredentialsSignin({
+    cause: data || '문제가 발생했습니다, 잠시 후 다시 시도하세요.'
+  })
 }
 ```
