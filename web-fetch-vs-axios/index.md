@@ -191,7 +191,7 @@ CDN으로 연결하거나,
 NPM으로 설치해서 사용할 수 있습니다.
 
 ```bash --caption=Axios NPM
-$ npm i axios
+npm i axios
 ```
 
 ```js
@@ -858,7 +858,7 @@ Node.js 환경에서도 데이터 통신을 위한 도구로 `fetch`와 `axios`�
 단, `fetch` 함수는 Web API이기 때문에 별도 구현이 필요하고, `node-fetch` 패키지를 설치해 Node.js 환경에서도 `fetch` 함수를 사용할 수 있습니다.
 
 ```bash
-$ npm i node-fetch
+npm i node-fetch
 ```
 
 ```js --caption=fetch
@@ -872,7 +872,7 @@ fetch(`https://api.heropy.dev/v0/users`)
 `axios`는 Node.js 환경도 지원하므로, 동일하게 설치해서 사용할 수 있습니다.
 
 ```bash
-$ npm i axios
+npm i axios
 ```
 
 ```js --caption=axios

@@ -25,7 +25,7 @@ description:
 다음과 같이 (슈퍼 유저 권한으로) `kill` 명령에 프로세스 종료(TERM 시그널)할 PID(Process ID)를 입력합니다.
 
 ```bash
-$ sudo kill -TERM <PID>
+sudo kill -TERM <PID>
 ```
 
 ## lsof 명령으로 검색 후 종료
@@ -35,7 +35,7 @@ MongoDB 기본 포트 번호(27017)를 사용해 다음과 같이 `lsof` 명령�
 `-i` 옵션으로 프로토콜(`TCP`)과 포트(`27017`)를 명시합니다.
 
 ```bash
-$ sudo lsof -i TCP:27017
+sudo lsof -i TCP:27017
 ```
 
 다음과 같이 PID를 찾을 수 있습니다.
@@ -46,7 +46,7 @@ $ sudo lsof -i TCP:27017
 다음과 같이 `-s` 옵션을 추가해 TCP 상태가 `LISTEN`인 목록을 검색 후 COMMAND가 `mongod`인 항목을 찾습니다.
 
 ```bash
-$ sudo lsof -i TCP -s TCP:LISTEN
+sudo lsof -i TCP -s TCP:LISTEN
 ```
 
 역시 다음과 같이 MongoDB의 PID를 찾을 수 있습니다.
@@ -56,5 +56,5 @@ $ sudo lsof -i TCP -s TCP:LISTEN
 PID를 찾았다면 다음과 같이 포트를 종료합니다.
 
 ```bash
-$ sudo kill -TERM 12020
+sudo kill -TERM 12020
 ```

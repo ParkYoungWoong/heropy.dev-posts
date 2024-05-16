@@ -27,32 +27,32 @@ VS Code로 프로젝트 폴더를 열고 터미널에서 다음 명령을 순서
 
 ```bash
 # 현재 경로에 프로젝트 구성
-$ npm create vite@latest .
+npm create vite@latest .
   # > Vue 선택
   # > JavaScript 혹은 TypeScript 선택
 
 # 의존성 패키지 설치
-$ npm i
+npm i
 ```
 
 혹은. 터미널에서 프로젝트를 생성할 경로로 이동 후 다음 명령을 순서대로 실행합니다.
 
 ```bash
 # 현재 경로에 프로젝트 폴더 생성 및 구성
-$ npm create vite@latest <프로젝트_폴더_이름>
+npm create vite@latest <프로젝트_폴더_이름>
   # > Vue 선택
   # > JavaScript 혹은 TypeScript 선택
 
 # 프로젝트 경로로 이동
-$ cd <프로젝트_폴더_이름>
+cd <프로젝트_폴더_이름>
 
 # 의존성 패키지 설치
-$ npm i
+npm i
 
 # 현재 경로를 새로운 VS Code 창으로 열기
-$ code .
+code .
 # 혹은 현재 VS Code 창에서 열기
-$ code . -r
+code . -r
 # 혹은 수동으로 프로젝트 열기
 ```
 
@@ -63,7 +63,7 @@ VS Code > 명령 팔레트(Ctrl(Cmd) + Shift + P) > `code` 검색 > `PATH에 'co
 ///
 
 ```bash --caption=개발 서버 실행.
-$ npm run dev
+npm run dev
 ```
 
 ## ESLint + Prettier 구성
@@ -95,11 +95,11 @@ Vue 프로젝트이므로, 다음 확장 프로그램도 추가로 설치해 도
 각 패키지는 모두 런타임에서 필요치 않은 개발용이기 때문에, `-D` 플래그를 사용해 '개발 의존성 패키지(Dev Dependencies)'로 설치합니다.
 
 ```bash --caption=자바스크립트인 경우.
-$ npm i -D eslint prettier eslint-plugin-vue eslint-config-prettier eslint-plugin-prettier
+npm i -D eslint prettier eslint-plugin-vue eslint-config-prettier eslint-plugin-prettier
 ```
 
 ```bash --caption=타입스크립트인 경우.
-$ npm i -D eslint prettier eslint-plugin-vue eslint-config-prettier eslint-plugin-prettier @typescript-eslint/eslint-plugin @typescript-eslint/parser
+npm i -D eslint prettier eslint-plugin-vue eslint-config-prettier eslint-plugin-prettier @typescript-eslint/eslint-plugin @typescript-eslint/parser
 ```
 
 | 패키지 | 설명 |

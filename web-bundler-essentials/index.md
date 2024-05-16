@@ -276,7 +276,7 @@ h1 {
 - `webpack-dev-server`: 개발용으로 Live Server를 실행(HMR)
 
 ```bash
-$ npm i -D webpack webpack-cli webpack-dev-server
+npm i -D webpack webpack-cli webpack-dev-server
 ```
 
 Webpack을 실행할 스크립트를 다음과 같이 `package.json` 파일에 추가합니다.
@@ -383,7 +383,7 @@ module.exports = {
 - `@swc/core`: JS/JSX 파일 해석(트렌스파일)
 
 ```bash
-$ npm i -D style-loader css-loader sass-loader sass swc-loader @swc/core
+npm i -D style-loader css-loader sass-loader sass swc-loader @swc/core
 ```
 
 ```js --path=/webpack.config.js
@@ -447,7 +447,7 @@ SWC를 통해 JS/JSX 파일을 해석할 때 필요한 옵션을 제공할 수 �
 - `copy-webpack-plugin`: 정적 파일(파비콘, 이미지 등)을 제품(dist) 폴더로 복사
 
 ```bash
-$ npm i -D html-webpack-plugin copy-webpack-plugin
+npm i -D html-webpack-plugin copy-webpack-plugin
 ```
 
 ```js --path=/webpack.config.js
@@ -499,7 +499,7 @@ Parcel 구성의 최종 결과는 [여기](https://github.com/ParkYoungWoong/Bun
 ```
 
 ```bash
-$ npm i -D parcel
+npm i -D parcel
 ```
 
 #### 진입점
@@ -569,7 +569,7 @@ Parcel의 자바스크립트 컴파일러는 SWC를 기반으로 구축되어 �
 - `parcel-reporter-static-files-copy`: 정적 파일(파비콘, 이미지 등)을 `dist` 폴더로 복사
 
 ```bash
-$ npm i -D parcel-reporter-static-files-copy
+npm i -D parcel-reporter-static-files-copy
 ```
 
 플러그인을 사용할 때는, 다음과 같이 프로젝트 루트 경로에 `.parcelrc` 파일을 생성하고, 기본 구성을 제공해야 합니다.
@@ -620,13 +620,13 @@ Vite 구성의 최종 결과는 [여기](https://github.com/ParkYoungWoong/Bundl
 ///
 
 ```bash
-$ npm create vite@latest .
+npm create vite@latest .
   # > React 선택
   # > JavaScript + SWC 선택
 
 # 의존성 패키지 설치
-$ npm i
-$ npm i -D sass
+npm i
+npm i -D sass
 ```
 
 Vite는 프로젝트의 기본 구조를 가지고 시작하고 있습니다.

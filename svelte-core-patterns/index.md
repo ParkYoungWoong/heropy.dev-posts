@@ -3347,7 +3347,7 @@ Svelte REPL에서도 사용할 수 있습니다.
 [REPL에서 예제 보기 >](https://svelte.dev/repl/c35ccfc5a3914983b386929b0e3c82fd?version=3.29.4)
 
 ```bash
-$ npm i -D svelte-spa-router
+npm i -D svelte-spa-router
 ```
 
 `routes.js`를 생성해 다음과 같이 Route로 정의할 컴포넌트를 연결합니다.
