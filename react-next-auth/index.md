@@ -4,7 +4,7 @@ filename: react-next-auth
 image: https://heropy.dev/postAssets/MI1Khc/main.jpg
 title: Auth.js(NextAuth.js) 핵심 정리
 createdAt: 2024-04-21
-updatedAt: 2024-04-26
+updatedAt: 2024-06-09
 group: React
 author:
   - ParkYoungWoong
@@ -265,7 +265,7 @@ export default async function Header() {
 }
 ```
 
-## Credentials
+## Credentials 공급자
 
 자격 증명 공급자(`Credentials`)를 사용해, 사용자 이름, 이메일, 비밀번호를 이용한 회원가입 및 로그인을 구현할 수 있습니다.
 
@@ -942,7 +942,7 @@ async function _signIn(
 }
 ```
 
-## Google
+## Google 공급자
 
 주로 '소셜 로그인'이라고 부르는 방식으로, `Google` 공급자를 통해 사용자의 구글 계정으로 회원가입 및 로그인을 구현할 수 있습니다.
 
@@ -1256,5 +1256,108 @@ async function _signIn(
   throw new CredentialsSignin({
     cause: data || '문제가 발생했습니다, 잠시 후 다시 시도하세요.'
   })
+}
+```
+
+## 반응형 세션 확인
+
+세션 정보를 매번 확인해 반응형 데이터로 만들어 사용하는 것은 상당히 번거러운 일입니다.
+그래서 다음과 같이 커스텀 훅을 만들어서 사용하면 편리합니다.
+
+다음 예시는 페이지를 이동할 때마다 세션 정보가 갱신하며, 반응형으로 사용할 수 있습니다.
+만약 다른 상황에서 세션 정보를 갱신하길 원하면, `SessionProvider` 함수를 수정할 수 있습니다.
+
+```tsx --path=/providers/session.tsx
+'use client'
+import { createContext, useContext, useEffect, useState } from 'react'
+import { usePathname } from 'next/navigation'
+import type { Session } from 'next-auth'
+import { auth } from '@/serverActions/auth'
+
+const SessionContent = createContext<Session | null>(null)
+
+export const SessionProvider = ({
+  children
+}: {
+  children: React.ReactNode
+}) => {
+  const pathname = usePathname()
+  const [session, setSession] = useState<Session | null>(null)
+  useEffect(() => {
+    auth().then(res => {
+      setSession(res)
+    })
+  }, [pathname]) // 페이지를 이동할 때마다 세션을 갱신
+  return (
+    <SessionContent.Provider value={session}>
+      {children}
+    </SessionContent.Provider>
+  )
+}
+
+// 클라이언트 컴포넌트용 커스텀 훅
+export const useSession = () => {
+  return useContext(SessionContent)
+}
+```
+
+`useSession` 커스텀 훅은 `<SessionProvider>` 컴포넌트 범위에서만 사용할 수 있습니다.
+따라서 다음과 같이 전역 레이아웃이나 사용을 원하는 곳에서, `<SessionProvider>` 컴포넌트를 사용합니다.
+
+```tsx --path=/app/layout.tsx --line-active=1,12,15
+import { SessionProvider } from '@/providers/session'
+import Header from '@/components/Header'
+
+export default function RootLayout({
+  children
+}: Readonly<{
+  children: React.ReactNode
+}>) {
+  return (
+    <html lang="ko">
+      <body>
+        <SessionProvider>
+          <Header />
+          {children}
+        </SessionProvider>
+      </body>
+    </html>
+  )
+}
+```
+
+서버 컴포넌트는 커스텀 훅을 사용할 수 없으므로, 클라이언트 컴포넌트로 선언(`'use client'`)해야 합니다.
+
+```tsx --path=/components/Header.tsx --line-active=1,5,9 --line-error=3,8
+'use client'
+import Link from 'next/link'
+// import { getSession, signOutWithForm } from '@/serverActions/auth'
+import { signOutWithForm } from '@/serverActions/auth'
+import { useSession } from '@/providers/session'
+
+export default function Header() {
+  // const session = await getSession()
+  const session = useSession()
+  return (
+    <header>
+      {session?.user && <div className="username">{session.user.name}</div>}
+      <nav style={{ display: 'flex', gap: '10px' }}>
+        <Link href="/">Home</Link>
+        <Link href="/about">About</Link>
+        {session?.user ? (
+          <>
+            <form action={signOutWithForm}>
+              <button type="submit">로그아웃</button>
+            </form>
+          </>
+        ) : (
+          <>
+            <Link href="/signin">로그인</Link>
+            <Link href="/signup">회원가입</Link>
+          </>
+        )}
+      </nav>
+    </header>
+  )
 }
 ```
