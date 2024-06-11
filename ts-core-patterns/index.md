@@ -4,7 +4,7 @@ filename: ts-core-patterns
 image: https://heropy.dev/postAssets/WhqSC8/main.jpg
 title: 한눈에 보는 타입스크립트
 createdAt: 2023-11-30
-updatedAt: 2024-04-19
+updatedAt: 2024-06-09
 group: TS
 author:
   - ParkYoungWoong

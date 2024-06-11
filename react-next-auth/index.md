@@ -1328,7 +1328,7 @@ export default function RootLayout({
 
 서버 컴포넌트는 커스텀 훅을 사용할 수 없으므로, 클라이언트 컴포넌트로 선언(`'use client'`)해야 합니다.
 
-```tsx --path=/components/Header.tsx --line-active=1,5,9 --line-error=3,8
+```tsx --path=/components/Header.tsx --line-active=1,5,9 --line-error=3,8 --caption=이제 세션은 반응형입니다.
 'use client'
 import Link from 'next/link'
 // import { getSession, signOutWithForm } from '@/serverActions/auth'
