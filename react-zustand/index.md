@@ -258,10 +258,10 @@ export default function App() {
 
 ### 상태 초기화
 
-만약 상태를 초깃값으로 돌리는 기능이 필요한 경우, 다음과 같이 `resetState` 함수를 추가해 사용할 수 있습니다.
+만약 상태를 초깃값으로 되돌리는 기능이 필요한 경우, 다음과 같이 `resetState` 함수를 추가해 사용할 수 있습니다.
 액션을 제외한 상태만 초기화하는 것이니, 상태와 액션을 분리해서 타입과 초깃값을 작성합니다.
 
-```ts --line-active=28
+```ts  --path=/src/store/count.ts --line-active=28
 import { create } from 'zustand'
 
 interface State {
@@ -294,9 +294,9 @@ export const useCountStore = create<State & Actions>(set => ({
 }))
 ```
 
-전체 상태를 초기화하는 것에 더해 일부 상태도 초기화하려면, 다음과 같이 `resetState` 함수를 수정합니다.
+전체 상태를 초기화하는 것에 더해 일부 상태도 초기화하려면, 다음과 같이 `resetState` 함수를 수정할 수 있습니다.
 
-```ts --line-active=13,28-36
+```ts  --path=/src/store/count.ts --line-active=13,28-38
 import { create } from 'zustand'
 
 interface State {
@@ -324,11 +324,13 @@ export const useCountStore = create<State & Actions>(set => ({
   actions: {
     increase: () => set(state => ({ count: state.count + 1 })),
     decrease: () => set(state => ({ count: state.count - 1 })),
-    resetState: (keys) => {
+    resetState: keys => {
+      // 전체 상태 초기화
       if (!keys) {
         set(initialState)
         return
       }
+      // 일부 상태 초기화
       keys.forEach(key => {
         set(({ [key]: initialState[key] }))
       })
@@ -368,7 +370,7 @@ npm i lodash-es
 npm i -D @types/lodash-es
 ```
 
-```ts --line-active=2,14,29-31
+```ts  --path=/src/store/count.ts --line-active=2,14,29-31
 import { create } from 'zustand'
 import { omit } from 'lodash-es'
 
@@ -423,8 +425,8 @@ export default function DeleteState() {
 
 ## 미들웨어
 
-Zustand는 미들웨어(Middleware)를 사용해 스토어의 추가 기능(타입 추론, 중첩 객체 변경 등)을 확장할 수 있습니다.
-다중 미들웨어를 사용할 때는 일부 중첩 순서가 중요할 수 있습니다.
+Zustand는 미들웨어(Middleware)라는 것을 사용해, 스토어의 추가 기능(타입 추론, 중첩 객체 변경 등)을 확장할 수 있습니다.
+다중 미들웨어를 작성할 때는 일부 중첩 순서가 중요할 수 있습니다.
 
 ```ts
 // 미들웨어 없이
@@ -472,8 +474,9 @@ combine(state, actions)
 ```
 
 앞서 살펴본 [상태 삭제](/p/n74Tgc#h3_상태_삭제) 예시에서 `combine` 미들웨어를 사용하면, 다음과 같이 작성할 수 있습니다.
+다음 예제의 모든 상태는 숫자 타입(`number`)으로 추론합니다.
 
-```ts
+```ts --path=/src/store/count.ts
 import { create } from 'zustand'
 import { combine } from 'zustand/middleware'
 import { omit } from 'lodash-es'
@@ -501,9 +504,9 @@ export const useCountStore = create(
 ```
 
 추론 가능하지 않은 타입은 직접 작성해야 합니다.
-타입 만족 키워드(`satisfies`)와 타입 단언 키워드(`as`)를 활용해 타입을 작성하면 됩니다.
+[타입 만족(`satisfies`)](https://www.heropy.dev/p/WhqSC8#h3_타입_만족)이나 [타입 단언(`as`)](https://www.heropy.dev/p/WhqSC8#h3_타입_단언) 키워드를 활용해 타입을 작성하면 됩니다.
 
-```ts --line-active=4-8,12 --line-error=11,27
+```ts --path=/src/store/user.ts --line-active=4-8,12 --line-error=11,27
 import { create } from 'zustand'
 import { combine } from 'zustand/middleware'
 
@@ -530,7 +533,7 @@ export const useUserStore = create(
               email: 'thesecon@gmail.com',
               displayName: 'HEROPY',
               isValid: true,
-              hello: 'world' // Error!
+              phone: 12345678 // Error!
             }
           })
         }
@@ -544,9 +547,9 @@ export const useUserStore = create(
 
 다음 예시와 같이, `user` 객체(상태)에서 `displayName` 속성만 변경하는 액션을 작성할 수 있습니다.
 여기서 `set` 함수는 상태 자체를 변경해야 하므로, 특정 객체에서 일부 속성만 변경하려면 새로운 객체를 할당하고 기존 속성은 복사해야 합니다.
-그런데 만약 `user.relations[0].emails[0].tld`와 같이 다중 중첩 객체에서 특정 하위 속성을 변경하려면, 이러한 작업은 매우 복잡해집니다.
+그런데 만약 `user.relations[0].emails[0].domain`과 같이 다중 중첩 객체에서 특정 하위 속성을 변경하려면, 이러한 작업은 매우 복잡해집니다.
 
-```ts --line-active=4-8,33-43
+```ts --path=/src/store/user.ts --line-active=4-8,33-43
 import { create } from 'zustand'
 
 interface State {
@@ -599,15 +602,15 @@ Immer 미들웨어를 사용하면, 중첩된 객체 상태를 보다 쉽게 변
 단, [Immer](https://immerjs.github.io/immer/) 라이브러리를 설치해야 합니다. 
 이는 Zustand의 Immer 미들웨어를 사용하기 위해 설치해야 하는 피어 의존성(Peer Dependency)입니다.
 
-```npm 
+```bash
 npm i immer
 ```
 
 다시 돌아와, Immer 미들웨어를 적용합니다.
-이제 `set` 함수의 콜백에서 객체의 속성에 직접 접근해 값을 변경할 수 있으며, 병합할 상태의 반환이 없어도 됩니다.
-`user.relations[0].emails[0].tld = 'com'`와 같이 다중 중첩 객체의 속성도 쉽게 변경할 수 있습니다.
+이제 `set` 함수의 콜백에서 객체의 속성에 직접 접근해 값을 변경할 수 있으며, 병합할 상태 객체의 반환이 없어도 됩니다.
+`user.relations[0].emails[0].domain = 'com'`과 같이 다중 중첩 객체의 속성도 쉽게 변경할 수 있습니다.
 
-```ts --line-active=2,6,11-15
+```ts --path=/src/store/user.ts --line-active=2,6,11-15
 import { create } from 'zustand'
 import { immer } from 'zustand/middleware/immer'
 
@@ -629,9 +632,9 @@ export const useUserStore = create(
 )
 ```
 
-앞서 살펴본 `combine`과 `immer` 미들웨어를 같이 사용하면, 다음과 같이 작성할 수 있습니다.
+앞서 살펴본 `combine`과 `immer` 미들웨어를 같이 사용하면, 다음과 예제와 같이 작성할 수 있습니다.
 
-```ts --line-active=3,10,11,15,16
+```ts --path=/src/store/count.ts --line-active=3,10,11,15,16
 import { create } from 'zustand'
 import { combine } from 'zustand/middleware'
 import { immer } from 'zustand/middleware/immer'
@@ -657,7 +660,7 @@ export const useCountStore = create(
 
 ### 상태 구독 (subscribeWithSelector)
 
-스토어 훅에서 `subscribe` 함수를 사용하면, 스토어의 모든 상태 변경을 감지해 리스너(Listener)를 호출합니다.
+스토어 훅에서 `subscribe` 함수를 사용하면, 스토어의 모든 상태 변경을 구독(상태를 감지해 리스너(Listener)를 호출)합니다.
 그리고 `subscribe` 함수의 반환을 호출하면, 구독을 해제할 수 있습니다.
 
 ```ts
@@ -666,16 +669,19 @@ const unsubscribe = useCountStore.subscribe(listener)
 unsubscribe() // 구독 해제
 ```
 
-만약 모든 상태가 아닌 특정 상태 변경만 감지하려면, `subscribeWithSelector` 미들웨어를 사용합니다.
+만약 모든 상태가 아닌 특정 상태 변경만 구독하려면, `subscribeWithSelector` 미들웨어를 사용합니다.
 그러면 `subscribe` 함수는 선택자(Selector)와 리스너를 인수로 받을 수 있습니다.
-선택자는 상태를 반환하는 함수를 말하며, 반환값을 통해 어떤 상태를 감시할지 결정합니다.
+선택자는 상태를 반환하는 함수를 말하며, 반환 값을 통해 어떤 상태를 구독할지 결정합니다.
 
 ```ts
-const selector = state => state.감시할상태
+const selector = state => state.구독할상태
 const listener = (newValue, oldValue) => {}
 const unsubscribe = useCountStore.subscribe(selector, listener)
 unsubscribe() // 구독 해제
 ```
+
+다음 예제는 `count` 상태를 구독해, `count` 상태가 변경될 때마다 `double` 상태를 변경하는 예제입니다.
+일종의 계산된 상태(Computed State)를 관리할 수 있습니다.
 
 ```ts --path=/src/store/count.ts --line-active=2,10,25-31
 import { create } from 'zustand'
@@ -746,12 +752,15 @@ export default function App() {
 Zustand는 `persist` 미들웨어를 사용해 스토리지에 상태를 저장하고 불러올 수 있습니다. 
 이를 통해 페이지를 새로고침하거나 다시 방문했을 때에도 상태를 유지할 수 있습니다.
 
+스토리지에 저장될 스토어의 고유한 이름을 필수 옵션(`name`)으로 제공해야 합니다.
+또한 로컬 스토리지(`localStorage`)를 기본으로 사용하며, 필요하면 세션 스토리지(`sessionStorage`)를 사용할 수도 있습니다.
+
 /// message-box --icon=warning
 JSON 형식으로 변환할 수 없는 상태는 저장할 수 없습니다.
 [액션 분리](/p/n74Tgc#h3_액션_분리)에서 살펴본 `actions` 객체는 액션(함수)들만 가지므로, 단순히 빈 객체로 저장되어 각 액션(함수)을 사용할 수 없으니 주의합니다!
 ///
 
-```ts --line-active=2,10,23-26 --line-error=16
+```ts --path=/src/store/count.ts --line-active=2,10,23-26 --line-error=16
 import { create } from 'zustand'
 import { combine, subscribeWithSelector, persist, createJSONStorage } from 'zustand/middleware'
 import { immer } from 'zustand/middleware/immer'
@@ -784,14 +793,14 @@ export const useCountStore = create(
 
 ![로컬 스토리지에 저장된 상태](./assets/s8.JPG)
 
-TODO: Next.js의 하이드레이션 에러!!
+TODO: Next.js의 하이드레이션 이슈!!
 
 ### 개발자 도구 (Devtools)
 
 [Redux DevTools](https://chromewebstore.google.com/detail/redux-devtools/lmhkpmbekcpmknklioeibfkpmmfibljd)과 같이 Zustand의 상태를 모니터링할 수 있는 개발자 도구를 사용할 수 있습니다.
 `devtools` 미들웨어를 사용하면, 개발자 도구가 활성화됩니다.
 
-```ts --line-active=2,10
+```ts --path=/src/store/count.ts --line-active=2,10
 import { create } from 'zustand'
 import { combine, subscribeWithSelector, persist, devtools } from 'zustand/middleware'
 import { immer } from 'zustand/middleware/immer'
