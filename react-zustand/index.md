@@ -793,8 +793,6 @@ export const useCountStore = create(
 
 ![로컬 스토리지에 저장된 상태](./assets/s8.JPG)
 
-TODO: Next.js의 하이드레이션 이슈!!
-
 ### 개발자 도구 (Devtools)
 
 [Redux DevTools](https://chromewebstore.google.com/detail/redux-devtools/lmhkpmbekcpmknklioeibfkpmmfibljd)과 같이 Zustand의 상태를 모니터링할 수 있는 개발자 도구를 사용할 수 있습니다.
