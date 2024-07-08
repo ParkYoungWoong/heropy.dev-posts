@@ -4,7 +4,7 @@ filename: react-next-auth
 image: https://heropy.dev/postAssets/MI1Khc/main.jpg
 title: Auth.js(NextAuth.js) 핵심 정리
 createdAt: 2024-04-21
-updatedAt: 2024-06-09
+updatedAt: 2024-07-09
 group: React
 author:
   - ParkYoungWoong
@@ -200,15 +200,15 @@ Next.js App Router의 클라이언트 컴포넌트는 `'use server'` 선언의 �
 import { auth, signIn, signOut, update } from '@/auth'
 
 export const signInWithCredentials = async (formData: FormData) => {
-  await signIn('credentials', options)
+  await signIn('credentials', { /* 옵션 */ })
   // ...
 }
 export const signInWithGoogle = async () => {
-  await signIn('google', options)
+  await signIn('google', { /* 옵션 */ })
   // ...
 }
 export const signInWithGitHub = async () => {
-  await signIn('github', options)
+  await signIn('github', { /* 옵션 */ })
   // ...
 }
 export const signOutWithForm = async (formData: FormData) => {
@@ -275,8 +275,8 @@ export default async function Header() {
 그리고 회원가입 및 로그인이 성공하면 메인 페이지로 리다이렉션하도록 `redirectTo` 옵션을 제공할 수 있습니다.
 
 /// message-box --icon=warning
-`signIn('credentials')` 함수의 옵션에서 `username` 같은 각 속성의 값은 문자로 변환됩니다.
-따라서 `formData.get('username')`이 `null`이면, `'null'` 문자로 전달되므로 주의해야 합니다.
+`signIn('credentials')` 함수의 옵션에서 `displayName` 같은 각 속성의 값은 문자로 변환됩니다.
+따라서 `formData.get('displayName')`이 `null`이면, `'null'` 문자로 전달되므로 주의해야 합니다.
 ///
 
 ```ts --path=/serverActions/auth.ts
@@ -285,7 +285,7 @@ import { auth, signIn, signOut, update } from '@/auth'
 
 export const signInWithCredentials = async (formData: FormData) => {
   await signIn('credentials', {
-    username: formData.get('username') || '', // `'null'` 문자 방지
+    displayName: formData.get('displayName') || '', // `'null'` 문자 방지
     email: formData.get('email') || '',
     password: formData.get('password') || '',
     redirectTo: '/'
@@ -315,11 +315,11 @@ export const {
   providers: [
     Credentials({
       authorize: async credentials => {
-        const { username, email, password } = credentials
+        const { displayName, email, password } = credentials
         let user = { id: '', name: '', email: '', image: '' }
 
         // 사용자 이름이 있는 경우, 회원가입!
-        if (username) {
+        if (displayName) {
           // <회원가입 로직 ...>
           return user
         }
@@ -345,7 +345,7 @@ export default async function Header() {
   const session = await getSession()
   return (
     <header>
-      {session?.user && <div className="username">{session.user.name}</div>}
+      {session?.user && <div>{session.user.name}</div>}
       <nav style={{ display: 'flex', gap: '10px' }}>
         <Link href="/">메인</Link>
         {session?.user ? (
@@ -386,7 +386,7 @@ export default function SignUpPage() {
         <label>
           사용자 이름
           <input
-            name="username"
+            name="displayName"
             type="text"
           />
         </label>
@@ -464,11 +464,11 @@ export const {
   providers: [
     Credentials({
       authorize: async credentials => {
-        const { username, email, password } = credentials
+        const { displayName, email, password } = credentials
         let user = { id: '', name: '', email: '', image: '' }
 
         // 사용자 이름이 있는 경우, 회원가입!
-        if (username) {
+        if (displayName) {
           // <회원가입 로직 ...>
           return {
             ...user,
@@ -540,8 +540,9 @@ export default async function MyaccountPage() {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
-      Authorization: `Bearer ${session.accessToken}`,
-      apikey: process.env.API_KEY as string
+      apikey: process.env.HEROPY_API_KEY as string,
+      username: 'HEROPY',
+      Authorization: `Bearer ${session.accessToken}`
     }
   })
   const account = (await res.json()) as ResponseValue
@@ -595,7 +596,7 @@ export default async function MyaccountPage() {
         <label>
           사용자 이름
           <input
-            name="username"
+            name="displayName"
             type="text"
             defaultValue={session?.user?.name as string}
           />
@@ -622,11 +623,12 @@ export async function updateUser(formData: FormData) {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
-        apikey: process.env.API_KEY as string,
+        apikey: process.env.HEROPY_API_KEY as string,
+        username: 'HEROPY',
         Authorization: `Bearer ${session?.accessToken}`
       },
       body: JSON.stringify({
-        displayName: formData.get('username')
+        displayName: formData.get('displayName')
       })
     }
   )
@@ -654,11 +656,11 @@ export const {
   providers: [
     Credentials({
       authorize: async credentials => {
-        const { username, email, password } = credentials
+        const { displayName, email, password } = credentials
         let user = { id: '', name: '', email: '', image: '' }
 
         // 사용자 이름이 있는 경우, 회원가입!
-        if (username) {
+        if (displayName) {
           // <회원가입 로직 ...>
           if (error) {
             throw new CredentialsSignin({
@@ -691,7 +693,7 @@ import { CredentialsSignin } from 'next-auth'
 export const signInWithCredentials = async (formData: FormData) => {
   try {
     await signIn('credentials', {
-      username: formData.get('username'),
+      displayName: formData.get('displayName'),
       email: formData.get('email'),
       password: formData.get('password'),
       // redirectTo: '/'  <= 이 속성은 try 문 안에서 동작하지 않습니다! Beta?
@@ -702,7 +704,7 @@ export const signInWithCredentials = async (formData: FormData) => {
       throw new Error(error.cause as unknown as string)
     }
   }
-  redirect('/')
+  redirect('/') // 또는 return { message: '메시지!' }
 }
 // ...
 ```
@@ -748,7 +750,7 @@ export default function SignUpPage() {
         <label>
           사용자 이름
           <input
-            name="username"
+            name="displayName"
             type="text"
           />
         </label>
@@ -819,7 +821,7 @@ export default function SignInPage() {
 이제 `useFormStatus` 훅으로 비동기 상태를 관리할 수 있습니다.
 회원가입 및 로그인 페이지에서 사용할 제출 버튼 컴포넌트를 다음과 같이 작성합니다.
 
-```tsx --path=/components/SubmitButton.tsx
+```tsx --path=/components/SubmitButton.tsx --caption=type="submit" 필수!
 'use client'
 import { useFormStatus } from 'react-dom'
 
@@ -853,7 +855,7 @@ export const signInWithCredentials = async (
 ) => {
   try {
     await signIn('credentials', {
-      username: formData.get('username'),
+      displayName: formData.get('displayName'),
       email: formData.get('email'),
       password: formData.get('password')
     })
@@ -871,13 +873,12 @@ export const signInWithCredentials = async (
 
 좀 더 구체적인 활용 예시로, 다음과 같이 회원가입 및 로그인 API를 활용할 수도 있습니다.
 
-```ts --path=/auth.ts --line-active=27-30,32-33,40-68
-import NextAuth from 'next-auth'
+```ts --path=/auth.ts --line-active=26-29,31-32,39-67
+import NextAuth, { CredentialsSignin } from 'next-auth'
 import Credentials from 'next-auth/providers/credentials'
-import { CredentialsSignin } from 'next-auth'
 
 interface UserInfo {
-  username?: string
+  displayName?: string
   email: string
   password: string
 }
@@ -899,7 +900,7 @@ export const {
         const userInfo = credentials as unknown as UserInfo
 
         // 회원가입
-        if (userInfo.username) {
+        if (userInfo.displayName) {
           return _signIn('signup', userInfo)
         }
 
@@ -913,13 +914,14 @@ export const {
 
 async function _signIn(
   type: 'signup' | 'login',
-  body: { username?: string; email: string; password: string }
+  body: { displayName?: string; email: string; password: string }
 ) {
   const res = await fetch(`https://api.heropy.dev/auth/${type}`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      apikey: process.env.API_KEY as string
+      apikey: process.env.HEROPY_API_KEY as string,
+      username: 'HEROPY'
     },
     body: JSON.stringify(body)
   })
@@ -1054,7 +1056,7 @@ export default function SignInPage() {
 [액세스 토큰 관리](/p/MI1Khc#h3_%EC%95%A1%EC%84%B8%EC%8A%A4_%ED%86%A0%ED%81%B0_%EA%B4%80%EB%A6%AC)와 [세션 정보 갱신](/p/MI1Khc#h3_%EC%84%B8%EC%85%98_%EC%A0%95%EB%B3%B4_%EA%B0%B1%EC%8B%A0)은 앞서 확인한 'Credentials' 내용과 같습니다.
 만약 별도의 액세스 토큰 관리나 세션 정보 갱신이 필요치 않은 경우, `jwt`와 `session` 콜백에서 관련 코드를 제거하세요.
 
-```ts --path=/auth.ts --line-active=8-11,21-27 --line-error=29-34,38-40
+```ts --path=/auth.ts --line-active=8-16,26-32 --line-error=34-36,43-45
 import NextAuth from 'next-auth'
 import Google from 'next-auth/providers/google'
 
@@ -1064,7 +1066,12 @@ export const {
   providers: [
     Google({
       clientId: process.env.AUTH_GOOGLE_ID,
-      clientSecret: process.env.AUTH_GOOGLE_SECRET
+      clientSecret: process.env.AUTH_GOOGLE_SECRET,
+      authorization: {
+        params: {
+          prompt: 'consent' // 사용자에게 항상 동의 화면을 표시하도록 강제!
+        }
+      }
     })
   ],
   session: {
@@ -1155,12 +1162,21 @@ interface ResponseValue {
 }
 
 export const {
-  // ...
+  handlers,
+  signIn,
+  signOut,
+  auth,
+  unstable_update: update
 } = NextAuth({
   providers: [
     Google({
       clientId: process.env.AUTH_GOOGLE_ID,
-      clientSecret: process.env.AUTH_GOOGLE_SECRET
+      clientSecret: process.env.AUTH_GOOGLE_SECRET,
+      authorization: {
+        params: {
+          prompt: 'consent' // 사용자에게 항상 동의 화면을 표시하도록 강제!
+        }
+      }
     })
   ],
   session: {
@@ -1180,36 +1196,29 @@ export const {
             : 'signup'
           // 회원가입 또는 로그인 
           const _user = await _signIn(type, {
-            token: account.access_token as string,
-            email: profile?.email as string,
-            expires: profile?.exp as string
+            displayName: user.name as string,
+            email: user.email as string,
+            profileImg: user.image as string
           })
-          user.accessToken = _user.accessToken
+          Object.assign(user, _user) // jwt 콜백의 user 속성과 병합
+          return !!profile?.email_verified
         } catch (error) {
-          if (
-            error instanceof CredentialsSignin &&
-            typeof error.cause === 'string'
-          ) {
+          if (error instanceof Error) {
             return `/error?message=${encodeURIComponent(error.message)}`
           }
         }
-        return !!profile?.email_verified
       }
       return true
     },
     jwt: async ({ token, user, trigger, session }) => {
-      if (user?.accessToken) {
-        token.accessToken = user.accessToken
-      }
+      token = { ...token, ...user }
       if (trigger === 'update' && session) {
         token = { ...token, ...session.user }
       }
       return token
     },
     session: async ({ session, token }) => {
-      if (token?.accessToken) {
-        session.accessToken = token.accessToken
-      }
+      session = { ...session, ...token }
       return session
     }
   }
@@ -1217,13 +1226,15 @@ export const {
 
 // 사용자 확인
 async function _existUser(email: string) {
-  const res = await fetch(`https://api.heropy.dev/auth/exists`, {
-    method: 'POST',
+  const res = await fetch(`https://api.heropy.dev/auth/oauth/exists`, {
+    method: 'GET',
     headers: {
       'Content-Type': 'application/json',
-      apikey: process.env.API_KEY as string
+      apikey: process.env.HEROPY_API_KEY as string,
+      username: 'HEROPY',
+      email
     },
-    body: JSON.stringify({ email })
+    cache: 'no-store'
   })
   return (await res.json()) as boolean
 }
@@ -1231,15 +1242,17 @@ async function _existUser(email: string) {
 // 회원가입 또는 로그인
 async function _signIn(
   type: 'signup' | 'login',
-  body: { email: string; token: string; expires: string }
+  body: { email: string; displayName?: string; profileImg?: string }
 ) {
-  const res = await fetch(`https://api.heropy.dev/oauth/${type}`, {
+  const res = await fetch(`https://api.heropy.dev/auth/oauth/${type}`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      apikey: process.env.API_KEY as string
+      apikey: process.env.HEROPY_API_KEY as string,
+      username: 'HEROPY'
     },
-    body: JSON.stringify(body)
+    body: JSON.stringify(body),
+    cache: 'no-store'
   })
   const data = (await res.json()) as ResponseValue | string
 
@@ -1253,9 +1266,9 @@ async function _signIn(
     }
   }
 
-  throw new CredentialsSignin({
-    cause: data || '문제가 발생했습니다, 잠시 후 다시 시도하세요.'
-  })
+  throw new Error(
+    (data as string) || '문제가 발생했습니다, 잠시 후 다시 시도하세요.'
+  )
 }
 ```
 
@@ -1272,7 +1285,7 @@ async function _signIn(
 import { createContext, useContext, useEffect, useState } from 'react'
 import { usePathname } from 'next/navigation'
 import type { Session } from 'next-auth'
-import { auth } from '@/serverActions/auth'
+import { getSession } from '@/serverActions/auth'
 
 const SessionContent = createContext<Session | null>(null)
 
@@ -1284,7 +1297,7 @@ export const SessionProvider = ({
   const pathname = usePathname()
   const [session, setSession] = useState<Session | null>(null)
   useEffect(() => {
-    auth().then(res => {
+    getSession().then(res => {
       setSession(res)
     })
   }, [pathname]) // 페이지를 이동할 때마다 세션을 갱신
@@ -1328,7 +1341,7 @@ export default function RootLayout({
 
 서버 컴포넌트는 커스텀 훅을 사용할 수 없으므로, 클라이언트 컴포넌트로 선언(`'use client'`)해야 합니다.
 
-```tsx --path=/components/Header.tsx --line-active=1,5,9 --line-error=3,8 --caption=이제 세션은 반응형입니다.
+```tsx --path=/components/Header.tsx --line-active=1,4,5,9 --line-error=3,8 --caption=이제 세션은 반응형입니다.
 'use client'
 import Link from 'next/link'
 // import { getSession, signOutWithForm } from '@/serverActions/auth'
@@ -1340,7 +1353,7 @@ export default function Header() {
   const session = useSession()
   return (
     <header>
-      {session?.user && <div className="username">{session.user.name}</div>}
+      {session?.user && <div>{session.user.name}</div>}
       <nav style={{ display: 'flex', gap: '10px' }}>
         <Link href="/">Home</Link>
         <Link href="/about">About</Link>

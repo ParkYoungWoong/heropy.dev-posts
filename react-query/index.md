@@ -4,6 +4,7 @@ filename: react-query
 image: https://heropy.dev/postAssets/HZaKIE/main.jpg
 title: TanStack Query(React Query) 핵심 정리
 createdAt: 2024-07-07
+updatedAt: 2024-07-09
 group: React
 author:
   - ParkYoungWoong
@@ -152,11 +153,6 @@ export default function App() {
 ```
 
 ## 핵심 기능
-
-- useQuery: 데이터 가져오기
-- useQueries: 여러 데이터 가져오기
-- useMutation: 데이터 변경
-- useInfiniteQuery: 무한 스크롤
 
 ### useQuery
 
@@ -1083,3 +1079,106 @@ export default function App() {
 버튼을 누르고 개발자 도구를 열어 사용하거나 도구 우측 상단의 버튼을 선택해 닫을 수도 있습니다.
 
 ![TanStack Query 개발자 도구](./assets/s5.JPG)
+
+## with Next.js
+
+```bash
+npm i @tanstack/react-query-next-experimental
+```
+
+다음과 같이 Provider를 구성합니다.
+서버와 클라이언트 모두에서 사용해야 하므로, `'use client'`를 사용해야 합니다.
+
+```tsx --path=/app/queryProviders.tsx --line-active=1
+'use client'
+import {
+  QueryClient,
+  QueryClientProvider,
+  isServer,
+} from '@tanstack/react-query'
+import { ReactQueryStreamedHydration } from '@tanstack/react-query-next-experimental'
+
+function makeQueryClient() {
+  return new QueryClient({
+    defaultOptions: {
+      queries: {
+        // 클라이언트의 즉시 다시 요청에 대응하도록, 기본 캐싱 시간(min)을 설정.
+        staleTime: 60 * 1000
+      }
+    }
+  })
+}
+
+let browserQueryClient: QueryClient | undefined = undefined
+
+function getQueryClient() {
+  if (isServer) {
+    return makeQueryClient()
+  } else {
+    if (!browserQueryClient) browserQueryClient = makeQueryClient()
+    return browserQueryClient
+  }
+}
+
+export function QueryProvider({ children }: { children: React.ReactNode }) {
+  const queryClient = getQueryClient()
+  return (
+    <QueryClientProvider client={queryClient}>
+      <ReactQueryStreamedHydration>
+        {children}
+      </ReactQueryStreamedHydration>
+    </QueryClientProvider>
+  )
+}
+```
+
+그리고 루트 레이아웃에서 구성한 `<QueryProvider>`를 사용합니다.
+
+```tsx --path=/app/layout.tsx --line-active=1,11
+import { QueryProvider } from './queryProviders'
+
+export default function RootLayout({
+  children
+}: Readonly<{
+  children: React.ReactNode
+}>) {
+  return (
+    <html lang="ko">
+      <body>
+        <QueryProvider>{children}</QueryProvider>
+      </body>
+    </html>
+  )
+}
+```
+
+`useSuspenseQuery`를 사용하면, 서버 측 렌더링 단계에서 가져오기를 시도합니다.
+우리는 TanStack Query의 캐싱 전략을 사용할 것이기 때문에, Next.js `fetch` 함수의 캐싱 기능을 비활성화해야 합니다.
+
+```tsx --path=/components/DelayedData.tsx --line-active=1,14
+'use client'
+import { useSuspenseQuery } from '@tanstack/react-query'
+
+type ResponseValue = {
+  message: string
+  time: string
+}
+
+export default function DelayedData() {
+  const { data } = useSuspenseQuery<ResponseValue>({
+    queryKey: ['delay'],
+    queryFn: async () => {
+      const res = await fetch('https://api.heropy.dev/v0/delay?t=1000', {
+        cache: 'no-store'
+      })
+      return res.json()
+    },
+    staleTime: 1000 * 10
+  })
+  return <div>{data.time}</div>
+}
+```
+
+```tsx --path=/app/page.tsx
+import DelayedData from '../components/DelayedData'
+```
