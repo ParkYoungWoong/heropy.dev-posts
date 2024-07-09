@@ -1180,5 +1180,14 @@ export default function DelayedData() {
 ```
 
 ```tsx --path=/app/page.tsx
-import DelayedData from '../components/DelayedData'
+import { Suspense } from 'react'
+import DelayedData from '@/components/DelayedData'
+
+export default function Page() {
+  return (
+    <Suspense fallback={<div>loading..</div>}>
+      <DelayedData />
+    </Suspense>
+  )
+}
 ```
