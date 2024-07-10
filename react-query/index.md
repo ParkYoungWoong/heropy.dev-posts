@@ -976,7 +976,7 @@ export default function AddUser() {
       if (!res.ok) throw new Error('변이 중 에러 발생!') // 변이 실패!
       return res.json() // 변이 성공!
     },
-    onMutate: async newTodo => {
+    onMutate: async newUser => {
       // 낙관적 업데이트 전에 사용자 목록 쿼리를 취소해 잠재적인 충돌 방지!
       await queryClient.cancelQueries({ queryKey: ['users'] })
 
@@ -985,26 +985,26 @@ export default function AddUser() {
 
       // 낙관적 업데이트
       if (previousUsers) {
-        queryClient.setQueryData<Users>(['users'], [...previousUsers, newTodo])
+        queryClient.setQueryData<Users>(['users'], [...previousUsers, newUser])
       }
 
       // 각 콜백의 context로 전달할 데이터 반환!
       return { previousUsers }
     },
-    onSuccess: (data, newTodo, context) => {
-      console.log('onSuccess', data, newTodo, context)
+    onSuccess: (data, newUser, context) => {
+      console.log('onSuccess', data, newUser, context)
       // 변이 성공 시 캐시 무효화로 사용자 목록 데이터 갱신!
       queryClient.invalidateQueries({ queryKey: ['users'] })
     },
-    onError: (error, newTodo, context) => {
-      console.log('onError', error, newTodo, context)
+    onError: (error, newUser, context) => {
+      console.log('onError', error, newUser, context)
       // 변이 실패 시, 낙관적 업데이트 결과를 이전 사용자 목록으로 되돌리기!
       if (context) {
         queryClient.setQueryData(['users'], context.previousUsers)
       }
     },
-    onSettled: (data, error, newTodo, context) => {
-      console.log('onSettled', data, error, newTodo, context)
+    onSettled: (data, error, newUser, context) => {
+      console.log('onSettled', data, error, newUser, context)
     },
     retry: 3, // 변이 실패 시 3번 재시도
     retryDelay: 500 // 0.5초 간격으로 재시도
@@ -1089,7 +1089,7 @@ npm i @tanstack/react-query-next-experimental
 다음과 같이 Provider를 구성합니다.
 서버와 클라이언트 모두에서 사용해야 하므로, `'use client'`를 사용해야 합니다.
 
-```tsx --path=/app/queryProviders.tsx --line-active=1
+```tsx --path=/app/providers/query.tsx --line-active=1
 'use client'
 import {
   QueryClient,
@@ -1135,7 +1135,7 @@ export function QueryProvider({ children }: { children: React.ReactNode }) {
 그리고 루트 레이아웃에서 구성한 `<QueryProvider>`를 사용합니다.
 
 ```tsx --path=/app/layout.tsx --line-active=1,11
-import { QueryProvider } from './queryProviders'
+import { QueryProvider } from '@/providers/query'
 
 export default function RootLayout({
   children

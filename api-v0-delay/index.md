@@ -4,7 +4,7 @@ filename: api-v0-delay
 id: 71PGfA
 title: 지연 응답 API
 createdAt: 2024-01-28
-updatedAt: 2024-04-02
+updatedAt: 2024-07-09
 group: HEROPY API
 author:
   - ParkYoungWoong
@@ -22,6 +22,7 @@ description:
 
 원하는 시간을 ms(밀리초) 단위로 `t` 파라미터에 작성해 요청하면, 그 시간 후 응답을 받을 수 있습니다.
 지연 시간은 최대 5초(5000ms)까지 지정할 수 있으며, 기본값은 1초(1000ms)입니다.
+응답 데이터의 `time` 속성은 요청이 아닌 응답 시간을 나타냅니다.
 
 ```curl
 curl https://api.heropy.dev/v0/delay?t=DELEY_TIME
