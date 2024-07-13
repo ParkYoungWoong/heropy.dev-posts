@@ -4,7 +4,7 @@ filename: react-next-auth
 image: https://heropy.dev/postAssets/MI1Khc/main.jpg
 title: Auth.js(NextAuth.js) 핵심 정리
 createdAt: 2024-04-21
-updatedAt: 2024-07-09
+updatedAt: 2024-07-13
 group: React
 author:
   - ParkYoungWoong
@@ -18,7 +18,7 @@ description:
 ---
 
 /// message-box --icon=info
-이 글은 NextAuth.js(Auth.js) `5.0.0-beta.16` 버전을 기준으로 작성되었습니다.
+이 글은 NextAuth.js(Auth.js) `5.0.0-beta.19` 버전을 기준으로 작성되었습니다.(`path-to-regexp@^7`)
 NextAuth.js v5는 기존 v4에서 Next.js App Router가 우선 지원되는 새로운 버전으로, Next.js v14 이상을 필요로 합니다.
 ///
 
@@ -37,7 +37,7 @@ npm i next-auth@beta path-to-regexp
 ```
 
 `AUTH_SECRET`은 토큰 및 이메일 확인 해시를 암호화하는 값으로 사용됩니다.
-다음과 같이 생성 후 환경변수로 지정합니다.
+터미널에서 다음과 같이 입력하면, 자동으로 환경변수를 생성합니다.
 
 ```bash
 npx auth secret
@@ -154,22 +154,33 @@ import { match } from 'path-to-regexp'
 import { getSession } from '@/serverActions/auth' // import { auth } from '@/auth'
 
 const matchersForAuth = [
-  '/dashboard/:path*',
-  '/myaccount/:path*',
-  '/settings/:path*',
+  '/dashboard/*',
+  '/myaccount/*',
+  '/settings/*',
   '...'
 ]
-
+const matchersForSignIn = [
+  '/signup/*', 
+  '/signin/*'
+]
 export async function middleware(request: NextRequest) {
+  // 인증이 필요한 페이지 접근 제어!
   if (isMatch(request.nextUrl.pathname, matchersForAuth)) {
     return (await getSession()) // 세션 정보 확인
       ? NextResponse.next()
       : NextResponse.redirect(new URL('/signin', request.url))
       // : NextResponse.redirect(new URL(`/signin?callbackUrl=${request.url}`, request.url))
   }
+  // 인증 후 회원가입 및 로그인 접근 제어!
+  if (isMatch(request.nextUrl.pathname, matchersForSignIn)) {
+    return (await getSession())
+      ? NextResponse.redirect(new URL('/', request.url))
+      : NextResponse.next()
+  }
   return NextResponse.next()
 }
 
+// 경로 일치 확인!
 function isMatch(pathname: string, urls: string[]) {
   return urls.some(url => !!match(url)(pathname))
 }
@@ -288,7 +299,7 @@ export const signInWithCredentials = async (formData: FormData) => {
     displayName: formData.get('displayName') || '', // `'null'` 문자 방지
     email: formData.get('email') || '',
     password: formData.get('password') || '',
-    redirectTo: '/'
+    // redirectTo: '/' // 로그인 후 메인 페이지로 이동!
   })
 }
 export const signOutWithForm = async (formData: FormData) => {
@@ -536,7 +547,7 @@ interface ResponseValue {
 
 export default async function MyaccountPage() {
   const session = await getSession()
-  const res = await fetch('https://api.heropy.dev/banks/account', {
+  const res = await fetch(`${process.env.HEROPY_API_URL}/banks/account`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
@@ -568,14 +579,15 @@ await updateSession({
 `updateSession` 서버 액션이 호출되면, `callbacks.jwt` 콜백이 호출되며, `trigger`와 `session` 속성으로 정보가 전달됩니다.
 `trigger`는 갱신 이벤트이고 `session`은 갱신된 세션 정보로, 다음과 같이 반환되는 토큰 정보에 갱신된 사용자 정보를 추가합니다.
 
-```ts --path=/auth.ts
+```ts --path=/auth.ts --line-active=6-9
 callbacks: {
   jwt: async ({ token, user, trigger, session }) => {
     if (user?.accessToken) {
       token.accessToken = user.accessToken
     }
     if (trigger === 'update' && session) {
-      token = { ...token, ...session.user }
+      Object.assign(token, session.user)
+      token.picture = session.user.image // 사진을 변경했을 때 반영!
     }
     return token
   }
@@ -598,7 +610,7 @@ export default async function MyaccountPage() {
           <input
             name="displayName"
             type="text"
-            defaultValue={session?.user?.name as string}
+            defaultValue={session?.user?.name || ''}
           />
         </label>
         <button type="submit">수정</button>
@@ -618,7 +630,7 @@ import { getSession, updateSession } from '@/serverActions/auth'
 export async function updateUser(formData: FormData) {
   const session = await getSession()
   const res = await fetch(
-    'https://api.heropy.dev/auth/user',
+    `${process.env.HEROPY_API_URL}/auth/user`,
     {
       method: 'PUT',
       headers: {
@@ -644,11 +656,10 @@ export async function updateUser(formData: FormData) {
 
 ### 예외 처리
 
-회원가입 및 로그인 과정에서 발생하는 에러를 처리하려면, 다음과 같이 `CredentialsSignin` 클래스로 에러를 반환(`throw`)합니다.
+회원가입 및 로그인 과정에서 발생하는 에러를 처리하려면, 다음과 같이 에러를 반환(`throw`)합니다.
 
-```ts --path=/auth.ts --line-active=2,16-20,25-29
+```ts --path=/auth.ts --line-active=14-16
 // ...
-import { CredentialsSignin } from 'next-auth'
 
 export const { 
   // ...
@@ -659,24 +670,11 @@ export const {
         const { displayName, email, password } = credentials
         let user = { id: '', name: '', email: '', image: '' }
 
-        // 사용자 이름이 있는 경우, 회원가입!
-        if (displayName) {
-          // <회원가입 로직 ...>
-          if (error) {
-            throw new CredentialsSignin({
-              cause: '<ERROR_MESSAGE>'
-            })
-          }
-          return user
+        try {
+          // 회원가입 및 로그인 로직..
+        } catch (error) {
+          throw new Error(error.message)
         }
-
-        // <로그인 로직 ...>
-        if (error) {
-          throw new CredentialsSignin({
-            cause: '<ERROR_MESSAGE>'
-          })
-        }
-        return user
       }
     })
   ],
@@ -686,9 +684,8 @@ export const {
 
 만약 에러 메시지를 별도의 페이지(`error.tsx`)에 출력하려면, 로그인과 회원가입 서버 액션에서 다음과 같이 에러 객체를 반환합니다.
 
-```tsx --path=/serverActions/auth.ts --line-active=2,13-18 --line-error=10,12
+```tsx --path=/serverActions/auth.ts --line-active=12-15 --line-error=9,11
 // ...
-import { CredentialsSignin } from 'next-auth'
 
 export const signInWithCredentials = async (formData: FormData) => {
   try {
@@ -700,9 +697,8 @@ export const signInWithCredentials = async (formData: FormData) => {
     })
     // 로그인에 성공하면, 리다이렉션을 에러 캐치로 처리하므로 이 위치에 실행할 코드를 추가하지 마세요! Beta?
   } catch (error) {
-    if (error instanceof CredentialsSignin) {
-      throw new Error(error.cause as unknown as string)
-    }
+    // @ts-ignore-next-line // 아직 해당 타입이 없어 무시합니다. // if (error instanceof CredentialsSignin)
+    throw new Error(error.cause.err.message)
   }
   redirect('/') // 또는 return { message: '메시지!' }
 }
@@ -845,9 +841,8 @@ const { pending, data, method, action } = useFormStatus()
 이제 서버 액션을 `<form>` 요소에 직접 연결하지 않으므로, `useFormState` 훅의 인수 타입에 맞게 서버 액션을 수정해야 합니다.
 그리고 서버 액션은 `initialState` 타입과 일치하는 데이터를 반환해야 합니다.
 
-```tsx --path=/serverActions/auth.ts --line-active=5,16
+```tsx --path=/serverActions/auth.ts --line-active=4,13-16
 // ...
-import { CredentialsSignin } from 'next-auth'
 
 export const signInWithCredentials = async (
   initialState: { message: string },
@@ -860,9 +855,8 @@ export const signInWithCredentials = async (
       password: formData.get('password')
     })
   } catch (error) {
-    if (error instanceof CredentialsSignin) {
-      return { message: error.cause as unknown as string }
-    }
+    // @ts-ignore-next-line
+    return { message: error.cause.err.message }
   }
   redirect('/')
 }
@@ -873,8 +867,8 @@ export const signInWithCredentials = async (
 
 좀 더 구체적인 활용 예시로, 다음과 같이 회원가입 및 로그인 API를 활용할 수도 있습니다.
 
-```ts --path=/auth.ts --line-active=26-29,31-32,39-67
-import NextAuth, { CredentialsSignin } from 'next-auth'
+```ts --path=/auth.ts
+import NextAuth from 'next-auth'
 import Credentials from 'next-auth/providers/credentials'
 
 interface UserInfo {
@@ -899,13 +893,16 @@ export const {
       authorize: async credentials => {
         const userInfo = credentials as unknown as UserInfo
 
-        // 회원가입
-        if (userInfo.displayName) {
-          return _signIn('signup', userInfo)
+        try {
+          // 회원가입
+          if (userInfo.displayName) {
+            return _signIn('signup', userInfo)
+          }
+          // 로그인
+          return _signIn('login', userInfo)
+        } catch (error) {
+          throw new Error(error.message)
         }
-
-        // 로그인
-        return _signIn('login', userInfo)
       }
     })
   ],
@@ -916,12 +913,12 @@ async function _signIn(
   type: 'signup' | 'login',
   body: { displayName?: string; email: string; password: string }
 ) {
-  const res = await fetch(`https://api.heropy.dev/auth/${type}`, {
+  const res = await fetch(`${process.env.HEROPY_API_URL}/auth/${type}`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      apikey: process.env.HEROPY_API_KEY as string,
-      username: 'HEROPY'
+      apikey: process.env.HEROPY_API_KEY,
+      username: process.env.HEROPY_API_USERNAME
     },
     body: JSON.stringify(body)
   })
@@ -938,9 +935,9 @@ async function _signIn(
     }
   }
 
-  throw new CredentialsSignin({
-    cause: data || '문제가 발생했습니다, 잠시 후 다시 시도하세요.'
-  })
+  throw new Error(
+    (data || '문제가 발생했습니다, 잠시 후 다시 시도하세요.') as string
+  )
 }
 ```
 
@@ -1192,8 +1189,8 @@ export const {
         try {
           // 사용자 확인
           const type = (await _existUser(user.email as string))
-            ? 'login'
-            : 'signup'
+           ? 'oauth/login'
+            : 'oauth/signup'
           // 회원가입 또는 로그인 
           const _user = await _signIn(type, {
             displayName: user.name as string,
@@ -1211,9 +1208,12 @@ export const {
       return true
     },
     jwt: async ({ token, user, trigger, session }) => {
-      token = { ...token, ...user }
+      if (user) {
+        Object.assign(token, user)
+      }
       if (trigger === 'update' && session) {
-        token = { ...token, ...session.user }
+        Object.assign(token, session.user)
+        token.picture = session.user.image // 사진을 변경했을 때 반영!
       }
       return token
     },
@@ -1226,12 +1226,12 @@ export const {
 
 // 사용자 확인
 async function _existUser(email: string) {
-  const res = await fetch(`https://api.heropy.dev/auth/oauth/exists`, {
+  const res = await fetch(`${process.env.HEROPY_API_URL}/auth/exists`, {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
-      apikey: process.env.HEROPY_API_KEY as string,
-      username: 'HEROPY',
+      apikey: process.env.HEROPY_API_KEY,
+      username: process.env.HEROPY_API_USERNAME,
       email
     },
     cache: 'no-store'
@@ -1241,15 +1241,15 @@ async function _existUser(email: string) {
 
 // 회원가입 또는 로그인
 async function _signIn(
-  type: 'signup' | 'login',
+  type: 'oauth/signup' | 'oauth/login',
   body: { email: string; displayName?: string; profileImg?: string }
 ) {
-  const res = await fetch(`https://api.heropy.dev/auth/oauth/${type}`, {
+  const res = await fetch(`${process.env.HEROPY_API_URL}/auth/${type}`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      apikey: process.env.HEROPY_API_KEY as string,
-      username: 'HEROPY'
+      apikey: process.env.HEROPY_API_KEY,
+      username: process.env.HEROPY_API_USERNAME
     },
     body: JSON.stringify(body),
     cache: 'no-store'
@@ -1267,7 +1267,7 @@ async function _signIn(
   }
 
   throw new Error(
-    (data as string) || '문제가 발생했습니다, 잠시 후 다시 시도하세요.'
+    (data || '문제가 발생했습니다, 잠시 후 다시 시도하세요.') as string
   )
 }
 ```
@@ -1280,7 +1280,7 @@ async function _signIn(
 다음 예시는 페이지를 이동할 때마다 세션 정보가 갱신하며, 반응형으로 사용할 수 있습니다.
 만약 다른 상황에서 세션 정보를 갱신하길 원하면, `SessionProvider` 함수를 수정할 수 있습니다.
 
-```tsx --path=/providers/session.tsx
+```tsx --path=/providers/session.tsx --line-active=20
 'use client'
 import { createContext, useContext, useEffect, useState } from 'react'
 import { usePathname } from 'next/navigation'
