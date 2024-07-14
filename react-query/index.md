@@ -4,7 +4,7 @@ filename: react-query
 image: https://heropy.dev/postAssets/HZaKIE/main.jpg
 title: TanStack Query(React Query) 핵심 정리
 createdAt: 2024-07-07
-updatedAt: 2024-07-09
+updatedAt: 2024-07-14
 group: React
 author:
   - ParkYoungWoong
@@ -109,7 +109,7 @@ npm i -D @tanstack/eslint-plugin-query
 ESLint 플러그인의 권장 규칙을 사용하면, 일반적인 실수를 피하는 데 도움이 됩니다.
 `extends` 옵션의 배열 아이템으로 `plugin:@tanstack/eslint-plugin-query/recommended`를 추가합니다.
 
-```cjs --path=/.eslintrc.cjs --line-active=8 --caption=ESLint 구성 예시
+```cjs --path=/.eslintrc.cjs --line-active=8 --line-error=18-21 --caption=ESLint 구성 예시
 module.exports = {
   root: true,
   env: { browser: true, es2020: true },
@@ -126,10 +126,18 @@ module.exports = {
     'react-refresh/only-export-components': [
       'warn',
       { allowConstantExport: true }
-    ]
+    ],
+    // TanStack Query 권장 규칙! (plugin:@tanstack/eslint-plugin-query/recommended)
+    // '@tanstack/query/exhaustive-deps': 'error',
+    // '@tanstack/query/stable-query-client': 'error',
+    // '@tanstack/query/no-rest-destructuring': 'warn'
   }
 }
 ```
+
+- `@tanstack/query/exhaustive-deps`: 쿼리 함수에서 사용하는 외부 변수는 쿼리 키에 추가하세요!
+- `@tanstack/query/stable-query-client`: 애플리케이션에서 하나의 쿼리 클라이언트를 생성해 사용하세요!
+- `@tanstack/query/no-rest-destructuring`: 쿼리의 반환에서 나머지 매개변수(`...rest`)를 사용하지 마세요!
 
 프로젝트 범위를 `<QueryClientProvider>`로 랩핑하고, 사용할 `queryClient` 인스턴스를 연결합니다.
 이제 사용할 준비가 끝났습니다!
@@ -552,11 +560,6 @@ export default function DelayedData() {
 만약 신선도(`staleTime`) 기반으로 데이터를 가져오려면, `queryClient.fetchQuery()` 메소드를 사용할 수 있습니다.
 주의할 부분은, `queryKey`와 `staleTime`를 기존 쿼리와 동일하게 제공해야 합니다.(`queryFn` 생략 가능)
 
-/// message-box --icon=warning
-`queryClient.ensureQueryData()` 메소드도 비슷하지만, 데이터가 상헀을 때 호출하면 캐시된 데이터를 반환하고 새로 가져옵니다.
-`queryClient.fetchQuery()` 메소드는 새로 가져온 데이터를 반환합니다.
-///
-
 /// message-box --icon=info
 `queryOptions` 함수를 사용해 옵션을 미리 정의하고 재사용할 수 있습니다.
 ///
@@ -865,6 +868,8 @@ export default function MovieList() {
 TanStack Query는 데이터 변경 작업(생성, 수정, 삭제 등)을 위한 `useMutation` 훅을 제공합니다.
 이를 통해, 데이터 변경 작업을 처리하고 다양한 성공, 실패, 로딩 등의 상태를 얻을 수 있습니다.
 그리고 요청 실패 시의 자동 재시도나 낙관적 업데이트 같은 고급 기능도 쉽게 처리할 수 있습니다.
+
+쿼리(`useQuery`)는 '가져오기'에 집중하는 반면, 변이(`useMutation`)는 '보내기'에 집중하는 훅으로 이해하면 쉽습니다.
 
 /// message-box --icon=info
 낙관적 업데이트(Optimistic Update)는 서버 요청의 응답을 기다리지 않고, 먼저 UI를 업데이트하는 기능을 말합니다.
