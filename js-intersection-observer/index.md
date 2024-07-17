@@ -68,7 +68,6 @@ io.observe(element2) // 관찰 대상 2
 ```
 
 ![intersection observer entry object](./assets/intersection-observer-entry-object.jpg)
-<div class="image-caption">IntersectionObserverEntry 구조</div>
 
 #### entry.boundingClientRect
 
@@ -78,7 +77,6 @@ io.observe(element2) // 관찰 대상 2
 ![intersection observer boundingClientRect](./assets/intersection-observer-bounding-client-rect.jpg)
 ![intersection observer DOM rect](./assets/intersection-observer-dom-rect-object.jpg)
 ![intersection observer DOM rect](./assets/intersection-observer-dom-rect.jpg)
-<div class="image-caption">DOMRectReadOnly 구조</div>
 
 #### entry.intersectionRect
 
@@ -123,7 +121,6 @@ io.observe(element)
 ```
 
 ![intersection observer observer](./assets/intersection-observer-observer.jpg)
-<div class="image-caption">IntersectionObserver 구조</div>
 
 ## 옵션
 
@@ -185,7 +182,7 @@ const io = new IntersectionObserver(callback, {
 
 ## 메소드
 
-### observe()
+### observe
 
 대상 요소의 관찰을 시작합니다.
 
@@ -202,7 +199,7 @@ io2.observe(li) // LI 요소 관찰
 io2.observe(h2) // h2 요소 관찰
 ```
 
-### unobserve()
+### unobserve
 
 대상 요소의 관찰을 중지합니다.
 관찰을 중지할 하나의 대상 요소를 인수로 지정해야 합니다.
@@ -241,7 +238,7 @@ const io1 = new IntersectionObserver((entries, observer) => {
 }, options)
 ```
 
-### disconnect()
+### disconnect
 
 IntersectionObserver 인스턴스가 관찰하는 모든 요소의 관찰을 중지합니다.
 
