@@ -4,6 +4,7 @@ filename: react-vite-starter
 image: https://heropy.dev/postAssets/6iFzkB/main.jpg
 title: React 프로젝트 시작하기 w. Vite
 createdAt: 2023-11-30
+updatedAt: 2024-07-22
 group: React
 author:
   - ParkYoungWoong
