@@ -295,3 +295,30 @@ import type { Routes } from '@/routes'
   }
 }
 ```
+
+생성한 프로젝트의 `tsconfig.json` 파일에서 `tsconfig.app.json` 파일을 참조하는 경우, 해당 옵션을 `tsconfig.app.json` 파일에 추가합니다.
+
+```json --path=/tsconfig.json --line-active=4
+{
+  "files": [],
+  "references": [
+    { "path": "./tsconfig.app.json" },
+    { "path": "./tsconfig.node.json" }
+  ]
+}
+```
+
+```json --path=/tsconfig.app.json --line-active=5-10
+{
+  "compilerOptions": {
+    // ...
+
+    /* Path alias */
+    "baseUrl": "./",
+    "paths": {
+      "@/*": ["./src/*"],
+      "node_modules/*": ["./node_modules/*"]
+    }
+  }
+}
+```
