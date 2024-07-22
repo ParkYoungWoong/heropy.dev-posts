@@ -115,7 +115,7 @@ npm i -D eslint prettier eslint-plugin-react eslint-config-prettier eslint-plugi
 
 설치가 완료되면, 프로젝트 루트 경로에 `.eslintrc.json` 파일을 생성하고 다음과 같이 내용을 추가합니다.
 
-```json --path=/.eslintrc.json --caption=자바스크립트인 경우.
+```json --path=/.eslintrc.json --line-active=5 --caption=자바스크립트인 경우.
 {
   "extends": [
     "eslint:recommended",
@@ -123,13 +123,12 @@ npm i -D eslint prettier eslint-plugin-react eslint-config-prettier eslint-plugi
     "plugin:prettier/recommended"
   ],
   "plugins": [
-    "react",
-    "prettier"
+    "react"
   ]
 }
 ```
 
-```json --path=/.eslintrc.json --caption=타입스크립트인 경우.
+```json --path=/.eslintrc.json --line-active=6 --caption=타입스크립트인 경우.
 {
   "extends": [
     "eslint:recommended",
@@ -138,11 +137,34 @@ npm i -D eslint prettier eslint-plugin-react eslint-config-prettier eslint-plugi
     "plugin:prettier/recommended"
   ],
   "plugins": [
-    "react",
-    "prettier"
+    "react"
   ],
   "parserOptions": {
     "parser": "@typescript-eslint/parser"
+  }
+}
+```
+
+구성 파일이 `.eslintrc.json`이 아닌 `.eslintrc.cjs`인 경우, 다음과 같이 내용을 추가합니다.
+
+```cjs --path=/.eslintrc.cjs --line-active=8 --caption=타입스크립트인 경우.
+module.exports = {
+  root: true,
+  env: { browser: true, es2020: true },
+  extends: [
+    'eslint:recommended',
+    'plugin:@typescript-eslint/recommended',
+    'plugin:react-hooks/recommended',
+    'plugin:prettier/recommended'
+  ],
+  ignorePatterns: ['dist', '.eslintrc.cjs'],
+  parser: '@typescript-eslint/parser',
+  plugins: ['react-refresh'],
+  rules: {
+    'react-refresh/only-export-components': [
+      'warn',
+      { allowConstantExport: true },
+    ]
   }
 }
 ```
@@ -216,6 +238,19 @@ VS Code에서 자동 포맷팅을 사용하려면, 다음 옵션을 사용자 �
 }
 ```
 
+```json --path=/.vscode/settings.json --caption=Module S?CSS를 사용하는 경우.
+{
+  "[css]": {
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[scss]": {
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  }
+}
+```
+
 ## 경로 별칭 구성
 
 경로 별칭(Path Alias)을 사용하면, 프로젝트 내의 파일을 쉽게 참조할 수 있어 편리합니다.
@@ -229,7 +264,7 @@ export default defineConfig({
   plugins: [react()],
   resolve: {
     alias: [
-      { find: '~', replacement: '/src' },
+      { find: '@', replacement: '/src' },
       { find: 'node_modules', replacement: '/node_modules' }
     ]
   }
@@ -238,7 +273,7 @@ export default defineConfig({
 
 ```tsx --path=/src/components/a/b/c/MyComponent.tsx --line-active=2 --line-error=1 --caption=경로 별칭 사용 예시
 // import type { Routes } from '../../../../routes'
-import type { Routes } from '~/routes'
+import type { Routes } from '@/routes'
 ```
 
 ```scss --path=/src/components/a/b/c/MyComponent.module.scss --caption=경로 별칭 사용 예시
@@ -254,7 +289,7 @@ import type { Routes } from '~/routes'
     // ...
     "baseUrl": "./",
     "paths": {
-      "~/*": ["./src/*"],
+      "@/*": ["./src/*"],
       "node_modules/*": ["./node_modules/*"]
     }
   }
