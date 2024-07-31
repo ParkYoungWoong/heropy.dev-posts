@@ -1174,7 +1174,7 @@ http://localhost:3000/delay
 ### 서버 액션
 
 Next.js는 서버에서만 실행되는 함수(Server Actions)를 작성할 수 있습니다.
-다음과 같이, 모듈 상단에 `'use server'` 지시어를 추가하고 서버 액션를 작성합니다.
+다음과 같이, 모듈 상단에 `'use server'` 지시어를 추가하고 서버 액션을 추가합니다.
 
 ```ts --path=/serverActions/index.ts --line-active=1
 'use server'
@@ -1228,7 +1228,7 @@ export default function ClientPage() {
 
 특히, 서버 액션은 `<form>` 요소의 `action` 속성으로 호출하는 것이 가능해, 양식(Forms) 작업에서 유용합니다.
 
-```tsx --path=/app/signin --line-active=7
+```tsx --path=/app/signin/page.tsx --line-active=7
 import { signIn } from '@/serverActions'
 
 export default function Page() {
@@ -1303,8 +1303,8 @@ export default async function MoviePoster({
     <Image
       src={movie.Poster}
       alt={movie.Title}
-      width="300"
-      height="450"
+      width={300}
+      height={450}
     />
   )
 }
@@ -1317,6 +1317,7 @@ export default async function MoviePoster({
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
+    minimumCacheTTL: 60, // 최소 캐시 시간(초)
     remotePatterns: [
       { 
         protocol: 'https', 
@@ -1329,7 +1330,7 @@ const nextConfig = {
       {
         protocol: 'https',
         hostname: '**.example.com',
-        port: '',
+        port: '80',
         pathname: '/account123/**',
       }
     ]
@@ -1352,8 +1353,8 @@ export default function Page() {
     <Image
       src={image.src}
       alt={image.name}
-      width="100"
-      height="200"
+      width={100}
+      height={200}
       onLoad={() => setLoaded(true)}
     />
   )
