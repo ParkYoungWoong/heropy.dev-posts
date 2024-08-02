@@ -34,6 +34,10 @@ description:
 `git config --global --list` | 구성 목록 확인
 `git config --global --unset <항목이름>` | 구성 항목 삭제
 
+```bash --caption=구성 파일을 직접 열어서 수정하는 경우
+vim ~/.gitconfig
+```
+
 ## 초기화 (Init)
 
 초기화(Init)는 프로젝트 단위로 Git 버전 관리를 시작하는 기능입니다.
