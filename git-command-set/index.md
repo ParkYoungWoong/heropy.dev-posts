@@ -4,6 +4,7 @@ filename: git-command-set
 image: https://heropy.dev/postAssets/PcUkdT/main.jpg
 title: Git 핵심 명령어 모음
 createdAt: 2024-04-22
+updatedAt: 2024-08-02
 group: 시작하기
 author:
   - ParkYoungWoong

@@ -4,7 +4,7 @@ filename: react-core-patterns
 image: https://heropy.dev/postAssets/OidQSe/main.jpg
 title: React 핵심 패턴
 createdAt: 2023-12-10
-updatedAt: 2024-04-02
+updatedAt: 2024-08-05
 group: React
 author:
   - ParkYoungWoong
@@ -557,6 +557,56 @@ export default function App() {
       <pre>{text}</pre>
     </>
   )
+}
+```
+
+### 수정 가능 요소
+
+일반 요소는 `contenteditable` 속성을 통해, 수정 가능 요소로 만들어 텍스트를 수정할 수 있습니다.
+
+```html
+<div contenteditable>Content!</div>
+```
+
+하지만 React에서 이 속성을 사용하면, 가상 DOM 충돌, 이벤트 점프 등의 문제가 발생할 수 있기 때문에, 일반적인 문제가 대부분 해결된 [react-contenteditable 라이브러리](https://www.npmjs.com/package/react-contenteditable?ref=blixt-dev)를 사용하는 것을 추천합니다.
+
+```bash
+npm i react-contenteditable
+```
+
+`<div>`, `<br/>` 같은 요소를 통해 줄바꿈 처리를 하므로, 입력된 값이 없으면 내용을 비웁니다.
+`placeholder` 속성 대신 `aria-placeholder` 속성을 사용해 힌트를 제공할 수 있습니다.(CSS 코드를 같이 제공해야 합니다)
+
+```tsx
+import { useRef, useState } from 'react'
+import ContentEditable from 'react-contenteditable'
+
+export default function App() {
+  const ref = useRef<HTMLElement>(null)
+  const [text, setText] = useState('')
+  function onChange() {
+    if (ref.current && !ref.current.textContent) {
+      setText('')
+    }
+  }
+
+  return (
+    <>
+      <ContentEditable
+        innerRef={ref}
+        html={text}
+        onChange={onChange}
+        aria-placeholder="텍스트를 입력하세요!"
+      />
+    </>
+  )
+}
+```
+
+```css
+[contenteditable]:empty::before {
+  content: attr(aria-placeholder);
+  color: #aaa;
 }
 ```
 
