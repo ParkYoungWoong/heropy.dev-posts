@@ -4,8 +4,8 @@ filename: git-command-set
 image: https://heropy.dev/postAssets/PcUkdT/main.jpg
 title: Git 핵심 명령어 모음
 createdAt: 2024-04-22
-updatedAt: 2024-08-02
-group: 시작하기
+updatedAt: 2024-08-14
+group: Git
 author:
   - ParkYoungWoong
 tags:
@@ -101,6 +101,7 @@ vim ~/.gitconfig
 `git blame -L <시작>,<종료> <파일>` | 특정 파일의 시작부터 종료 줄까지 작업자 확인 | `git blame -L 10,20 ./src/main.js`
 `git blame -L <시작> <파일>` | 특정 파일의 시작부터 마지막 줄까지 작업자 확인 | `git blame -L 10 ./src/main.js`
 `git blame -L ,<종료> <파일>` | 특정 파일의 처음부터 종료 줄까지 작업자 확인 | `git blame -L ,20 ./src/main.js`
+`git branch --show-current` | 현재 브랜치 이름 확인 (v2.22) |
 
 ## 브랜치 (Branch)
 
@@ -113,7 +114,9 @@ vim ~/.gitconfig
 `git branch -a` | 로컬 및 원격 브랜치 목록 확인 |
 `git branch <브랜치>` | 브랜치 생성 | `git branch dev`
 `git branch -D <브랜치>` | 브랜치 삭제 | `git branch -D dev`
-`git branch -m master main` | 브랜치 이름 변경 | 
+`git branch -m <브랜치>` | 현재 브랜치 이름 변경 | `git branch -m main`
+`git branch -m <이전브랜치> <새브랜치>` | 특정 브랜치 이름 변경 | `git branch -m master main`
+`git branch --show-current` | 현재 브랜치 이름 확인 (v2.22) |
 `git checkout <브랜치>` | 브랜치 전환 | `git checkout dev`
 `git checkout -b <브랜치>` | 브랜치 생성 및 전환 | `git checkout -b dev`
 `git checkout <해시>` | 특정 버전 체크아웃 | `git checkout 1a2b3c4d`
@@ -139,7 +142,6 @@ vim ~/.gitconfig
 명령 | 설명 | 예시
 --- | --- | ---
 `git pull <원격별칭> <브랜치>` | 원격 저장소에서 브랜치 당겨오기 | `git pull origin dev`
-`git pull <원격별칭> --all` | 원격 저장소에서 모든 브랜치 당겨오기 | `git pull origin --all`
 `git pull --rebase <원격별칭> <브랜치>` | 원격 저장소의 브랜치로 로컬 브랜치 덮어쓰기 | `git pull --rebase origin dev`
 
 ## 가져오기 (Fetch)
@@ -150,7 +152,7 @@ vim ~/.gitconfig
 --- | --- | ---
 `git fetch` | 현재 원격 저장소의 브랜치 목록 가져오기 |
 `git fetch <원격별칭>` | 특정 원격 저장소의 브랜치 목록 가져오기 | `git fetch origin`
-`git fetch -all` | 모든 원격 저장소의 브랜치 목록 가져오기 | 
+`git fetch --all` | 모든 원격 저장소의 브랜치 목록 가져오기 | 
 `git fetch --prune` | 원격 저장소에서 브랜치 목록 가져와서 로컬의 원격 브랜치 목록 덮어쓰기 |
 
 ## 비교 (Diff)
