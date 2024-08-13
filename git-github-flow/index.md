@@ -11,7 +11,7 @@ tags:
   - Git
   - GitHub
 description:
-  Hello world!
+  GitHub Flow는 GitHub을 활용하는 브랜치 전략으로, 브랜치를 어떻게 생성하고 병합하는지에 대한 개념입니다. GitHub Flow의 간단한 사용 사례를 통해 브랜치 전략을 이해해 봅시다.
 ---
 
 GitHub Flow는 GitHub을 활용하는 브랜치 전략으로, 브랜치를 어떻게 생성하고 병합하는지에 대한 개념입니다. 
