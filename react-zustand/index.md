@@ -4,6 +4,7 @@ filename: react-zustand
 image: https://heropy.dev/postAssets/n74Tgc/main.jpg
 title: Zustand 핵심 정리
 createdAt: 2024-06-11
+updatedAt: 2024-08-22
 group: React
 author:
   - ParkYoungWoong
@@ -543,6 +544,74 @@ export const useUserStore = create(
 )
 ```
 
+#### 액션 호출 in 액션
+
+액션 함수 내부에서 다른 액션을 호출할 때, `get()` 함수의 반환으로 액션을 가져와 호출할 수 있습니다.
+하지만, `combine` 미들웨어를 사용하면, `get()` 함수가 액션 타입을 추론하지 못합니다.
+
+다음 예제는 정상적으로 잘 동작하지만, 타입 에러가 발생합니다.
+
+```ts --path=/src/store/count.ts --line-error=16
+import { create } from 'zustand'
+import { combine } from 'zustand/middleware'
+
+const initialState = {
+  count: 1,
+  double: 2
+}
+
+export const useCountStore = create(
+  combine(
+    initialState,
+    (set, get) => ({
+      actions: {
+        increase: () => {
+          set(state => ({ count: state.count + 1 }))
+          get().actions.increaseDouble() // Error - '{ count: number; double: number; }' 형식에 'actions' 속성이 없습니다.ts(2339)
+        },
+        increaseDouble: () => {
+          set(state => ({ double: state.count * 2 }))
+        }
+      }
+    })
+  )
+)
+```
+
+이를 해결하기 위해, 다음과 같이 액션을 별도 함수로 작성합니다.
+그러면 함수 호이스팅을 활용하니, 액션 안에서 다른 액션을 쉽게 호출할 수 있습니다.
+
+/// message-box --icon=info
+현재 예제는 단순히 __'액션 호출 in 액션'__ 주제의 이해를 돕기 위해 작성되었습니다.
+지금처럼 `double` 상태를 직접 변경하지 않고, `count` 상태의 변경을 감지해 `double` 상태의 값을 변경하는 방법은 [상태 구독](/p/n74Tgc#h3_%EC%83%81%ED%83%9C_%EA%B5%AC%EB%8F%85_subscribeWithSelector)에서 자세히 설명합니다.
+///
+
+```ts --path=/src/store/count.ts --line-active=9,16,17
+// ...
+
+export const useCountStore = create(
+  combine(
+    initialState,
+    set => {
+      function increase() {
+        set(state => ({ count: state.count + 1 }))
+        increaseDouble() // OK!
+      }
+      function increaseDouble() {
+        set(state => ({ double: state.count * 2 }))
+      }
+      return {
+        actions: {
+          increase,
+          increaseDouble
+        }
+      }
+    }
+  )
+)
+```
+
+
 ### 중첩된 객체 변경 (Immer)
 
 다음 예시와 같이, `user` 객체(상태)에서 `displayName` 속성만 변경하는 액션을 작성할 수 있습니다.
@@ -683,7 +752,7 @@ unsubscribe() // 구독 해제
 다음 예제는 `count` 상태를 구독해, `count` 상태가 변경될 때마다 `double` 상태를 변경하는 예제입니다.
 일종의 계산된 상태(Computed State)를 관리할 수 있습니다.
 
-```ts --path=/src/store/count.ts --line-active=2,10,25-31
+```ts --path=/src/store/count.ts --line-active=2,10,25-32
 import { create } from 'zustand'
 import { combine, subscribeWithSelector } from 'zustand/middleware'
 import { immer } from 'zustand/middleware/immer'
@@ -712,7 +781,8 @@ export const useCountStore = create(
 useCountStore.subscribe(
   state => state.count, // Selector
   count => { // Listener
-    useCountStore.setState(() => ({ double: count * 2 }))
+    console.log(useCountStore.getState().double) // Getter
+    useCountStore.setState(() => ({ double: count * 2 })) // Setter
   }
 )
 ```
