@@ -4,6 +4,7 @@ filename: git-github-flow
 image: https://heropy.dev/postAssets/6hdJi6/main.jpg
 title: 사례로 이해하는 GitHub Flow
 createdAt: 2024-08-14
+updatedAt: 2024-08-24
 group: Git
 author:
   - ParkYoungWoong
@@ -16,6 +17,42 @@ description:
 
 GitHub Flow는 GitHub을 활용하는 브랜치 전략으로, 브랜치를 어떻게 생성하고 병합하는지에 대한 개념입니다. 
 GitHub Flow의 간단한 사용 사례를 통해 브랜치 전략을 이해해 봅시다.
+
+## 브랜치 전략 이해
+
+브랜치 전략은 효율적으로 협업하고 코드를 관리하는 버전 관리 방법을 의미합니다.
+널리 사용되는 Git Flow와 GitHub Flow에 대해 간단히 살펴봅시다.
+
+### Git Flow
+
+[Git Flow](https://nvie.com/posts/a-successful-git-branching-model/)는 [Vincent Driessen](https://nvie.com/about/)이 2010년에 제안한 브랜치 모델입니다. 
+
+더욱 복잡하고 구조화된 접근 방식을 제공하는 Git Flow는 체계적이고 엄격하게 버전을 관리하는 것이 핵심입니다. 
+이는 대규모 프로젝트나 엔터프라이즈 환경에서 사용하기에 적합한 반면에, 브랜치가 많아지면 관리가 상당히 복잡해지므로 작은 규모의 프로젝트나 빠른 개발을 위한 방법으로는 적합하지 않습니다.
+
+다음과 같은 주요 브랜치를 사용합니다.
+
+- `main`(`master`): 항상 배포 가능한 제품 상태를 유지하는 핵심 브랜치
+- `dev`(`develop`): 다음 릴리스를 위해 개발 사항을 통합하는 브랜치
+- `release/*`: 출시 버전을 관리하는 브랜치
+- `feature/*`: 기능 개발을 위한 브랜치
+- `bugfix/*`: 버그 수정을 위한 브랜치
+- `hotfix/*`: 긴급 버그 수정을 위한 브랜치
+
+### GitHub Flow
+
+[GitHub Flow](https://guides.github.com/introduction/flow/)는 GitHub에서 제안한 브랜치 모델로, 간단하고 빠른 개발을 위한 방법입니다.
+
+GitHub Flow는 단순하고 이해하기 쉬워서 빠른 개발과 배포를 위한 방법으로 널리 사용됩니다.
+하지만, 명시적인 릴리스 관리가 없으므로 엄격한 관리가 필요한 대규모 프로젝트나 엔터프라이즈 환경에서는 적합하지 않습니다.
+
+GitHub Flow는 다음과 같은 주요 특징을 가집니다.
+
+- 단일 핵심 브랜치(`main` 혹은 `master`) 브랜치 사용
+- 기타 개발은 핵심 브랜치로부터 분기된 브랜치에서 진행하고 빠르게 병합
+- Pull Request를 통해 코드 검토 후 병합
+- 다양한 GitHub 기능을 활용한 효율적인 협업
+- 지속적인 배포(Continuous Deployment)를 통한 빠른 제품 피드백
 
 ## 프로젝트 초기화
 
@@ -680,3 +717,221 @@ git push origin feature/mocha
 앞으로 `main` 브랜치를 대상으로 하는 모든 출처 브랜치의 PR은, 항상 테스트가 성공해야만 병합할 수 있습니다.
 
 ![테스트 성공!](./assets/s40.JPG)
+
+## 이슈 기반 개발 사례
+
+GitHub 이슈(Issue)는 개발 요청이나 버그 수정 등, 프로젝트의 작업을 추적하고 관리하는 데 사용됩니다.
+개발자 '박' 씨는 이슈를 생성해, 개발해야 할 내용을 명확하게 정리하고, 개발자 '김' 씨에게 이슈를 참조해 개발을 요청하려고 합니다.
+
+![생성한 이슈 목록](./assets/s57.JPG)
+
+### 이슈 생성 및 참조
+
+프로젝트 저장소의 __[Issues]__ 페이지로 이동해, 우측 상단의 __[New issue]__ 버튼을 선택합니다.
+
+/// message-box --icon=info
+라벨(Labels)과 마일스톤(Milestone)은 이슈나 PR을 더욱 세부적으로 관리할 수 있도록 도와줍니다.
+아래에서 자세히 설명합니다!
+///
+
+![이슈 페이지](./assets/s41.JPG)
+
+이슈 제목과 내용을 작성하고, 담당자(Assignees)를 지정하거나 라벨(Labels)을 추가할 수 있습니다.
+
+첫 번째 이슈는 앞서 개발했던 `count` 모듈의 `increase` 함수를 `1`씩만 증가하는 것이 아니라, 증가하는 값을 인수로 받아서 처리하도록 수정하려고 합니다.
+담당자는 개발자 '박' 씨 자신으로 지정하고, 라벨은 `enhancement`로 지정해 이 이슈가 새로운 기능을 추가하는 것임을 표시합니다.
+
+![첫 번째 이슈 생성](./assets/s42.JPG)
+
+__[Submit new issue]__ 버튼을 선택하면 다음과 같이 이슈가 생성됩니다.
+생성된 이슈 제목에 이슈 번호(`#5`)가 자동으로 할당된 것을 볼 수 있는데, 이렇게 생성된 이슈 번호를 참조해 개발을 진행할 수 있습니다.
+
+![생성된 첫 번째 이슈](./assets/s43.JPG)
+
+그리고 두 번째로는 `count` 모듈에 `decrease` 함수를 추가해, 값을 감소하는 기능을 개발하려고 합니다.
+개발자 '박' 씨가 모두 다 개발할 수 없으니, 동료 개발자 '김' 씨를 담당자로 지정하고 역시 `enhancement` 라벨을 추가합니다.
+이슈 설명에서 `#` 기호를 사용하면 참조할 수 있는 이슈나 PR의 목록이 자동 완성되는데, 이 중에서 현재 이슈와 관련이 있는 참조를 선택해 관계를 명확하게 표시할 수 있습니다.
+두 번째 이슈는 '값을 인수로 받아서 처리하는 기능' 개발의 이슈와 관련이 있으므로, 첫 번째 이슈(`#5`)를 참조합니다.
+
+![두 번째 이슈 생성](./assets/s44.JPG)
+
+역시 생성된 이슈 제목에 이슈 번호(`#6`)가 자동으로 할당된 것을 확인할 수 있습니다.
+그리고 참조된 번호는 자동으로 링크되어, 해당 이슈나 PR로 이동할 수 있습니다.
+
+![생성된 두 번째 이슈](./assets/s45.JPG)
+
+### 라벨 및 마일스톤
+
+__라벨(Label)__ 을 추가하면, 해당 이슈나 PR이 어떤 종류의 작업인지 쉽게 구분할 수 있습니다.
+라벨 목록은 얼마든지 추가하거나 수정할 수 있으며, 한 이슈에 여러 라벨을 추가할 수도 있습니다.
+
+/// message-box --icon=info
+이해가 쉽도록 한글로 작성하는 것도 좋습니다!
+///
+
+![Labels](./assets/s46.JPG)
+
+__마일스톤(Milestone)__ 을 통해, 제목과 설명, 마감일(Due date)을 지정할 수 있습니다.
+이를 통해 해당 이슈나 PR이 어떤 기간에 완료돼야 하는지 명확하게 알 수 있습니다.
+
+![Milestones](./assets/s47.JPG)
+
+### 이슈 해결 및 PR
+
+생성된 이슈를 확인한, 개발자 '박' 씨와 '김' 씨는 이슈를 기반해 각자 개발을 진행합니다.
+
+개발자 '박' 씨는 `feature/increase-with-argument` 브랜치를 생성해, `count` 모듈의 `increase` 함수를 다음과 같이 수정합니다.
+커밋 메시지에 `close #5`를 추가해, 해당 이슈가 해결되었고 기본 브랜치로 병합될 때 이슈가 자동으로 닫히도록 합니다.
+`close` 대신 `fix`, `resolve` 등을 사용할 수도 있습니다.
+
+```js --path=/count.js --line-active=2,3
+export let count = 0
+export function increase(val = 1) {
+  return count += val
+}
+```
+
+```bash --line-active=5
+# 변경 사항 스테이징
+git add .
+
+# 변경 사항 커밋
+git commit -m "증가 함수가 증가 값을 인수로 받아 사용하도록 수정. close #5"
+
+# 변경 사항 푸시
+git push origin feature/increase-with-argument
+```
+
+개발자 '박' 씨는 PR을 생성하고 푸시한 `feature/increase-with-argument` 브랜치에서 `main` 브랜치로 병합합니다.
+별다른 충돌 없이 병합을 할 수 있고, 병합을 완료하면 커밋 메시지(`... close #5`)를 통해 해당 이슈는 자동으로 닫힙니다.
+
+![첫 번째 이슈 해결에 대한 PR 생성](./assets/s48.JPG)
+
+동료 개발자 '김' 씨는 `feature/decrease` 브랜치를 생성해, `count` 모듈에 `decrease` 함수를 추가합니다.
+자신에게 할당된 이슈(`#6`)를 확인했지만, 깜빡하고 커밋 메시지에 `close #6`을 추가하지 않았습니다.
+
+```js --path=/count.js --line-active=6-8
+export let count = 0
+
+export function increase() {
+  return count += 1
+}
+export function decrease() {
+  return count -= 1
+}
+```
+
+```bash --line-active=5
+# 변경 사항 스테이징
+git add .
+
+# 변경 사항 커밋
+git commit -m "count 모듈의 감소 함수 추가."
+
+# 변경 사항 푸시
+git push origin feature/decrease
+```
+
+개발자 '김' 씨 또한 PR을 생성해, 푸시한 `feature/decrease` 브랜치에서 `main` 브랜치로 병합을 시도합니다.
+하지만 다음과 같이, PR 생성 직전에 자동으로 병합할 수 없다며 에러 메시지(__Can't automatically merge.__)가 표시됩니다.
+이런 경우, 발생한 문제(충돌, Conflict)을 해결해야 병합을 진행할 수 있습니다.
+
+![두 번째 이슈 해결에 대한 PR 생성](./assets/s49.JPG)
+
+### 충돌 해결
+
+두 브랜치의 병합 과정에서 발생한 충돌(Conflict)은 로컬이나 GitHub에서 해결(Resolve)해야 합니다.
+
+#### 로컬에서 충돌 해결
+
+먼저 로컬에서는 수동으로 병합을 시도하고 충돌을 확인 및 해결할 수 있습니다.
+다음과 같이 `main` 브랜치에서 `feature/decrease` 브랜치로 병합을 시도합니다.
+
+/// message-box --icon=warning
+이 병합은 단지 충돌 해결을 위함으로, `feature/decrease` 브랜치에서 `main` 브랜치로 병합하지 않도록 주의하세요!
+///
+
+```bash
+# main 브랜치로 이동
+git switch main
+
+# 원격 저장소 main 브랜치의 최신 내용 당겨오기
+git pull origin main
+
+# 병합할 브랜치로 이동
+git switch feature/decrease
+
+# 병합 시도
+git merge main
+```
+
+병합 시도를 통해 다음과 같이 충돌을 확인합니다.
+__[현재 변경 사항]__ 은 대상 브랜치(`feature/decrease`)의 내용을 의미하며, __[수신 변경 사항]__ 은 출처 브랜치(`main`)의 내용을 의미합니다.
+단순히 현재나 수신 변경 사항을 선택하거나, __[두 변경 사항 모두 수락]__ 버튼을 선택해 모든 내용을 적용하거나 일부를 수정해 병합을 완료할 수도 있습니다.
+
+![충돌 확인](./assets/s50.JPG)
+
+앞서 두 번째 이슈(`#5`)가 첫 번째 이슈(`#6`)를 참조한 것을 확인하고, 최종적으로 다음과 같이 수정합니다.
+
+```js --path=/count.js
+export let count = 0
+
+export function increase(val = 1) {
+  return count += val
+}
+export function decrease(val = 1) {
+  return count -= val
+}
+```
+
+충돌을 해결했으니, 커밋 후 푸시합니다.
+GitHub에서 다시 PR을 생성하면, 이제 충돌 없이 병합을 진행할 수 있습니다.
+
+```bash --line-active=5
+# 변경 사항 스테이징
+git add .
+
+# 변경 사항 커밋
+git commit
+## "Merge branch 'main' into feature/decrease"
+:wq
+
+# 변경 사항 푸시
+git push origin feature/decrease
+```
+
+#### GitHub에서 충돌 해결
+
+충돌은 GitHub에서도 확인하고 해결할 수 있습니다.
+앞서 확인한 대로 충돌이 발생하긴 하지만, 일단 PR을 생성합니다.
+그러면 다음과 같이, __'This branch has conflicts that must be resolved'__ 메시지가 표시와 함께 오른쪽에 __[Resolve conflicts]__ 버튼을 확인할 수 있습니다.
+이 버튼을 선택해 충돌 해결을 시작합니다.
+
+![충돌을 해결해야 병합 가능](./assets/s51.JPG)
+
+충돌이 발생하는 파일을 확인해, 어떤 브랜치의 내용을 사용할지 선택할 수 있습니다.
+`=======` 기호로 구분된 윗쪽은 `feature/decrease` 브랜치의 내용이고 아랫쪽은 `main` 브랜치의 내용입니다.
+
+![충돌 확인](./assets/s52.JPG)
+
+앞서 두 번째 이슈(`#5`)가 첫 번째 이슈(`#6`)를 참조한 것을 확인하고, 최종적으로 다음과 같이 수정합니다.
+우측 상단의 __[Mark as resolved]__ 버튼을 선택해 수정한 내용을 저장하며 모든 충돌을 확인하고 해결했다면, 다시 우측 상단에 초록색의 __[Commit merge]__ 버튼을 선택해 수정한 내용을 커밋합니다.
+
+![충돌 해결](./assets/s53.JPG)
+
+충돌을 해결했으니, 이제 PR을 병합할 수 있습니다.
+
+![PR 병합 가능](./assets/s54.JPG)
+
+개발자 '김' 씨는 커밋 메시지에 close #6을 추가하지 않았었기 때문에, 병합을 해도 이슈는 자동으로 닫히지 않습니다.
+따라서 다음과 같이 병합의 최종 컨펌 메시지로 `close #6`을 추가해 이슈를 닫거나,
+
+![병합의 최종 컨펌 메시지 작성](./assets/s55.JPG)
+
+이슈 페이지에서 직접 __[Close issue]__ 버튼을 선택해 수동으로 이슈를 닫을 수도 있습니다.
+
+![이슈 수동으로 닫기](./assets/s56.JPG)
+
+닫힌 이슈는 다음과 같이 __[Closed]__ 상태로 표시됩니다.
+
+![닫힌 이슈 목록 확인](./assets/s58.JPG)

@@ -14,7 +14,8 @@ description:
   GA4 Query Explorer와 Google Analytics Data API를 활용해, Google Analytics에서 웹사이트의 트래픽 정보를 가져오는 방법을 알아봅니다.(GA4 쿼리 익스플로러, 구글 애널리틱스 데이터 API)
 ---
 
-Google Analytics Data API 사용을 위해...
+GA4 Query Explorer와 Google Analytics Data API를 활용해, Google Analytics에서 웹사이트의 트래픽 정보를 가져오는 방법을 알아봅니다.
+(GA4 쿼리 익스플로러, 구글 애널리틱스 데이터 API)
 
 ## GA4 Query Explorer
 
