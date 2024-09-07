@@ -9,6 +9,7 @@ author:
   - ParkYoungWoong
 tags:
   - MongoDB
+  - DB
 description: 
   시동 중이던 MongoDB가 비정상적으로 종료된 후 다시 MongoDB를 시동하기 위해 기존 포트를 찾아 종료하는 방법을 알아봅니다.
 ---
