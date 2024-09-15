@@ -4,6 +4,7 @@ filename: vue3-vite-starter
 image: https://heropy.dev/postAssets/aBLqC5/main.jpg
 title: Vue 프로젝트 시작하기 w. Vite
 createdAt: 2023-11-30
+updatedAt: 2024-09-15
 group: Vue
 author:
   - ParkYoungWoong
@@ -84,10 +85,9 @@ ESLint와 Prettier를 사용하기 위해 VS Code에서 각 확장 프로그램�
 
 Vue 프로젝트이므로, 다음 확장 프로그램도 추가로 설치해 도움을 받을 수 있습니다.
 
-- [Vue Language Features (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.volar): Vue 프로젝트의 문법 강조, 자동 완성, 오류 검사 등을 지원
-- [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin): TS 서버가 `*.vue` 파일(SFC)을 인식할 수 있도록 지원
+- [Vue - Official](https://marketplace.visualstudio.com/items?itemName=Vue.volar): Vue 프로젝트의 문법 강조, 자동 완성, 오류 검사 등을 지원
 
-![Vue Language Features (Volar)](./assets/s4.JPG) ![TypeScript Vue Plugin (Volar)](./assets/s5.JPG)
+![Vue Language Features (Volar)](./assets/s4.JPG)
 
 ### 패키지 설치 및 구성
 
@@ -188,13 +188,35 @@ npm i -D eslint prettier eslint-plugin-vue eslint-config-prettier eslint-plugin-
 
 ### 자동 포맷팅 설정
 
-VS Code에서 자동 포맷팅을 사용하려면, 다음 옵션을 사용자 설정(`settings.json`)에 추가합니다.
-같은 옵션을 중복 추가하지 않도록, 이미 설정되어 있는지 꼼꼼히 확인하세요.
+현재 프로젝트에서만 사용하는 사용자 설정(지역)을 통해 `*.vue`, `*.js`, `*.ts` 파일에 대한 자동 포맷팅을 사용할 수 있습니다.
+프로젝트의 루트 경로에 `.vscode/settings.json` 폴더와 파일을 생성해 다음과 같이 내용을 추가할 수 있습니다.
 
-```json
+```json --path=/.vscode/settings.json --caption=자바스크립트인 경우.
 {
-  "editor.codeActionsOnSave": {
-    "source.fixAll.eslint": true
+  "[javascript]": {
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[vue]": {
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  }
+}
+```
+
+```json --path=/.vscode/settings.json --caption=타입스크립트인 경우.
+{
+  "[javascript]": {
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[typescript]": {
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[vue]": {
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
   }
 }
 ```
@@ -217,6 +239,7 @@ export default defineConfig({
   resolve: {
     alias: [
       { find: '~', replacement: '/src' },
+      { find: '@', replacement: '/src' },
       { find: 'node_modules', replacement: '/node_modules' }
     ]
   }
@@ -244,6 +267,7 @@ import { useMovieStore } from '~/store/movie'
     "baseUrl": "./",
     "paths": {
       "~/*": ["./src/*"],
+      "@/*": ["./src/*"],
       "node_modules/*": ["./node_modules/*"]
     }
   }
