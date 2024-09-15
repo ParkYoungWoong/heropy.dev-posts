@@ -4,6 +4,7 @@ filename: vue3-core-patterns-with-ts
 image: https://heropy.dev/postAssets/zDWwNL/main.jpg
 title: Vue Composition API 핵심 패턴 w. 타입스크립트
 createdAt: 2023-11-29
+updatedAt: 2024-09-15
 group: Vue
 author:
   - ParkYoungWoong
@@ -133,7 +134,7 @@ div {
 <div data-v-7a7a37b1></div>
 ```
 
-`scoped` 속성은 이름 충돌을 방지하지만, 간혹 부모 컴포넌트에서 하위 컴포넌트에 영향을 줘야 하는 경우가 있습니다.
+`scoped` 속성은 이름 충돌을 방지하지만, 간혹 중첩된 하위 컴포넌트에 영향을 줘야 하는 경우가 있습니다.
 이때 `:deep()` 가상 클래스를 사용할 수 있습니다.
 
 ```vue --path=/src/components/Parent.vue
@@ -144,11 +145,12 @@ import Child from './components/Child.vue'
 <template>
   <div class="parent">
     <Child />
+    .child
   </div>
 </template>
 
 <style scoped>
-.parent .child {
+.parent :deep(.child) {
   color: red;
 }
 </style>
@@ -1038,7 +1040,7 @@ const text = ref('')
   <!-- 한글이 필요한 경우, -->
   <textarea
     :value="text"
-    @input="text = ($event.target as HTMLInputElement)?.value"></textarea>
+    @input="text = ($event.target as HTMLTextAreaElement)?.value"></textarea>
   <pre>{{ text }}</pre>
 </template>
 ```
@@ -1267,7 +1269,7 @@ Setter(세터)는 데이터를 지정할 때(Set), 호출되는 함수를 말합
 
 /// message-box --icon=error --color=error
 비동기 요청이나 DOM 변경은 계산된 데이터(Getter)를 사용하지 않아야 합니다.
-필요한 경우, 감시자(Watcher)를 사용해야 합니다!
+필요한 경우, [감시자(Watcher)](#h2_데이터_감시)를 사용해야 합니다!
 ///
 
 ```ts
@@ -1517,7 +1519,7 @@ onMounted(() => {
 
 /// message-box --icon=warning --color=warning
 전역 등록된 컴포넌트는 트리쉐이킹(Tree Shaking)을 방지하므로, 등록 후 전혀 사용하지 않아도 최종 번들에는 포함됩니다.
-자주 사용하는 등, 필요한 경우에만 전역으로 등록하는 것이 좋습니다.
+그래서 자주 사용하는 등, 꼭 필요한 경우에만 전역으로 등록하는 것이 좋습니다.
 ///
 
 ```vue --path=/src/components/TheButton.vue
