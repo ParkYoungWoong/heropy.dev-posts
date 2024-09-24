@@ -872,7 +872,7 @@ function handler(name: string, event: MouseEvent) {
   <a 
     v-for="url in urls" 
     :key="url" 
-    :href="url" 
+    :href="`https://${url}`" 
     @click="handler(url, $event)">
     {{ url }}
   </a>
@@ -1094,6 +1094,7 @@ function setChecked(event: Event, fruit: Fruit) {
     v-for="fruit in fruits"
     :key="fruit.value">
     <input
+      :checked="checked.includes(fruit.value)"
       :value="fruit.value"
       type="checkbox"
       @change="setChecked($event, fruit)" />
@@ -1182,7 +1183,7 @@ const fruits = ref([
   { text: '바나나', value: 'banana' },
   { text: '체리', value: 'cherry' }
 ])
-const selected = ref([])
+const selected = ref<string[]>([])
 </script>
 
 <template>
@@ -1228,7 +1229,7 @@ watch(text, newValue => {
   <div
     ref="inputEl"
     contenteditable
-    @input="text = (inputEl as HTMLElement)?.innerText"></div>
+    @input="text = (inputEl as HTMLDivElement)?.innerText"></div>
   <pre>{{ text }}</pre>
 </template>
 ```
