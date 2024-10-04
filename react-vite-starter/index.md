@@ -4,7 +4,7 @@ filename: react-vite-starter
 image: https://heropy.dev/postAssets/6iFzkB/main.jpg
 title: React 프로젝트 시작하기 w. Vite
 createdAt: 2023-11-30
-updatedAt: 2024-07-22
+updatedAt: 2024-10-03
 group: React
 author:
   - ParkYoungWoong
@@ -146,28 +146,22 @@ npm i -D eslint prettier eslint-plugin-react eslint-config-prettier eslint-plugi
 }
 ```
 
-구성 파일이 `.eslintrc.json`이 아닌 `.eslintrc.cjs`인 경우, 다음과 같이 내용을 추가합니다.
+구성 파일이 `.eslintrc.json`이 아닌 `.eslintrc.cjs`인 경우, 다음과 같이 `extends` 옵션에 직접 내용을 추가합니다.
 
-```cjs --path=/.eslintrc.cjs --line-active=8 --caption=타입스크립트인 경우.
-module.exports = {
-  root: true,
-  env: { browser: true, es2020: true },
-  extends: [
-    'eslint:recommended',
-    'plugin:@typescript-eslint/recommended',
-    'plugin:react-hooks/recommended',
-    'plugin:prettier/recommended'
-  ],
-  ignorePatterns: ['dist', '.eslintrc.cjs'],
-  parser: '@typescript-eslint/parser',
-  plugins: ['react-refresh'],
-  rules: {
-    'react-refresh/only-export-components': [
-      'warn',
-      { allowConstantExport: true },
-    ]
+```cjs --path=/.eslintrc.cjs --line-active=9
+// ...
+
+export default tseslint.config(
+  { ignores: ['dist'] },
+  {
+    extends: [
+      js.configs.recommended,
+      ...tseslint.configs.recommended,
+      'plugin:prettier/recommended'
+    ],
+    // ...
   }
-}
+)
 ```
 
 추가로, 프로젝트 루트 경로에 `.prettierrc` 파일을 생성하고 다음과 같이 내용을 추가합니다.
@@ -256,7 +250,7 @@ VS Code에서 자동 포맷팅을 사용하려면, 다음 옵션을 사용자 �
 
 경로 별칭(Path Alias)을 사용하면, 프로젝트 내의 파일을 쉽게 참조할 수 있어 편리합니다.
 
-```tsx --path=/vite.config.ts
+```tsx --path=/vite.config.ts --line-active=7-12
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 
@@ -271,6 +265,8 @@ export default defineConfig({
   }
 })
 ```
+
+이를 통해 복잡해질 수 있는 상대 경로를 사용하지 않고, 특정 경로 위치를 바로 참조할 수 있습니다.
 
 ```tsx --path=/src/components/a/b/c/MyComponent.tsx --line-active=2 --line-error=1 --caption=경로 별칭 사용 예시
 // import type { Routes } from '../../../../routes'
@@ -288,7 +284,7 @@ import type { Routes } from '@/routes'
 {
   "compilerOptions": {
     // ...
-    "baseUrl": "./",
+    "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"],
       "node_modules/*": ["./node_modules/*"]
@@ -315,7 +311,7 @@ import type { Routes } from '@/routes'
     // ...
 
     /* Path alias */
-    "baseUrl": "./",
+    "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"],
       "node_modules/*": ["./node_modules/*"]

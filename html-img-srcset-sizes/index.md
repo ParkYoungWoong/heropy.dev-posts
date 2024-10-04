@@ -26,7 +26,7 @@ description:
 
 ![disable cache](./assets/chrome_network_disable_cache.jpg)
 
-그리고 예제에 사용한 이미지들은 포스트 하단에 첨부했습니다.
+그리고 예제에 사용한 이미지들은 게시글 하단에 첨부했습니다.
 
 # 간단한 예제
 

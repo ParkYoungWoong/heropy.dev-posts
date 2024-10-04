@@ -115,7 +115,7 @@ npx prisma init
 
 다음 예시처럼, 값의 `[YOUR-PASSWORD]` 부분은 앞서 입력했던 데이터베이스 비밀번호로 대체합니다.
 
-```plaintext --path=/.env
+```bash --path=/.env
 # DATABASE_URL="postgres://postgres.rhlkfepaasyyeqydkjkw:[YOUR-PASSWORD]@aws-0-ap-northeast-2.pooler.supabase.com:5432/postgres"
 DATABASE_URL="postgres://postgres.rhlkfepaasyyeqydkjkw:abcdefghijk@aws-0-ap-northeast-2.pooler.supabase.com:5432/postgres"
 ```

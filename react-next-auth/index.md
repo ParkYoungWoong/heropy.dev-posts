@@ -4,7 +4,7 @@ filename: react-next-auth
 image: https://heropy.dev/postAssets/MI1Khc/main.jpg
 title: Auth.js(NextAuth.js) 핵심 정리
 createdAt: 2024-04-21
-updatedAt: 2024-07-13
+updatedAt: 2024-10-03
 group: React
 author:
   - ParkYoungWoong
@@ -18,9 +18,14 @@ description:
 ---
 
 /// message-box --icon=info
-이 글은 NextAuth.js(Auth.js) `5.0.0-beta.19` 버전을 기준으로 작성되었습니다.(`path-to-regexp@^7`)
+이 글은 NextAuth.js(Auth.js) `5.0.0-beta.22` 버전을 기준으로 작성되었습니다.(`path-to-regexp@^7`)
 NextAuth.js v5는 기존 v4에서 Next.js App Router가 우선 지원되는 새로운 버전으로, Next.js v14 이상을 필요로 합니다.
 ///
+
+/// message-box --icon=info
+현재 글과 관련된 프로젝트 저장소를 참고하세요.
+https://github.com/ParkYoungWoong/nextjs-app--Authjs_Zustand_TanStackQuery
+/// 
 
 - v4 문서: https://next-auth.js.org/
 - v5 문서: https://authjs.dev/

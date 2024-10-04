@@ -84,7 +84,7 @@ export default function App() {
 ```html --caption=출력된 결과.
 <body>
   <div id="root">
-		<!-- 중간 div 요소 없음 -->
+    <!-- 중간 div 요소 없음 -->
     <header>HEADER</header>
     <main>MAIN</main>
     <footer>FOOTER</footer>
@@ -111,15 +111,15 @@ export default function App() {
 
 ```jsx --path=/src/App.jsx
 export default function App() {
-	const count = 1
+  const count = 1
 
-	const getFullName = (firstName, lastName) => `${firstName} ${lastName}`
+  const getFullName = (firstName, lastName) => `${firstName} ${lastName}`
 
   return (
     <>
-			<h2>{count + 7}</h2>
-			<h2>{getFullName('YoungWoong', 'Park')}</h2>
-		</>
+      <h2>{count + 7}</h2>
+      <h2>{getFullName('YoungWoong', 'Park')}</h2>
+    </>
   )
 }
 ```
@@ -822,7 +822,7 @@ export default function App() {
   const inputRef = useRef(null)
 
   // input 요소에 포커스! 
-	// Error - cannot read properties of null (reading 'focus')
+  // Error - cannot read properties of null (reading 'focus')
   inputRef.current.focus()
 
   return (
