@@ -1348,22 +1348,22 @@ IE11에서는 `-ms-` 접두사를 이용해 일부 Grid 기능을 지원합니�
 다음에 [Autoprefixer](https://github.com/postcss/autoprefixer)에서 지원 가능한 속성만 정리했습니다.
 
 속성 | IE 속성
---|--
-`display: grid;` | `display: -ms-grid;`
-grid-template-rows | -ms-grid-rows
-grid-template-columns | -ms-grid-columns
-grid-template-areas | -
-grid-template | -
-row-gap(grid-row-gap) | -
-column-gap(grid-column-gap) | -
-gap(grid-gap) | -
-grid-row-start | -ms-grid-row
-grid-row-end | -
-grid-row | -
-grid-column-start | -ms-grid-column
-grid-column-end | -
-grid-column | -
-align-self | -ms-grid-row-align
-justify-self | -ms-grid-column-align
-- | -ms-grid-row-span
-- | -ms-grid-column-span
+|--|--|
+| `display: grid;` | `display: -ms-grid;` |
+| `grid-template-rows` | `-ms-grid-rows` |
+| `grid-template-columns` | `-ms-grid-columns` |
+| grid-template-areas | - |
+| grid-template | - |
+| row-gap(grid-row-gap) | - |
+| column-gap(grid-column-gap) | - |
+| gap(grid-gap) | - |
+| grid-row-start | -ms-grid-row |
+| grid-row-end | - |
+| grid-row | - |
+| grid-column-start | -ms-grid-column |
+| grid-column-end | - |
+| grid-column | - |
+| align-self | -ms-grid-row-align |
+| justify-self | -ms-grid-column-align |
+| - | -ms-grid-row-span |
+| - | -ms-grid-column-span |
