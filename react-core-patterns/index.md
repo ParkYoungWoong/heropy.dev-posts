@@ -31,7 +31,7 @@ export default function 컴포넌트이름() {
 }
 ```
 
-React 17버전부터는 컴포넌트 상단에 `import React from ‘react’` 코드를 명시할 필요가 없습니다.
+React 17버전부터는 타입을 사용할 때 컴포넌트 상단에 `import React from ‘react’` 코드를 명시할 필요가 없습니다.
 단, 일부 프로젝트의 개발 도구나 환경에 따라 해당 코드 명시가 필요할 수도 있습니다.
 
 ## JSX fragment
@@ -92,6 +92,21 @@ export default function App() {
 </body>
 ```
 
+만약 JSX fragment에 속성을 지정해야 하는 경우, 명시적으로 `<Fragment>` 컴포넌트를 사용해야 합니다.
+
+```jsx --path=/src/App.jsx --line-active=1,5
+import { Fragment } from 'react'
+
+export default function App() {
+  return (
+    <Fragment key={'123'}>
+      <header>HEADER</header>
+      <main>MAIN</main>
+      <footer>FOOTER</footer>
+    </Fragment>
+  )
+}
+```
 ## 데이터 보간
 
 컴포넌트 템플릿(Template)에서 `{}` 기호를 사용해 데이터를 쉽게 출력할 수 있습니다.
