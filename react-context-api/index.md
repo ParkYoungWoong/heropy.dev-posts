@@ -22,8 +22,8 @@ React Context API는 프로젝트의 상위/하위 컴포넌트 간 데이터 �
 다음의 프로젝트 구조에서 시작해 Context API의 개념과 사용법을 이해해 봅시다.
 
 ```plaintext --caption=프로젝트 구조
-├─src
-│  ├─components
+├─src/
+│  ├─components/
 │  │  ├─A1.tsx
 │  │  ├─A2.tsx
 │  │  ├─B1.tsx
