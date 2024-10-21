@@ -14,7 +14,7 @@ description:
   React 기본 문법의 다양한 사용 패턴을 살펴봅니다.
 ---
 
-/// message-box --icon=lightbulb
+/// message-box --icon=info
 이 글은 [Vite로 시작하는 React 프로젝트](/p/6iFzkB)를 기반으로 설명합니다.
 ///
 

@@ -274,7 +274,7 @@ getMovies('frozen', movies => {
 `Promise` 클래스를 통해 콜백 대신 `resolve` 메소드를 호출하면, 모든 동작이 완료된 시점을 보장할 수 있습니다.
 이제 함수를 호출할 때, `.then()` 메소드를 체이닝으로 사용할 수 있고, `.then()` 메소드의 콜백은 모든 동작이 완료된 시점(`resolve` 호출 위치)에서 실행됩니다.
 
-/// message-box --icon=lightbulb
+/// message-box --icon=info
 Promise 클래스의 자세한 사용법은 아래에서 살펴봅니다.
 ///
 
@@ -406,7 +406,7 @@ getMovies('frozen')
 `.then()` 메소드를 사용하는 방식은 콜백 패턴보다 가독성이 훨씬 좋지만, 여전히 일부 콜백 구조를 가지고 있습니다.
 ES2017에서 새롭게 도입된 `async`와 `await` 키워드를 사용하면, 더 쉽게 비동기 코드를 작성할 수 있습니다.
 
-/// message-box --icon=lightbulb
+/// message-box --icon=info
 앞서 `Promise` 클래스로 작성한 함수는 동일합니다.
 ///
 
