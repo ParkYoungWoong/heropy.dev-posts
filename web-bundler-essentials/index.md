@@ -647,6 +647,6 @@ Vite는 프로젝트의 기본 구조를 가지고 시작하고 있습니다.
 └─vite.config.js
 ```
 
-/// message-box --icon=lightbulb
+/// message-box --icon=info
 Vite 프로젝트의 좀 더 자세한 구성은 [React 프로젝트 시작하기 w. Vite](/p/6iFzkB) 혹은 [Vue 프로젝트 시작하기 w. Vite](/p/aBLqC5) 글을 참고하세요.
 ///
