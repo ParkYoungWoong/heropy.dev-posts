@@ -92,7 +92,7 @@ export const add = (a: number, b: number): number => a + b
 
 ### Given-When-Then
 
-Given-When-Then(혹은 Arrange-Act-Asset)은 테스트의 시나리오를 작성하는 방식으로, 테스트 코드를 준비 단계, 실행 단계 그리고 검증 단계로 나눠 코드의 가독성을 향상시키고 유지보수를 용이하게 합니다.
+Given-When-Then(혹은 Arrange-Act-Assert)은 테스트의 시나리오를 작성하는 방식으로, 테스트 코드를 준비 단계, 실행 단계 그리고 검증 단계로 나눠 코드의 가독성을 향상시키고 유지보수를 용이하게 합니다.
 
 다음 예제는 Given-When-Then 패턴을 사용하는 테스트 코드입니다.
 함수에 전달할 인수를 준비하고, 함수를 실행한 후, 결과를 검증합니다.
@@ -295,7 +295,7 @@ export default function MovieList() {
 }
 ```
 
-`useEffect`의 콜백이 호출돼야 영화 목록이 초기화되므로, `act` 함수를 통해 컴포넌트의 렌더링 후 업데이트를 기다립니다.
+`useEffect`의 콜백에서 `fetchMovies` 비동기 함수가 완료되어야 영화 목록이 초기화되므로, `act` 함수를 사용하여 컴포넌트의 렌더링 후 업데이트를 기다려야 합니다.
 
 /// message-box --icon=warning
 `act` 함수의 인수는 비동기 함수여야 합니다.
@@ -898,7 +898,7 @@ npm run cy:run
 지속적 통합(CI, Continuous Integration) 구성으로, GitHub의 `main` 브랜치에 푸시하거나 PR을 생성할 때 자동으로 테스트를 실행할 수 있습니다. 
 이를 통해 코드 변경 사항이 프로젝트의 안정성에 미치는 영향을 즉시 확인할 수 있으며, 개발 과정에서의 오류를 조기에 발견하고 수정할 수 있습니다.
 
-```yml --path=.github/workflows/test.yml
+```yml --path=/a.github/workflows/test.yml
 # GitHub Action 이름 지정!
 name: 테스트 실행!
 
