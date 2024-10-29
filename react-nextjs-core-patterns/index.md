@@ -2,9 +2,9 @@
 id: n7JHmI
 filename: react-nextjs-core-patterns
 image: https://heropy.dev/postAssets/n7JHmI/main.jpg
-title: Next.js 핵심 정리
+title: Next.js 15 핵심 정리
 createdAt: 2024-04-03
-updatedAt: 2024-04-26
+updatedAt: 2024-10-30
 group: React
 author:
   - ParkYoungWoong
@@ -12,50 +12,81 @@ tags:
   - React
   - Next.js
 description:
-  Next.js는 Vercel에서 개발한 React 프레임워크로, 서버 사이드 렌더링(SSR), 클라이언트 사이드 렌더링(CSR), API 라우팅 등의 다양한 최적화 기능을 제공합니다. Next.js을 사용하면, React의 기본 기능을 확장해, 보다 빠르고 안정적으로 웹 애플리케이션을 개발할 수 있습니다.
+  Next.js는 Vercel에서 개발한 React 프레임워크로, 서버 사이드 렌더링(SSR), 클라이언트 사이드 렌더링(CSR), API 라우팅 등의 다양한 최적화 기능을 제공합니다. Next.js를 사용하면, React의 기본 기능을 확장해, 보다 빠르고 안정적으로 웹 애플리케이션을 개발할 수 있습니다.
 ---
 
 ## 개요
 
 /// message-box --icon=info
-이 글은 Next.js `14.2.1` 버전을 기준으로 작성되었습니다.
-Next.js의 최신 버전은 `create-next-app@latest`로, 카나리아 버전은 `create-next-app@canary`로 설치합니다.
-카나리아 버전은 안정화 직전의 최신 라이브 테스트 버전으로, 일부 최신 기능이나 이슈 해결이 포함되어 있습니다.
+이 글은 Next.js `15.0.1` 버전을 기준으로 작성되었습니다.
+Next.js의 최신 버전은 `create-next-app@latest`로, 카나리아(Canary) 버전은 `create-next-app@canary`로 설치합니다.
+카나리(아) 버전은 안정화 직전의 최신 라이브 테스트 버전으로, 일부 최신 기능이나 이슈 해결이 포함되어 있습니다.
 ///
+
+다음은 Next.js 15의 주요 업데이트 내용입니다.
+
+- **자동화된 업그레이드 CLI(`@next/codemod`)**
+  - Next.js 버전을 쉽게 업그레이드할 수 있는 CLI가 제공됩니다. 
+  - `npx @next/codemod@canary upgrade latest` 명령어로 업그레이드할 수 있습니다.
+  - 상세한 코드 변경까지는 변경이 되지 않아서 추가 확인 작업이 필요합니다.
+- **비동기 요청 API (중요 변경사항)**
+  - 데이터 요청이 필요 없는 컴포넌트를 비동기로 처리하여 초기 로드 속도를 높이는 방향으로 변경되었습니다.
+  - `params`나 `searchParams` 등의 주요 API가 비동기 사용으로 전환되었습니다.
+- **캐싱 기본값 변경**
+  - GET 요청 및 클라이언트 내비게이션의 기본 캐싱 설정이 해제되었습니다.
+  - TanStack Query 같은 라이브러리의 캐싱 기능과 중복되지 않아서 좋습니다.
+  - `force-static` 옵션으로 다시 캐싱할 수 있습니다.
+- **React 19 지원**
+  - React 19와의 호환성을 지원하며, React 18과도 일부 하위 호환이 유지됩니다.
+- **`<Form>` 컴포넌트**
+  - `<form>` 요소를 확장한 최적화 컴포넌트로, 제출 경로를 프리패칭(Prefetching)하고 제출 데이터를 쿼리스트링으로 보존합니다.
+- **Turbopack Dev 안정화**
+  - `next dev --turbo` 모드가 안정화되어, 더 빠른 개발 환경과 반응 속도를 제공합니다.
+- **정적 라우트 표시기**
+  - 개발 중에 경로가 사전 렌더링되는지 여부를 화면 하단 모서리에 표시(⚡ Static route)합니다. 
+- **비동기 처리 후 코드 실행 API** (`unstable_after`)
+  - 스트리밍이 완료된 후 비동기적으로 추가 작업을 처리할 수 있는 새로운 API입니다.
+  - 아직 안정화 전이니 참고만 하는 것이 좋겠습니다.
+- **`/instrumentation.js` API 안정화**
+  - 서버 생명주기를 관찰하여 성능을 모니터링하고 오류를 추적할 수 있습니다.
+- **TypeScript 구성 지원**
+  - TypeScript를 사용하는 설정 파일을 지원하며 자동 완성과 타입 안전성도 보장됩니다.
+- **자체 호스팅 개선**
+  - 캐시 제어 헤더에 대한 더 많은 제어와 이미지 최적화 성능이 향상되었습니다.
+- **보안 강화**
+  - 서버 액션이 공개 엔드포인트가 되는 것을 방지하기 위한 기능이 추가되어 보안이 강화되었습니다.
+- **외부 패키지 번들링 최적화**
+  - 외부 패키지를 번들링할 수 있는 설정 옵션이 추가되었습니다.
+- **ESLint 9 지원**
+  - ESLint 9를 지원하여 최신 규칙을 반영하고 호환성을 유지합니다.
+- **빌드 및 개발 성능 개선**
+  - 정적 페이지 생성 최적화와 서버 컴포넌트의 HMR 기능이 강화되었습니다.
 
 ### Next.js란?
 
 [Next.js](Next.js)는 [Vercel](https://vercel.com/)에서 개발한 React 프레임워크로, 서버 사이드 렌더링(SSR), 클라이언트 사이드 렌더링(CSR), API 라우팅 등의 다양한 최적화 기능을 제공합니다.
-Next.js을 사용하면, [React](https://react.dev/)의 기본 기능을 확장해, 보다 빠르고 안정적으로 웹 애플리케이션을 개발할 수 있습니다.
+Next.js를 사용하면, [React](https://react.dev/)의 기본 기능을 확장해, 보다 빠르고 안정적으로 웹 애플리케이션을 개발할 수 있습니다.
 
 ### 설치 및 구성
 
 다음 명령으로 Next.js 프로젝트를 설치합니다.
-각 질문에 `Yes` 또는 `No`로 답변하며, 여기에서는 TypeScript와 ESLint를 사용하고 Tailwind CSS는 사용하지 않습니다.
+각 질문에 `Yes` 또는 `No`로 답변합니다.
 
 ```bash
 npx create-next-app@latest <프로젝트이름>
     ✔ Would you like to use TypeScript? … Yes  # 타입스크립트 사용 여부
     ✔ Would you like to use ESLint? … Yes  # ESLint 사용 여부
-    ✔ Would you like to use Tailwind CSS? … No  # Tailwind CSS 사용 여부
-    ✔ Would you like to use `src/` directory? … No  # src/ 디렉토리 사용 여부
+    ✔ Would you like to use Tailwind CSS? … Yes  # Tailwind CSS 사용 여부
+    ✔ Would you like your code inside a `src/` directory? … No  # src/ 디렉토리 사용 여부
     ✔ Would you like to use App Router? (recommended) … Yes  # App Router 사용 여부
-    ✔ Would you like to customize the default import alias (@/*)? … No  # `@/*` 외 경로 별칭 사용 여부
+    ✔ Would you like to use Turbopack for next dev? … No  # Turbopack 사용 여부
+    ✔ Would you like to customize the import alias (@/* by default)? … No  # `@/*` 외 경로 별칭 사용 여부
 ```
 
 /// message-box --icon=info
 'App Router'는 Next.js 13버전부터 사용할 수 있게 된 방식으로, 보다 복잡한 라우팅 요구사항과 애플리케이션 상태 관리를 위해 설계되었습니다.
 일부 장단점이 있지만, 대부분의 경우 Pages Router 보다 최신의 App Router를 사용하는 것을 추천합니다!
 ///
-
-#### SCSS
-
-Next.js에서 SCSS를 사용하기 위해 다음 패키지를 설치합니다.
-설치 후 바로 `*.scss` 파일을 사용할 수 있습니다.
-
-```bash
-npm i -D sass
-```
 
 #### Prettier
 
@@ -67,15 +98,16 @@ npm i -D sass
 Prettier 관련 패키지들을 설치합니다.
 
 ```bash
-npm i -D prettier eslint-config-prettier
+npm i -D prettier eslint-config-prettier prettier-plugin-tailwindcss
 ```
 
 ESLint 구성을 다음과 같이 수정합니다.
 
-```json --path=/.eslintrc.json
+```json --path=/.eslintrc.json --line-active=5
 {
   "extends": [
-    "next/core-web-vitals",
+    "next/core-web-vitals", 
+    "next/typescript", 
     "prettier"
   ]
 }
@@ -84,7 +116,7 @@ ESLint 구성을 다음과 같이 수정합니다.
 추가로, 프로젝트 루트 경로에 `.prettierrc` 파일을 생성하고 다음처럼 원하는 규칙을 추가합니다.
 자세한 규칙은 [Prettier / Options](https://prettier.io/docs/en/options) 에서 확인할 수 있습니다.
 
-```json --path=/.prettierrc
+```json --path=/.prettierrc --line-active=9
 {
   "semi": false,
   "singleQuote": true,
@@ -92,26 +124,14 @@ ESLint 구성을 다음과 같이 수정합니다.
   "bracketSameLine": true,
   "endOfLine": "lf",
   "trailingComma": "none",
-  "arrowParens": "avoid"
+  "arrowParens": "avoid",
+  "plugins": ["prettier-plugin-tailwindcss"]
 }
 ```
 
 ##### 자동 포맷팅 설정
 
 프로젝트의 루트 경로에 `.vscode/settings.json` 폴더와 파일을 생성해 다음과 같이 내용을 추가할 수 있습니다.
-
-```json --path=/.vscode/settings.json --caption=자바스크립트인 경우.
-{
-  "[javascript]": {
-    "editor.formatOnSave": true,
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
-  },
-  "[javascriptreact]": {
-    "editor.formatOnSave": true,
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
-  }
-}
-```
 
 ```json --path=/.vscode/settings.json --caption=타입스크립트인 경우.
 {
@@ -128,19 +148,6 @@ ESLint 구성을 다음과 같이 수정합니다.
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "[typescriptreact]": {
-    "editor.formatOnSave": true,
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
-  }
-}
-```
-
-```json --path=/.vscode/settings.json --caption=Module S?CSS를 사용하는 경우.
-{
-  "[css]": {
-    "editor.formatOnSave": true,
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
-  },
-  "[scss]": {
     "editor.formatOnSave": true,
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   }
@@ -173,6 +180,8 @@ __서버 컴포넌트만 사용:__
 - cookies
 - headers
 - redirect
+- generateMetadata
+- revalidatePath
 - ...
 
 __클라이언트 컴포넌트만 사용:__
@@ -182,6 +191,9 @@ __클라이언트 컴포넌트만 사용:__
 - onChange
 - useRouter
 - useParams
+- useSearchParams
+- useFormState
+- useOptimistic
 - ...
 
 각 서버와 클라이언트 컴포넌트에서 서로 맞지 않는 API를 사용하면 다음 이미지와 같이, 바로 에러를 표시하기 때문에 금방 구분할 수 있게 됩니다.
@@ -198,17 +210,17 @@ __클라이언트 컴포넌트만 사용:__
 
 기본 파일 | 확장자 | 설명
 --- | --- | ---
-`layout` | `.js`, `.jsx`, `.tsx` | 고정 레이아웃
-`template` | `.js`, `.jsx`, `.tsx` | 변화 레이아웃(탐색 시)
 `error` | `.js`, `.jsx`, `.tsx` | 에러 페이지
+`layout` | `.js`, `.jsx`, `.tsx` | 고정 레이아웃
 `loading` | `.js`, `.jsx`, `.tsx` | 로딩 페이지
 `not-found` | `.js`, `.jsx`, `.tsx` | 찾을 수 없는(404) 페이지
 `page` | `.js`, `.jsx`, `.tsx` | 기본 페이지
+`template` | `.js`, `.jsx`, `.tsx` | 변화 레이아웃(탐색 시)
 
 추가 파일 | 설명
 --- | ---
-`global-error` | `.js`, `.jsx`, `.tsx` | 전역 에러 UI
 `default` | `.js`, `.jsx`, `.tsx` | 병렬 경로(Parallel)의 대체 페이지
+`global-error` | `.js`, `.jsx`, `.tsx` | 전역 에러 UI
 `route` | `.js`, `.ts` | API 엔드포인트
 
 ### 페이지
@@ -222,8 +234,8 @@ Next.js는 폴더를 사용해 경로를 정의하는 파일 시스템 기반 �
 ![세그먼트의 이해](./assets/s3.JPG)
 
 ```plaintext --caption=프로젝트 구조
-├─app
-│  ├─movies
+├─app/
+│  ├─movies/
 │  │  └─page.tsx
 │  └─page.tsx
 ```
@@ -237,12 +249,14 @@ export default function Home() {
 ```tsx --path=/app/movies/page.tsx --caption=http://localhost:3000/movies 경로의 페이지 내용
 export default function Movies() {
   return (
-    <h1>Movies page!</h1>
-    <ul>
-      <li>Avengers</li>
-      <li>Avatar</li>
-      <li>Frozen</li>
-    </ul>
+    <>
+      <h1>Movies page!</h1>
+      <ul>
+        <li>Avengers</li>
+        <li>Avatar</li>
+        <li>Frozen</li>
+      </ul>
+    </>
   )
 }
 ```
@@ -259,33 +273,36 @@ export default function Movies() {
 또한 레이아웃은 중첩해서 사용할 수 있습니다.
 
 ```plaintext --line-active=3,5,8 --caption=프로젝트 구조
-├─app
-│  ├─movies
+├─app/
+│  ├─movies/
 │  │  ├─layout.tsx
 │  │  └─page.tsx
 │  ├─layout.tsx
 │  └─page.tsx
-├─components
+├─components/
 │  └─Header.tsx
 ```
 
 /// message-box --icon=info
-앞서 우리는 Next.js의 설치 질문에서 `✔ Would you like to customize the default import alias (@/*)? … No` 입력을 통해, `@` 경로 별칭이 프로젝트의 루트 경로를 의미하도록 구성했습니다.
+앞서 우리는 Next.js의 설치 질문에서 `✔ Would you like to customize the import alias (@/* by default)? … No` 입력을 통해, `@` 경로 별칭이 프로젝트의 루트 경로를 의미하도록 구성했습니다.
 ///
 
 다음 코드의 `{children}` 부분에는 `/app/page.tsx` 컴포넌트가 출력됩니다.
 
-```tsx --path=/app/layout.tsx --line-active=10 --caption=http://localhost:3000/ 경로의 레이아웃
+```tsx --path=/app/layout.tsx --line-active=13 --caption=http://localhost:3000/ 경로의 레이아웃
+import './globals.css'
 import Header from '@/components/Header'
 
 export default function RootLayout({
   children
-}: Readonly<{ children: React.ReactNode }>) {
+}: Readonly<{
+  children: React.ReactNode
+}>) {
   return (
     <html lang="ko">
-      <body>
+      <body className="antialiased">
         <Header />
-        {children}
+        <main className="p-2">{children}</main>
       </body>
     </html>
   )
@@ -294,15 +311,11 @@ export default function RootLayout({
 
 다음 코드의 `{children}` 부분에는 `/app/movies/page.tsx` 컴포넌트가 출력됩니다.
 
-```tsx --path=/app/movies/layout.tsx --line-active=6 --caption=http://localhost:3000/movies 경로의 레이아웃
+```tsx --path=/app/movies/layout.tsx --line-active=4 --caption=http://localhost:3000/movies 경로의 레이아웃
 export default function MoviesLayout({
   children
 }: Readonly<{ children: React.ReactNode }>) {
-  return (
-    <section className="container">
-      {children}
-    </section>
-  )
+  return <section>{children}</section>
 }
 ```
 
@@ -313,13 +326,13 @@ Next.js에서는 페이지 이동을 위해 `<a>` 태그가 아닌 [`<Link>` 컴
 위에서 확인한, `/components/Header.tsx` 컴포넌트에서, 각 페이지로 이동할 수 있는 링크를 추가해봅시다.
 
 ```plaintext --line-active=8 --caption=프로젝트 구조
-├─app
-│  ├─movies
+├─app/
+│  ├─movies/
 │  │  ├─layout.tsx
 │  │  └─page.tsx
 │  ├─layout.tsx
 │  └─page.tsx
-├─components
+├─components/
 │  └─Header.tsx
 ```
 
@@ -329,15 +342,50 @@ import Link from 'next/link'
 export default function Header() {
   return (
     <header>
-      <nav>
-        <ul>
-          <li>
-            <Link href="/">Home</Link>
-          </li>
-          <li>
-            <Link href="/movies">Movies</Link>
-          </li>
-        </ul>
+      <nav className="flex">
+        {links.map(({ href, label }) => (
+          <Link
+            key={href}
+            href={href}
+            className="px-2">
+            {label}
+          </Link>
+        ))}
+      </nav>
+    </header>
+  )
+}
+```
+
+`usePathname` 훅을 사용해 반환되는 현재 경로(`pathname`)와 각 `<Link>` 컴포넌트의 경로를 비교해 현재 페이지인 경우 활성화 스타일을 추가할 수 있습니다.
+
+/// message-box --icon=info
+`use` 접두사로 시작하는 훅은 클라이언트 컴포넌트(`'use client'`)에서만 사용할 수 있습니다.
+///
+
+```tsx --path=/components/Header.tsx --line-active=1,2,11,19
+'use client'
+import { usePathname } from 'next/navigation'
+import Link from 'next/link'
+
+const links = [
+  { href: '/', label: 'Home' },
+  { href: '/movies', label: 'Movies' }
+]
+
+export default function Header() {
+  const pathname = usePathname()
+  return (
+    <header>
+      <nav className="flex">
+        {links.map(({ href, label }) => (
+          <Link
+            key={href}
+            href={href}
+            className={`px-2 ${pathname === href ? 'bg-blue-600 text-white' : ''} `}>
+            {label}
+          </Link>
+        ))}
       </nav>
     </header>
   )
@@ -346,9 +394,13 @@ export default function Header() {
 
 #### 미리 가져오기
 
-`<Link />` 컴포넌트는 `prefetch` 옵션을 통해 뷰포트에 보여질 때(`IntersectionObserver`), 연결된 경로(href)의 데이터를 미리 가져와 탐색 성능을 크게 향상시킬 수 있습니다.
+`<Link />` 컴포넌트는 `prefetch` 옵션을 통해 뷰포트에 보여질 때, 연결된 경로(href)의 데이터를 미리 가져와 탐색 성능을 크게 향상시킬 수 있습니다.
 
-- `null`(기본값): 정적 경로인 경우 모든 하위 경로를, 동적 경로인 경우 `loading.tsx`가 있는 가장 가까운 세그먼트까지 미리 가져옵니다.
+/// message-box --icon=info
+미리 가져오기 기능은 제품(Production) 모드에서만 활성화됩니다!
+///
+
+- `null`(기본값): 정적 경로인 경우 모든 하위 경로를, 동적 경로인 경우 `loading.tsx`가 있는 가장 가까운 세그먼트까지만 미리 가져옵니다.
 - `true`: 정적 경로와 동적 경로 모두 미리 가져옵니다.
 - `false`: 미리 가져오지 않습니다.
 
@@ -356,17 +408,13 @@ export default function Header() {
 export default function Links() {
   return (
     <>
-      <Link href={someLink}>이동~</Link>
-      <Link prefetch={true} href={someLink}>이동~</Link>
-      <Link prefetch={false} href={someLink}>이동~</Link>
+      <Link href={someLink}>null</Link>
+      <Link prefetch={true} href={someLink}>true</Link>
+      <Link prefetch={false} href={someLink}>false</Link>
     </>
   )
 }
 ```
-
-/// message-box --icon=info
-Prefetch 기능은 제품(Production) 모드에서만 활성화됩니다!
-///
 
 ### 프로그래밍 방식의 탐색
 
@@ -378,27 +426,36 @@ Prefetch 기능은 제품(Production) 모드에서만 활성화됩니다!
 따라서 컴포넌트 상단에 `'use client` 선언이 필요합니다.
 ///
 
-```tsx --path=/components/Header.tsx --line-active=1,3,6,19-21
+```tsx --path=/components/Header.tsx --line-active=3,13,15,26-30
 'use client'
-import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 import { useRouter } from 'next/navigation'
+import Link from 'next/link'
+
+const links = [
+  { href: '/', label: 'Home' },
+  { href: '/movies', label: 'Movies' }
+]
 
 export default function Header() {
+  const pathname = usePathname()
   const router = useRouter()
   return (
-    <header>
-      <nav>
-        <ul>
-          <li>
-            <Link href="/">Home</Link>
-          </li>
-          <li>
-            <Link href="/movies">Movies</Link>
-          </li>
-        </ul>
+    <header className="flex items-center">
+      <nav className="flex">
+        {links.map(({ href, label }) => (
+          <Link
+            key={href}
+            href={href}
+            className={`px-2 ${pathname === href ? 'bg-blue-600 text-white' : ''} `}>
+            {label}
+          </Link>
+        ))}
       </nav>
-      <button onClick={() => router.push('/movies')}>
-        Movies
+      <button
+        className="rounded bg-gray-800 px-2 py-1 text-sm text-white transition-colors hover:bg-gray-700"
+        onClick={() => router.push('/movies')}>
+        Movies(Push)
       </button>
     </header>
   )
@@ -407,25 +464,32 @@ export default function Header() {
 
 #### 미리 가져오기
 
-기본적인 미리 가져오기는 자동으로 동작하는 `<Link>` 컴포넌트와 달리,
-프로그래밍 방식의 탐색에서는 `useEffect` 훅과 `router.prefetch()` 메소드를 사용해 미리 가져오기를 구현할 수 있습니다.
+기본적인 미리 가져오기가 자동으로 동작하는 `<Link>` 컴포넌트와 달리, 프로그래밍 방식의 탐색에서는 `useEffect` 훅과 `router.prefetch()` 메서드를 사용해 미리 가져오기를 구현할 수 있습니다.
 
-```tsx --path=/components/Header.tsx --line-active=8-10
+```tsx --path=/components/Header.tsx --line-active=2,13-15
 'use client'
-import Link from 'next/link'
 import { useEffect } from 'react'
+import { usePathname } from 'next/navigation'
 import { useRouter } from 'next/navigation'
+import Link from 'next/link'
+
+// 생략..
 
 export default function Header() {
+  const pathname = usePathname()
   const router = useRouter()
+
   useEffect(() => {
     router.prefetch('/movies')
   }, [router])
+
   return (
-    <header>
-      {/* 생략 */}
-      <button onClick={() => router.push('/movies')}>
-        MOVIES
+    <header className="flex items-center">
+      {/* 생략.. */}
+      <button
+        className="rounded bg-gray-800 px-2 py-1 text-sm text-white transition-colors hover:bg-gray-700"
+        onClick={() => router.push('/movies')}>
+        Movies(Push)
       </button>
     </header>
   )
@@ -434,31 +498,36 @@ export default function Header() {
 
 ### 동적 경로
 
-미리 정의할 수 없는 동적 경로는, 대괄호(`[]`)를 사용해 폴더 이름을 작성합니다.
+미리 정의할 수 없는 동적인 경로는, 대괄호(`[]`)를 사용해 폴더 이름을 작성합니다.
 그러면 URL의 세그먼트 값이, `params` Prop으로 전달되고, 대괄호 사이의 폴더 이름이 속성 이름이 됩니다.
 만약 쿼리스트링(Query String)을 사용하는 경우, `searchParams` Prop으로 전달됩니다.
 
 ```plaintext --caption=프로젝트 구조
-├─app
-│  ├─movies
-│  │  ├─[movieId]
+├─app/
+│  ├─movies/
+│  │  ├─[movieId]/
 │  │  │  └─page.tsx
 ```
 
-```tsx --path=/app/movies/[movieId]/page.tsx --caption=http://localhost:3000/movies/tt4520988?plot=full 등의 경로와 일치하는 페이지 내용
-type Movie = { // 응답 결과 타이핑
+`params`와 `searchParams`는 모두 Promise 객체입니다.
+서버 컴포넌트인 경우, `await` 키워드를 사용해 필요한 값을 추출합니다.
+
+```tsx --path=/app/movies/[movieId]/page.tsx --line-active=13-14 --caption=서버 컴포넌트인 경우
+interface Movie {
   Title: string
   Plot: string
 }
 
 export default async function MovieDetails({
-  params,
+  params, // 동적 세그먼트
   searchParams // 쿼리스트링
 }: {
-  params: { movieId: string }
-  searchParams: { plot?: 'short' | 'full' }
+  params: Promise<{ movieId: string }>
+  searchParams: Promise<{ plot?: 'short' | 'full' }>
 }) {
-  const res = await fetch(`https://omdbapi.com/?apikey=7035c60c&i=${params.movieId}&plot=${searchParams.plot || 'short'}`)
+  const { movieId } = await params
+  const { plot } = await searchParams
+  const res = await fetch(`https://omdbapi.com/?apikey=7035c60c&i=${movieId}&plot=${plot || 'short'}`)
   const movie: Movie = await res.json()
   return (
     <>
@@ -468,6 +537,63 @@ export default async function MovieDetails({
   )
 }
 ```
+
+클라이언트 컴포넌트인 경우, `use` 훅을 사용해 필요한 값을 추출합니다.
+
+```tsx --path=/app/movies/[movieId]/page.tsx --line-active=1,2,16-17 --caption=클라이언트 컴포넌트인 경우
+'use client'
+import { use, useState, useEffect } from 'react'
+
+interface Movie {
+  Title: string
+  Plot: string
+}
+
+export default function MovieDetails({
+  params, // 동적 세그먼트
+  searchParams // 쿼리스트링
+}: {
+  params: Promise<{ movieId: string }>
+  searchParams: Promise<{ plot?: 'short' | 'full' }>
+}) {
+  const { movieId } = use(params)
+  const { plot } = use(searchParams)
+  const [movie, setMovie] = useState<Movie | null>(null)
+
+  useEffect(() => {
+    const fetchMovie = async () => {
+      const res = await fetch(`https://omdbapi.com/?apikey=7035c60c&i=${movieId}&plot=${plot || 'short'}`)
+      const movie: Movie = await res.json()
+      setMovie(movie)
+    }
+    fetchMovie()
+  }, [movieId, plot])
+
+  return (
+    <>
+      <h1>{movie?.Title}</h1>
+      <p>{movie?.Plot}</p>
+    </>
+  )
+}
+```
+
+`<Header>` 컴포넌트에서 영화 상세 페이지로 이동할 수 있는 링크를 추가해봅시다.
+
+```tsx --path=/components/Header.tsx --line-active=5
+// 생략..
+const links = [
+  { href: '/', label: 'Home' },
+  { href: '/movies', label: 'Movies' },
+  { href: '/movies/tt4154796', label: 'Movie(Avengers)' }
+]
+
+export default function Header() {
+  // 생략..
+}
+```
+
+혹은 다음과 같이 직접 URL을 입력해 영화 상세 페이지로 이동해 보세요.
 
 ```plaintext --caption=위 URL로 접근해보세요!
 http://localhost:3000/movies/tt4520988?plot=full
@@ -492,31 +618,82 @@ http://localhost:3000/movies/tt1630029
 ### 로딩
 
 페이지 출력을 준비하는 동안, 먼저 로딩 상태를 표시할 수 있습니다.
-출력할 페이지와 같은 폴더에 `loading.tsx` 파일을 생성합니다.
-
+출력할 페이지와 같은 경로(폴더)에 `loading.tsx` 파일을 생성합니다.
 
 ```plaintext --caption=프로젝트 구조
-├─app
-│  ├─delay
-│  │  ├─loading.tsx
-│  │  └─page.tsx
+├─app/
+│  ├─movies/
+│  │  ├─[movieId]/
+│  │  │  ├─loading.tsx
+│  │  │  └─page.tsx
 ```
 
-```tsx --path=/app/delay/loading.tsx --caption=페이지 출력 전 로딩 UI
+```tsx --path=/app/movies/loading.tsx --caption=페이지 출력 전 로딩 UI
+import Loader from '@/components/Loader'
+
 export default function Loading() {
-  return <h2>로딩 중...</h2>
+  return <Loader />
 }
 ```
 
-```tsx --path=/app/delay/page.tsx --caption=2초 후에 페이지를 출력
-export default async function DelayPage() {
-  await new Promise(resolve => setTimeout(resolve, 2000))
-  return <h2>완료!</h2>
+애니메이션 로딩 UI를 구현하기 위해, 다음과 같이 `<Loader>` 컴포넌트를 작성합니다.
+
+```tsx --path=/components/Loader.tsx
+interface LoaderProps {
+  size?: number
+  weight?: number
+  color?: string
+  duration?: number
+  className?: string
+}
+
+export default function Loader({
+  size = 40,
+  weight = 4,
+  color = '#e96900',
+  duration = 1,
+  className = ''
+}: LoaderProps) {
+  return (
+    <div
+      className={`animate-spin rounded-full ${className} `}
+      style={{
+        width: size,
+        height: size,
+        borderWidth: weight,
+        borderStyle: 'solid',
+        borderColor: color,
+        borderTopColor: 'transparent',
+        animationDuration: `${duration}s`
+      }}
+    />
+  )
 }
 ```
 
-```plaintext --caption=위 URL로 접근해보세요!
-http://localhost:3000/delay
+지연 시간을 추가하도록 대기(Delay) 유틸 함수를 작성합니다.
+
+```tsx --path=/utils/wait.ts --caption=대기 유틸 함수
+export default function wait(ms: number) {
+  return new Promise(resolve => setTimeout(resolve, ms))
+}
+```
+
+다음과 같이 영화 상세 정보 가져오기를 2초 동안 지연해서 확실히 로딩 UI를 확인하려고 합니다.
+이제 `http://localhost:3000/movies/tt4520988` 페이지로 접근해보세요!
+
+```tsx --path=/app/movies/[movieId]/page.tsx --line-active=1,8 --caption=최소 3초 후에 페이지를 출력
+import wait from '@/utils/wait'
+
+export default async function MovieDetails({
+  // 생략..
+}) {
+  const { movieId } = await params
+  const { plot } = await searchParams
+  await wait(2000)
+  const res = await fetch(`https://omdbapi.com/?apikey=7035c60c&i=${movieId}&plot=${plot || 'short'}`)
+  // 생략..
+}
 ```
 
 ### 에러
@@ -530,43 +707,36 @@ http://localhost:3000/delay
 ///
 
 ```plaintext --caption=프로젝트 구조
-├─app
-│  ├─delay
-│  │  ├─error.tsx
-│  │  ├─loading.tsx
-│  │  └─page.tsx
+├─app/
+│  ├─movies/
+│  │  ├─[movieId]/
+│  │  │  ├─error.tsx
+│  │  │  ├─loading.tsx
+│  │  │  └─page.tsx
 ```
 
-```tsx --path=/app/delay/error.tsx --line-active=1 --caption=페이지 출력 중 에러 발생 시 UI
+```tsx --path=/app/movies/error.tsx --line-active=1,7 --caption=페이지 출력 중 에러 발생 시 UI
 'use client'
-
 export default function Error({
   error
 }: {
   error: Error & { digest?: string }
 }) {
   return <h2>{error.message}</h2>
-  // <h2>뭔가 문제가 있어요..</h2>
 }
 ```
 
-```tsx --path=/app/delay/page.tsx --line-active=7-9 --caption=2초 후에 페이지를 출력
-export default async function DelayPage({
-  searchParams
-}: {
-  searchParams: { ok: 'true' }
+```tsx --path=/app/movies/[movieId]/page.tsx --line-active=8 --caption=2초 후에 에러 페이지를 출력
+import wait from '@/utils/wait'
+
+export default async function MovieDetails({
+  // 생략..
 }) {
-  await new Promise(resolve => setTimeout(resolve, 2000))
-  if (searchParams.ok !== 'true') {
-    throw new Error('뭔가 문제가 있어요..')
-  }
-  return <h2>완료!</h2>
+  // 생략..
+  await wait(2000)
+  throw new Error('뭔가 문제가 있어요..')
+  // 생략..
 }
-```
-
-```plaintext --caption=위 URL로 접근해보세요!
-http://localhost:3000/delay?ok=true
-http://localhost:3000/delay
 ```
 
 ### 찾을 수 없는 페이지
@@ -574,7 +744,7 @@ http://localhost:3000/delay
 프로젝트에서 정의하지 않은 경로로 접근하면, `not-found.tsx` 파일로 별도의 페이지를 출력할 수 있습니다.
 
 ```plaintext --caption=프로젝트 구조
-├─app
+├─app/
 │  └─not-found.tsx
 ```
 
@@ -584,7 +754,7 @@ import Link from 'next/link'
 export default function NotFound() {
   return (
     <>
-      <h1>404, 찾을 수 없는 페이지입니다.</h1>
+      <h1 className="text-2xl font-bold">404, 찾을 수 없는 페이지입니다.</h1>
       <Link href="/">메인 페이지로 이동~</Link>
     </>
   )
@@ -592,53 +762,60 @@ export default function NotFound() {
 ```
 
 ```plaintext --caption=위 URL로 접근해보세요!
-http://localhost:3000/helloworld
+http://localhost:3000/helloworld12345678
 ```
 
 ### 비동기 컴포넌트 스트리밍
 
-다음 예제에서 `async/page.tsx` 파일은 3초 후에 페이지를 출력하는 비동기 컴포넌트이고, `Abc`와 `Xyz` 컴포넌트 또한 각각 5초와 2초 후에 내용을 출력하는 비동기 컴포넌트입니다.
-그러면 이 페이지로 접근했을 때, `로딩 중...`이라는 메시지는 8초 동안 표시되고 그 후에 `Abc`와 `Xyz` 컴포넌트가 동시에 출력됩니다.
-`Xyz` 컴포넌트는 2초 만에 출력할 수 있지만, `Abc` 컴포넌트의 영향으로 5초 후에 같이 출력됩니다.
+다음 예제에서 `async/page.tsx` 파일은 1초 후에 페이지를 출력하는 비동기 컴포넌트이고, `Abc`와 `Xyz` 컴포넌트 또한 각각 2초와 3초 후에 내용을 출력하는 비동기 컴포넌트입니다.
+그러면 `http://localhost:3000/async` 주소로 접근했을 때, 로딩 애니메이션은 4초 동안 표시되고 그 후에 `Abc`와 `Xyz` 컴포넌트가 동시에 출력됩니다.
+`Abc` 컴포넌트는 2초 만에 출력할 수 있지만, `Xyz` 컴포넌트의 영향으로 3초 후에 같이 출력됩니다.
 
 ```plaintext --caption=프로젝트 구조
-├─app
-│  ├─async
+├─app/
+│  ├─async/
 │  │  ├─Abc.tsx
-│  │  ├─Xyz.tsx
 │  │  ├─loading.tsx
-│  │  └─page.tsx
+│  │  ├─page.tsx
+│  │  └─Xyz.tsx
 ```
 
-```tsx --path=/app/async/A.tsx --caption=5초 후에 페이지를 출력하는 컴포넌트 Abc
-export default async function A() {
-  await new Promise(resolve => setTimeout(resolve, 5000))
+```tsx --path=/app/async/loading.tsx --caption=페이지 출력 전 로딩 UI
+import Loader from '@/components/Loader'
+
+export default function Loading() {
+  return <Loader />
+}
+```
+
+```tsx --path=/app/async/Abc.tsx --line-active=4 --caption=2초 후에 페이지를 출력하는 컴포넌트 Abc
+import wait from '@/utils/wait'
+
+export default async function Abc() {
+  await wait(2000)
   return <h2>Abc 컴포넌트!</h2>
 }
 ```
 
-```tsx --path=/app/async/B.tsx --caption=2초 후에 페이지를 출력하는 컴포넌트 Xyz
-export default async function B() {
-  await new Promise(resolve => setTimeout(resolve, 2000))
+```tsx --path=/app/async/Xyz.tsx --line-active=4 --caption=3초 후에 페이지를 출력하는 컴포넌트 Xyz
+import wait from '@/utils/wait'
+
+export default async function Xyz() {
+  await wait(3000)
   return <h2>Xyz 컴포넌트!</h2>
 }
 ```
 
-```tsx --path=/app/async/loading.tsx --caption=페이지 출력 전 로딩 UI
-export default function Loading() {
-  return <h2>로딩 중...</h2>
-}
-```
-
-```tsx --path=/app/async/page.tsx --caption=컴포넌트 Abc와 Xyz를 출력하는 페이지
+```tsx --path=/app/async/page.tsx --line-active=6 --caption=1초 후에 비동기 컴포넌트 Abc와 Xyz를 출력하는 페이지
+import wait from '@/utils/wait'
 import Abc from './Abc'
 import Xyz from './Xyz'
 
 export default async function Page() {
-  await new Promise(resolve => setTimeout(resolve, 3000))
+  await wait(1000)
   return (
     <>
-      <h1>페이지!</h1>
+      <h1>비동기 페이지!</h1>
       <Abc />
       <Xyz />
     </>
@@ -646,24 +823,42 @@ export default async function Page() {
 }
 ```
 
-`<Suspense>` 컴포넌트를 사용해 비동기 컴포넌트를 스트리밍하면, 각 컴포넌트가 준비되는 대로 출력할 수 있습니다.
-`fallback` Prop을 통해 각 비동기 컴포넌트의 로딩 UI를 출력할 수도 있습니다.
-다음 예제는 `로딩 중...`이라는 메시지가 3초 동안 표시되고 그 후에 `Abc`와 `Xyz` 컴포넌트가 각각 2초와 5초 후에 따로 출력됩니다.
+`<Header>` 컴포넌트에서 비동기 컴포넌트 스트리밍 테스트 페이지로 이동할 수 있게 링크를 추가해봅시다.
 
-```tsx --path=/app/async/page.tsx --line-active=1,9-14 --caption=컴포넌트 Abc와 Xyz를 출력하는 페이지
+```tsx --path=/components/Header.tsx --line-active=6
+// 생략..
+const links = [
+  { href: '/', label: 'Home' },
+  { href: '/movies', label: 'Movies' },
+  { href: '/movies/tt4154796', label: 'Movie(Avengers)' },
+  { href: '/async', label: 'Async' }
+]
+
+export default function Header() {
+  // 생략..
+}
+```
+
+`<Suspense>` 컴포넌트를 사용해 비동기 컴포넌트를 스트리밍하면, 각 비동기 컴포넌트가 준비되는 대로 출력할 수 있습니다.
+`<Suspense>` 컴포넌트에서 `fallback` Prop을 사용해 각 비동기 컴포넌트의 로딩 UI를 출력할 수도 있습니다.
+다음 예제는 기본 로딩 애니메이션이 1초 동안 표시되고 그 후에 빨간색과 파란색 로딩 애니메이션이 각각 2초와 3초 동안 표시된 후에 `Abc`와 `Xyz` 컴포넌트가 출력됩니다.
+
+```tsx --path=/app/async/page.tsx --line-active=1,12-17 --caption=비동기 컴포넌트 Abc와 Xyz를 출력하는 페이지
 import { Suspense } from 'react'
+import Loader from '@/components/Loader'
+import wait from '@/utils/wait'
 import Abc from './Abc'
 import Xyz from './Xyz'
 
 export default async function Page() {
-  await new Promise(resolve => setTimeout(resolve, 3000))
+  await wait(1000)
   return (
     <>
-      <h1>페이지!</h1>
-      <Suspense fallback={<p>ABC 로딩 중..</p>}>
+      <h1>비동기 페이지!</h1>
+      <Suspense fallback={<Loader color="red" />}>
         <Abc />
       </Suspense>
-      <Suspense fallback={<p>XYZ 로딩 중..</p>}>
+      <Suspense fallback={<Loader color="blue" />}>
         <Xyz />
       </Suspense>
     </>
@@ -675,63 +870,37 @@ export default async function Page() {
 
 ### 경로 그룹
 
-`/app` 폴더 내 기본적인 폴더는 항상 URL 경로로 매핑되지만,
-소괄호(`()`)를 사용해 URL 경로에 영향을 주지 않는 폴더(경로) 그룹을 만들 수 있습니다.
+`/app` 폴더 내 기본적인 폴더는 항상 URL 경로로 매핑되지만, 소괄호(`()`)를 사용해 URL 경로에 영향을 주지 않는 폴더(경로) 그룹을 만들 수 있습니다.
 이 그룹은 특히, 각자의 레이아웃(`layout.tsx`)을 가질 수 있기 때문에, 경로에 맞는 여러 레이아웃 제공을 제공할 수 있습니다.
 
-```plaintext --line-active=2,5,6,14,15 --caption=프로젝트 구조
-├─app
-│  ├─(about)
-│  │  ├─about
-│  │  │  └─page.tsx
-│  │  └─layout.tsx  <== (about) 그룹에서만 동작하는 레이아웃
-│  ├─(movie)
-│  │  ├─movies
-│  │  │  ├─[movieId]
+```plaintext --line-active=2,8,9 --caption=프로젝트 구조
+├─app/
+│  ├─(movies)/
+│  │  ├─movies/
+│  │  │  ├─[movieId]/
+│  │  │  │  ├─error.tsx
+│  │  │  │  ├─loading.tsx
 │  │  │  │  └─page.tsx
-│  │  │  └─page.tsx
-│  │  ├─poster
-│  │  │  └─[movieId]
-│  │  │     └─page.tsx
-│  │  └─layout.tsx  <== (movie) 그룹에서만 동작하는 레이아웃
+│  │  └─layout.tsx  <== (movies) 그룹에서만 동작하는 레이아웃
 │  ├─layout.tsx  <== 루트 레이아웃
 │  └─page.tsx
 ```
 
-```tsx --path=/app/(about)/layout.tsx
-export default function Layout({
-  children
-}: {
-  children: React.ReactNode
-}) {
+```tsx --path=/app/(movies)/layout.tsx
+export default function Layout({ children }: { children: React.ReactNode }) {
   return (
-    <>
-      <h1>About Group</h1>
+    <div className="border-2 px-3 py-2">
+      <p className="text-gray-500">(movies) 경로 그룹의 레이아웃</p>
       {children}
-    </>
-  )
-}
-```
-
-```tsx --path=/app/(movie)/layout.tsx
-export default function Layout({
-  children
-}: {
-  children: React.ReactNode
-}) {
-  return (
-    <>
-      <h1>Movie Group</h1>
-      {children}
-    </>
+    </div>
   )
 }
 ```
 
 ### 경로 병렬 처리
 
-`@` 접두사의 폴더는 URL 경로에 영향을 주지 않는 페이지로, 하나의 레이아웃에서 동시에 처리(Parallel Routes)할 수 있습니다.
-이는 '이름을 가진 슬롯' 방식으로, `page.tsx` 컴포넌트가 같은 레벨 `layout.tsx`의 `children` Prop으로 전달되는 것처럼, `@abc/page.tsx` 컴포넌트는 `layout.tsx`의 `abc` Prop으로, `@xyz/page.tsx` 컴포넌트는 `xyz` Prop으로 전달됩니다.
+`@` 접두사의 폴더는 URL 경로에 영향을 주지 않는 페이지로, 하나의 레이아웃에서 병렬로 경로를 처리(Parallel Routes)할 수 있습니다.
+이를 통해 여러 페이지나 컴포넌트를 병렬로 로드하고 렌더링할 수 있어, 순차적 로딩 대비 전체 로딩 시간이 단축되고 각 컴포넌트의 로딩 상태를 독립적으로 표시할 수 있어 더 나은 사용자 경험을 제공합니다.
 
 ![경로 병렬 처리(Parallel Routes)](./assets/s11.avif)
 
@@ -749,33 +918,46 @@ export default function Layout({
 │  │  └─page.tsx
 ```
 
+프로젝트 구조의 컴포넌트 순서대로 아래와 같이 내용을 작성합니다.
+
 ```tsx --path=/app/async/@abc/loading.tsx
+import Loader from '@/components/Loader'
+
 export default function Loading() {
-  return <p>ABC 로딩 중..</p>
+  return <Loader color="red" />
 }
 ```
 
-```tsx --path=/app/async/@abc/page.tsx --caption=layout.abc로 전달되는 페이지
+```tsx --path=/app/async/@abc/page.tsx
+import wait from '@/utils/wait'
+
 export default async function Abc() {
-  await new Promise(resolve => setTimeout(resolve, 5000))
-  return <h2>ABC 컴포넌트!</h2>
+  await wait(2000)
+  return <h2>Abc 컴포넌트!</h2>
 }
 ```
 
 ```tsx --path=/app/async/@xyz/loading.tsx
+import Loader from '@/components/Loader'
+
 export default function Loading() {
-  return <p>XYZ 로딩 중..</p>
+  return <Loader color="blue" />
 }
 ```
 
-```tsx --path=/app/async/@xyz/page.tsx  --caption=layout.xyz로 전달되는 페이지
-export default async function XYZ() {
-  await new Promise(resolve => setTimeout(resolve, 2000))
-  return <h2>XYZ 컴포넌트!</h2>
+```tsx --path=/app/async/@xyz/page.tsx
+import wait from '@/utils/wait'
+
+export default async function Xyz() {
+  await wait(3000)
+  return <h2>Xyz 컴포넌트!</h2>
 }
 ```
 
-```tsx --path=/app/async/layout.tsx --line-active=3,4,7,8,13,14
+`layout.tsx` 컴포넌트와 같은 레벨의 `page.tsx` 컴포넌트는 `layout.tsx`의 `children`, `@abc/page.tsx` 컴포넌트는 `abc`, `@xyz/page.tsx` 컴포넌트는 `xyz` Prop으로 각각 전달됩니다.
+그리고 전달된 각 컴포넌트를 `{children}`과 같이 JSX 보간으로 출력합니다.
+
+```tsx --path=/app/async/layout.tsx --line-active=3-4,7-8,13-14
 export default function Layout({
   children,
   abc,
@@ -796,35 +978,41 @@ export default function Layout({
 ```
 
 ```tsx --path=/app/async/loading.tsx
+import Loader from '@/components/Loader'
+
 export default function Loading() {
-  return <h2>로딩 중...</h2>
+  return <Loader />
 }
 ```
 
-```tsx --path=/app/async/page.tsx --caption=layout.children으로 전달되는 페이지
+```tsx --path=/app/async/page.tsx
+import wait from '@/utils/wait'
+
 export default async function Page() {
-  await new Promise(resolve => setTimeout(resolve, 3000))
-  return <h1>페이지!</h1>
+  await wait(1000)
+  return <h1>비동기 페이지!</h1>
 }
 ```
 
-앞서 '비동기 컴포넌트 스트리밍'에서 살펴본 `<Suspense>` 컴포넌트 활용 예제와 비슷하지만,
-경로를 컴포넌트처럼 활용한다는 점에서 차이가 있습니다. 
+`http://localhost:3000/async` 주소로 접근하면, 앞서 '비동기 컴포넌트 스트리밍'에서 살펴본 `<Suspense>` 컴포넌트 활용 예제와 같은 로딩 애니메이션 및 페이지 결과가 출력됩니다.
+결과는 동일하지만, 이처럼 병렬 경로 처리 방식을 사용하면 각 페이지 컴포넌트가 독립적으로 로딩하고 로딩/에러 상태를 각 컴포넌트별로 쉽게 분리할 수 있어 복잡한 컴포넌트의 분기 처리가 줄어들 수 있습니다.
 
-```tsx --path=/app/async/page.tsx --caption=컴포넌트 A와 B를 출력하는 페이지
+```tsx --path=/app/async/page.tsx --line-active=4-5,12-17 --caption=앞서 작성했던 비동기 컴포넌트 스트리밍 예제
 import { Suspense } from 'react'
+import Loader from '@/components/Loader'
+import wait from '@/utils/wait'
 import Abc from './Abc'
 import Xyz from './Xyz'
 
 export default async function Page() {
-  await new Promise(resolve => setTimeout(resolve, 3000))
+  await wait(1000)
   return (
     <>
-      <h1>페이지!</h1>
-      <Suspense fallback={<p>ABC 로딩 중..</p>}>
+      <h1>비동기 페이지!</h1>
+      <Suspense fallback={<Loader color="red" />}>
         <Abc />
       </Suspense>
-      <Suspense fallback={<p>XYZ 로딩 중..</p>}>
+      <Suspense fallback={<Loader color="blue" />}>
         <Xyz />
       </Suspense>
     </>
@@ -936,76 +1124,66 @@ export default function CLayout({
 
 루트 경로에 생성하는 단일 `/middleware.ts` 파일을 통해, 특정 경로로 이동하기 전에 서버 측에서 실행되는 코드를 제공할 수 있습니다.
 주로 인증 및 권한 확인이 필요한 페이지를 구분하는 데 사용되며, 응답 헤더 및 쿠키 설정, Redirect, Rewrite 등의 작업도 가능합니다.
-그리고 미들웨어는 호출이 끝나야 경로 접근이 가능하기 때문에, 너무 복잡하거나 오래 걸리는 작업은 피해야 합니다.
+
+미들웨어는 다음과 같은 과정에서 실행됩니다.
+
+1. Next.js Edge Runtime 초기화
+2. 요청된 경로와 매칭되는 미들웨어 실행(`export const config = { matcher: ['/dashboard{/*path}', '...'] }`)
+3. 정적/동적 경로 매칭
+4. 레이아웃과 페이지 렌더링
+
+/// message-box --icon=warning
+미들웨어는 호출이 끝나야 경로 접근이 가능하기 때문에, 복잡하거나 오래 걸리는 작업은 피해야 합니다.
+`next/headers`의 쿠키나 헤더는 미들웨어 실행 후에만 수정 가능하며, 외부 패키지 사용이 제한될 수 있습니다.
+///
 
 ```ts --path=/middleware.ts --caption=미들웨어 기본 구조
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 
 export async function middleware(request: NextRequest) {
-  // console.log('Middleware!')
-  return NextResponse.next()
-}
-```
-
-```ts --path=/middleware.ts --caption=미들웨어 예시
-import { auth } from '@/auth'
-import { NextResponse } from 'next/server'
-import type { NextRequest } from 'next/server'
-
-export async function middleware(request: NextRequest) {
-  if (
-    // 로그인(인증)이 필요한 페이지 확인
-    isMatch(request.nextUrl.pathname, [
-      '/dashboard',
-      '/myaccount',
-      '/settings'
-    ])
-  ) {
-    const session = await auth()
-    if (session) {
-      return NextResponse.next()
-    }
-    return NextResponse.redirect(new URL('/signin', request.url))
-  }
   return NextResponse.next()
 }
 
 // 일치하는 경로에서만 미들웨어가 호출됩니다.
 // `config` 내보내기를 생략하면, 모든 경로에서 미들웨어가 호출됩니다.
 export const config = {
-  matcher: ['/dashboard/:path*', '/myaccount/:path*', '/settings/:path*'] // 특정 경로만 일치
-  // matcher: ['/:path*'] // 명시적 모든 경로 일치
-}
-
-function isMatch(pathname: string, matchers: string[]) {
-  return matchers.some(matcher => pathname.startsWith(matcher))
+  matcher: ['/dashboard', '...'] // 특정 경로만 일치
 }
 ```
 
-만약 더 복잡한 경로 매칭을 원한다면, `path-to-regexp` 라이브러리를 사용할 수 있습니다.
+복잡한 경로 매칭과 처리를 위해 `path-to-regexp` 라이브러리를 사용할 수 있습니다.
 
 ```bash
-npm i path-to-regexp
+npm i path-to-regexp@8
 ```
 
-```ts --path=/middleware.ts --line-active=7-9,17-19
-// ...
+```ts --path=/middleware.ts --caption=미들웨어 예시
+import { NextResponse } from 'next/server'
+import type { NextRequest } from 'next/server'
 import { match } from 'path-to-regexp'
 
+const getSession = async () => {
+  return false // 임시 데이터 반환!
+}
+const matchersForAuth = [
+  '/dashboard{/*path}',
+  '/myaccount{/*path}',
+  '/settings{/*path}'
+]
+
+// 미들웨어 함수
 export async function middleware(request: NextRequest) {
-  if (
-    isMatch(request.nextUrl.pathname, [
-      '/dashboard/:path*',
-      '/myaccount/:path+',
-      '/settings/user/:userId'
-    ])
-  ) {
-    // ...
+  // 인증이 필요한 페이지 접근 제어!
+  if (isMatch(request.nextUrl.pathname, matchersForAuth)) {
+    return (await getSession())
+      ? NextResponse.next()
+      : NextResponse.redirect(new URL('/signin', request.url))
   }
   return NextResponse.next()
 }
 
+// 경로 일치 확인!
 function isMatch(pathname: string, urls: string[]) {
   return urls.some(url => !!match(url)(pathname))
 }
@@ -1013,7 +1191,7 @@ function isMatch(pathname: string, urls: string[]) {
 
 ### API
 
-`/app/api` 폴더 내 구조를 통해 API 엔드포인트를 정의할 수 있고, `'GET'`이나 `'POST'` 등의 여러 HTTP 메소드 요청을 처리할 수 있습니다.
+`/app/api` 폴더 내 구조를 통해 API 엔드포인트를 정의할 수 있고, `'GET'`이나 `'POST'` 등의 여러 HTTP 메서드 요청을 처리할 수 있습니다.
 이 폴더 구조는 `page.tsx` 등의 기본 파일 규칙이 아닌, `route.ts` 파일을 사용합니다.
 
 
@@ -1087,98 +1265,13 @@ Next.js 프로젝트에서 회원가입이나 로그인 등의 사용자 인증 
 
 ![Auth.js(NextAuth.js)](./assets/s13.JPG)
 
-## 데이터 가져오기 및 캐시
-
-Next.js는 기본 `fetch` Web API를 확장해서, 서버에서 사용 가능하며 다양한 요청을 캐싱하거나 재검증하는 등의 추가 동작을 사용할 수 있습니다.
-
-다음 예제에서 사용한 [API](https://www.heropy.dev/p/71PGfA)는 지정된 시간(1초) 후에 간단한 메시지(`message`)와 응답한 시간(`time`)을 반환합니다.
-Next.js `fetch` 함수는 같은 엔드포인트에 대한 요청을 캐싱하기 때문에, 새로고침을 해도 계속 같은 시간이 출력됩니다.
-
-```tsx --path=/app/delay/page.tsx
-type ResponseValue = {
-  message: string
-  time: string // ISO 8601
-}
-
-export default async function AsyncPage() {
-  const res = await fetch('https://api.heropy.dev/v0/delay?t=1000')
-  const data: ResponseValue = await res.json()
-  return <h1>{data.time}</h1>
-  // 2024-04-02T17:47:09.678Z
-}
-```
-
-```plaintext --caption=위 URL로 접근해보세요!
-http://localhost:3000/delay
-```
-
-만약 캐싱을 비활성화하려면, `fetch` 함수의 `cache` 옵션을 사용할 수 있습니다.
-
-```tsx --path=/app/delay/page.tsx --line-active=5
-// 생략..
-
-export default async function AsyncPage() {
-  const res = await fetch('https://api.heropy.dev/v0/delay?t=1000', {
-    cache: 'no-store' // 캐싱 비활성화!
-  })
-  const data: ResponseValue = await res.json()
-  return <h1>{data.time}</h1>
-}
-```
-
-만약 캐싱을 시간 기반으로 설정하려면, `fetch` 함수의 `next.revalidate` 옵션으로 초 단위의 시간을 설정할 수 있습니다.
-
-```tsx --path=/app/delay/page.tsx --line-active=5
-// 생략..
-
-export default async function AsyncPage() {
-  const res = await fetch('https://api.heropy.dev/v0/delay?t=1000', {
-    next: { revalidate: 60 } // 1분마다 재검증!
-  })
-  const data: ResponseValue = await res.json()
-  return <h1>{data.time}</h1>
-}
-```
-
-만약 캐싱을 필요에 따라 제어하려면, `revalidatePath` 함수를 사용할 수 있습니다.
-다음 예제는 쿼리스트링에 `revalidate=true`가 있을 때만, 재검증(Revalidate)합니다.
-
-```tsx --path=/app/delay/page.tsx --line-active=1,14-16
-import { revalidatePath } from 'next/cache'
-
-type ResponseValue = {
-  message: string
-  time: string // ISO 8601
-}
-
-export default async function AsyncPage({
-  searchParams
-}: {
-  searchParams: { revalidate?: 'true' }
-}) {
-  const endpoint = 'https://api.heropy.dev/v0/delay?t=1000'
-  if (searchParams.revalidate === 'true') {
-    revalidatePath(endpoint)
-  }
-  const res = await fetch(endpoint)
-  const data: ResponseValue = await res.json()
-  return <h1>{data.time}</h1>
-}
-```
-
-```plaintext --caption=위 URL로 접근해보세요!
-http://localhost:3000/delay?revalidate=true
-http://localhost:3000/delay
-```
-
-### 서버 액션
+## 서버 액션
 
 Next.js는 서버에서만 실행되는 함수(Server Actions)를 작성할 수 있습니다.
 다음과 같이, 모듈 상단에 `'use server'` 지시어를 추가하고 서버 액션을 추가합니다.
 
 ```ts --path=/serverActions/index.ts --line-active=1
 'use server'
-
 export async function wait(duration = 1000): Promise<{ message: string }> {
   console.log(`Run 'wait' function`)
   return new Promise(resolve =>
@@ -1228,36 +1321,39 @@ export default function ClientPage() {
 
 특히, 서버 액션은 `<form>` 요소의 `action` 속성으로 호출하는 것이 가능해, 양식(Forms) 작업에서 유용합니다.
 
-```tsx --path=/app/signin/page.tsx --line-active=7
-import { signIn } from '@/serverActions'
+```tsx --path=/app/signin/page.tsx --line-active=1,7
+import { signIn } from '@/serverActions/signIn'
 
 export default function Page() {
   return (
     <>
-      <h1>로그인</h1>
-      <form action={signIn}>
-        <label>
-          Email
-          <input
-            name="email"
-            type="email"
-          />
-        </label>
-        <label>
-          Password
-          <input
-            name="password"
-            type="password"
-          />
-        </label>
-        <button type="submit">SIGN IN!</button>
+      <form
+        action={signIn}
+        className="flex gap-4">
+        <input
+          name="email"
+          type="email"
+          placeholder="이메일"
+          className="rounded px-2 py-1 text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
+        <input
+          name="password"
+          type="password"
+          placeholder="비밀번호"
+          className="rounded px-2 py-1 text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
+        <button
+          type="submit"
+          className="rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-400">
+          로그인
+        </button>
       </form>
     </>
   )
 }
 ```
 
-```ts --path=/serverActions/index.ts
+```ts --path=/serverActions/auth.ts
 'use server'
 import { redirect } from 'next/navigation'
 
@@ -1265,9 +1361,7 @@ export async function signIn(formData: FormData) {
   const email = formData.get('email')
   const password = formData.get('password')
   console.log(email, password)
-  
-  // ...
-
+  // await 로그인 처리..
   redirect('/') // 로그인 성공 시, 메인 페이지로 이동!
 }
 ```
@@ -1356,6 +1450,24 @@ export default function Page() {
       width={100}
       height={200}
       onLoad={() => setLoaded(true)}
+    />
+  )
+}
+```
+
+중요한 이미지로 판단해 우선 로드하거나 품질을 지정할 수도 있습니다.
+
+```tsx --line-active=9,10
+export default function Page() {
+  // ...
+  return (
+    <Image
+      src={image.src}
+      alt={image.name}
+      width={100}
+      height={200}
+      quality={100} // 기본값: 75
+      priority // LCP(Largest Contentful Paint) 최적화
     />
   )
 }
@@ -1510,7 +1622,7 @@ export default function RootLayout({
 
 동적 경로에서 메타데이터를 생성하려면, `generateMetadata` 함수를 사용해야 합니다.
 `generateMetadata` 함수는 페이지와 같은 인수를 받아서 처리할 수 있기 때문에, API 요청으로 생성할 메타데이터를 가져올 수 있습니다.
-`fetch` 함수의 GET 메소드 요청은 캐싱되므로, 다음 예제와 같이 API 요청을 사용해도 문제가 없습니다.
+`fetch` 함수의 GET 메서드 요청은 캐싱되므로, 다음 예제와 같이 API 요청을 사용해도 문제가 없습니다.
 
 ```tsx --path=/app/movies/[movieId]/page.tsx --line-active=13-31
 import type DetailedMovie from '@/stores/movies'
@@ -1611,22 +1723,22 @@ http://localhost:3000/vercel.svg
 ### 환경변수
 
 ```plaintext --line-active=1,3 --caption=프로젝트 구조
-├─.env.local
+├─.env
 ├─.eslintrc.json
 ├─.gitignore
 ├─.prettierrc
 ├─next.config.mjs
 ```
 
-각 컴포넌트에서 `process.env.변수이름`으로 접근 가능한 환경변수는 `/.env.local` 파일에서 관리하며, 기본적으로 서버 컴포넌트에서만 접근할 수 있습니다.
+각 컴포넌트에서 `process.env.변수이름`으로 접근 가능한 환경변수는 `/.env` 파일에서 관리하며, 기본적으로 서버 컴포넌트에서만 접근할 수 있습니다.
 만약 클라이언트 컴포넌트에서도 접근하도록 만들고 싶다면, 변수 이름에 `NEXT_PUBLIC_`을 접두사로 추가해야 합니다.
 
 /// message-box --icon=warning
 보안이 요구되는 API 키 등의 중요한 정보는 `NEXT_PUBLIC_` 접두사를 사용하지 않아야 합니다.
-.env.local 파일은 Next.js 프로젝트의 `.gitignore`에 추가되어 있습니다.
+`.env` 파일은 Next.js 프로젝트의 `.gitignore`에 추가되어 있어 원격 저장소에 업로드되지 않습니다.
 ///
 
-```plaintext --caption=.env.local 예시
+```plaintext --caption=.env 예시
 OMDB_API_KEY=7035c60c
 NEXT_PUBLIC_SITE_NAME=Nextjs Movie App
 ```
