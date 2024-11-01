@@ -462,6 +462,15 @@ export default function Header() {
 }
 ```
 
+`router` 객체에서는 다음과 같은 메서드를 사용할 수 있습니다.
+
+- `push(url)`: 페이지 이동
+- `replace(url)`: 페이지 이동(히스토리에 남지 않음)
+- `back()`: 이전 페이지로 이동
+- `forward()`: 다음 페이지로 이동
+- `refresh()`: 페이지 새로고침
+- `prefetch(url)`: 페이지 미리 가져오기
+
 #### 미리 가져오기
 
 기본적인 미리 가져오기가 자동으로 동작하는 `<Link>` 컴포넌트와 달리, 프로그래밍 방식의 탐색에서는 `useEffect` 훅과 `router.prefetch()` 메서드를 사용해 미리 가져오기를 구현할 수 있습니다.
@@ -1145,7 +1154,7 @@ export async function middleware(request: NextRequest) {
   return NextResponse.next()
 }
 
-// 일치하는 경로에서만 미들웨어가 호출됩니다.
+// matcher 속성에 일치하는 경로에서만 미들웨어가 호출됩니다.
 // `config` 내보내기를 생략하면, 모든 경로에서 미들웨어가 호출됩니다.
 export const config = {
   matcher: ['/dashboard', '...'] // 특정 경로만 일치
@@ -1186,6 +1195,32 @@ export async function middleware(request: NextRequest) {
 // 경로 일치 확인!
 function isMatch(pathname: string, urls: string[]) {
   return urls.some(url => !!match(url)(pathname))
+}
+```
+
+미들웨어는 기본적으로 모든 경로 요청에서 호출됩니다.
+[만약 특정한 경로를 제외하고 싶다면,](https://nextjs.org/docs/app/building-your-application/configuring/content-security-policy#adding-a-nonce-with-middleware) `source` 속성에 정규표현식(RegExp)을 사용해 특정 패턴을 제외할 수 있습니다.
+`(?!)` 표현은 특정 패턴을 제외하는 부정 전방 일치(Negative Lookahead)를 의미합니다.
+즉, 명시된 경로를 제외한 나머지 경로에서 미들웨어가 호출되며, 다음 경로가 미들웨어에서 제외됩니다.
+
+- `api/*`: API 라우트
+- `_next/static/*`: 정적 파일
+- `_next/image/*`: 이미지 최적화 파일
+- `favicon.ico`: 파비콘 파일
+
+```ts --path=/middleware.ts
+// ...
+export const config = {
+  matcher: [
+    {
+      source: '/((?!api|_next/static|_next/image|favicon.ico).*)',
+      // Prefetch 요청을 미들웨어에서 제외!
+      missing: [
+        { type: 'header', key: 'next-router-prefetch' },
+        { type: 'header', key: 'purpose', value: 'prefetch' }
+      ]
+    }
+  ]
 }
 ```
 
@@ -1407,11 +1442,11 @@ export default async function MoviePoster({
 만약 원격의 이미지 경로를 사용한다면, 애플리케이션 보호를 위해 `remotePatterns` 옵션을 프로젝트 구성으로 추가해야 합니다.
 포트 번호(`port`)나 구체적인 하위 경로(`pathname`)를 명시하는 것도 가능합니다.
 
-```mjs --path=/next.config.mjs --caption=원격 이미지 최적화 패턴 구성
-/** @type {import('next').NextConfig} */
-const nextConfig = {
+```ts --path=/next.config.ts --caption=원격 이미지 최적화 패턴 구성
+import type { NextConfig } from 'next'
+
+const nextConfig: NextConfig = {
   images: {
-    minimumCacheTTL: 60, // 최소 캐시 시간(초)
     remotePatterns: [
       { 
         protocol: 'https', 
@@ -1590,8 +1625,9 @@ body {
 
 ```tsx --path=/app/layout.tsx --line-active=3-14
 import Header from '@/components/Header'
+import type { Metadata } from 'next'
 
-export const metadata = {
+export const metadata: Metadata = {
   title: '제목!',
   description: '설명..',
   openGraph: {
@@ -1679,8 +1715,9 @@ export default async function MovieDetails({
 
 ```tsx --path=/app/layout.tsx --line-active=4-7
 import Header from '@/components/Header'
+import type { Metadata } from 'next'
 
-export const metadata = {
+export const metadata: Metadata = {
   title: { 
     template: '%s | 사이트이름', 
     default: '사이트이름'
@@ -1727,7 +1764,7 @@ http://localhost:3000/vercel.svg
 ├─.eslintrc.json
 ├─.gitignore
 ├─.prettierrc
-├─next.config.mjs
+├─next.config.ts
 ```
 
 각 컴포넌트에서 `process.env.변수이름`으로 접근 가능한 환경변수는 `/.env` 파일에서 관리하며, 기본적으로 서버 컴포넌트에서만 접근할 수 있습니다.
