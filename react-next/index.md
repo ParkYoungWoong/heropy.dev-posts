@@ -1,6 +1,6 @@
 ---
 id: n7JHmI
-filename: react-nextjs-core-patterns
+filename: react-next
 image: https://heropy.dev/postAssets/n7JHmI/main.jpg
 title: Next.js 15 핵심 정리
 createdAt: 2024-04-03
@@ -29,14 +29,14 @@ Next.js의 최신 버전은 `create-next-app@latest`로, 카나리아(Canary) �
   - Next.js 버전을 쉽게 업그레이드할 수 있는 CLI가 제공됩니다. 
   - `npx @next/codemod@canary upgrade latest` 명령어로 업그레이드할 수 있습니다.
   - 상세한 코드 변경까지는 변경이 되지 않아서 추가 확인 작업이 필요합니다.
-- **비동기 요청 API (중요 변경사항)**
+- **비동기 요청 API (중요)**
   - 데이터 요청이 필요 없는 컴포넌트를 비동기로 처리하여 초기 로드 속도를 높이는 방향으로 변경되었습니다.
   - `params`나 `searchParams` 등의 주요 API가 비동기 사용으로 전환되었습니다.
-- **캐싱 기본값 변경**
+- **캐싱 기본값 변경 (중요)**
   - GET 요청 및 클라이언트 내비게이션의 기본 캐싱 설정이 해제되었습니다.
   - TanStack Query 같은 라이브러리의 캐싱 기능과 중복되지 않아서 좋습니다.
   - `force-static` 옵션으로 다시 캐싱할 수 있습니다.
-- **React 19 지원**
+- **React 19 지원 (중요)**
   - React 19와의 호환성을 지원하며, React 18과도 일부 하위 호환이 유지됩니다.
 - **`<Form>` 컴포넌트**
   - `<form>` 요소를 확장한 최적화 컴포넌트로, 제출 경로를 프리패칭(Prefetching)하고 제출 데이터를 쿼리스트링으로 보존합니다.
