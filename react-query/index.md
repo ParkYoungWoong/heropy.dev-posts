@@ -4,7 +4,7 @@ filename: react-query
 image: https://heropy.dev/postAssets/HZaKIE/main.jpg
 title: TanStack Query(React Query) 핵심 정리
 createdAt: 2024-07-07
-updatedAt: 2024-07-14
+updatedAt: 2024-11-12
 group: React
 author:
   - ParkYoungWoong
@@ -1094,7 +1094,7 @@ npm i @tanstack/react-query-next-experimental
 다음과 같이 Provider를 구성합니다.
 서버와 클라이언트 모두에서 사용해야 하므로, `'use client'`를 사용해야 합니다.
 
-```tsx --path=/app/providers/query.tsx --line-active=1
+```tsx --path=/providers/query.tsx --line-active=1
 'use client'
 import {
   QueryClient,
@@ -1158,9 +1158,13 @@ export default function RootLayout({
 ```
 
 `useSuspenseQuery`를 사용하면, 서버 측 렌더링 단계에서 가져오기를 시도합니다.
-우리는 TanStack Query의 캐싱 전략을 사용할 것이기 때문에, Next.js `fetch` 함수의 캐싱 기능을 비활성화해야 합니다.
 
-```tsx --path=/components/DelayedData.tsx --line-active=1,14
+/// message-box --icon=warning
+Next.js 14버전까지 `fetch` 함수는 기본적으로 캐싱 기능이 활성화되어 있으므로, `cache: 'no-store'` 옵션을 사용해야 캐싱 기능을 비활성화할 수 있습니다.
+Next.js 15버전부터 `fetch` 함수가 기본적으로 캐싱 기능이 비활성화되어 있으므로, 해당 옵션을 사용하지 않아도 됩니다.
+///
+
+```tsx --path=/components/DelayedData.tsx --line-active=1 --line-error=14
 'use client'
 import { useSuspenseQuery } from '@tanstack/react-query'
 
@@ -1174,7 +1178,7 @@ export default function DelayedData() {
     queryKey: ['delay'],
     queryFn: async () => {
       const res = await fetch('https://api.heropy.dev/v0/delay?t=1000', {
-        cache: 'no-store'
+        // cache: 'no-store'
       })
       return res.json()
     },
