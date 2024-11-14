@@ -963,7 +963,7 @@ export default function TextField({ label = '', hint = '', value, onChange }) {
 
 ```jsx --path=/src/App.jsx
 import { useState } from 'react'
-import TextField from './components/TextField'
+import TextField from '@/components/TextField'
 
 export default function App() {
   const [name, setName] = useState('')
@@ -1002,7 +1002,7 @@ export default function App() {
 
 ```jsx --path=/src/App.jsx --line-active=13-18 --caption=Props로 정의하지 않는 여러 속성을 사용
 import { useState } from 'react'
-import TextField from './components/TextField'
+import TextField from '@/components/TextField'
 
 export default function App() {
   const [email, setEmail] = useState('')
@@ -1072,7 +1072,7 @@ export default function Button({ children, loading = false, ...restProps }) {
 
 ```jsx --path=/src/App.jsx
 import { useState } from 'react'
-import Button from './components/TextField'
+import Button from '@/components/Button'
 
 export default function App() {
   const [loading, setLoading] = useState(false)
@@ -1160,7 +1160,7 @@ npm i -D sass
 ```
 
 ```jsx --path=/src/components/Hello.jsx
-import styles from './TextField.module.scss'
+import styles from './Hello.module.scss'
 
 export default function Hello({ message = '' }) {
   return (
