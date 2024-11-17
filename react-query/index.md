@@ -4,7 +4,7 @@ filename: react-query
 image: https://heropy.dev/postAssets/HZaKIE/main.jpg
 title: TanStack Query(React Query) 핵심 정리
 createdAt: 2024-07-07
-updatedAt: 2024-11-12
+updatedAt: 2024-11-17
 group: React
 author:
   - ParkYoungWoong
@@ -203,7 +203,7 @@ export default function DelayedData() {
 `initialDataUpdatedAt` | 초기 데이터의 마지막 업데이트 시간 설정. |  | `number \| (() => number \| undefined)`
 `meta` | 활용할 메타 정보를 저장. |  | `Record<string, unknown>`
 `networkMode` | 네트워크 모드 설정. | `'online'` | `'online' \| 'always' \| 'offlineFirst'`
-`notifyOnChangeProps` | 변경 시 알림 받을 속성 설정. |  | `string[] \| "all" \| (() => string[] \| "all")`
+`notifyOnChangeProps` | 컴포넌트 리랜더링을 위해 변경 여부를 확인할 쿼리의 특정 반환 속성 목록.<br/>예시: `['data', 'error']` | 컴포넌트에서 접근한 반환 속성 | `string[] \| "all" \| (() => string[] \| "all")`
 `placeholderData` | 대기(Pending) 중인 상태에서 사용할 데이터. |  | `TData \| (previousValue: TData \| undefined, previousQuery: Query \| undefined) => TData`
 `queryClient` | 커스텀 쿼리 클라인트 연결 |  | `QueryClient`
 `queryFn` | 데이터를 가져오는 쿼리 함수로, 꼭 데이터를 반환하거나 오류를 던져야 함.<br/>기본 쿼리 함수가 지정되지 않은 경우에만 필수 옵션! |  | `(context: QueryFunctionContext) => Promise<TData>`
@@ -350,10 +350,11 @@ export default function DelayedData() {
 선택 함수(`select`)를 사용하면 가져온 데이터를 변형(선택)할 수 있습니다.
 쿼리 함수가 반환하는 데이터를 인수로 받아 선택 함수에서 처리하고 반환하면 최종 데이터가 됩니다.
 최종 데이터의 타입은 `useQuery`의 3번째 제네릭 타입으로 선언할 수 있습니다.
+2번째는 오류 타입(`Error`)입니다.
 
 다음 예제의 사용한 API는 [사용자 정보 API](https://www.heropy.dev/p/5PlGxB)입니다.
 
-```tsx --path=/src/components/UserNames.tsx --line-active=3,11,17
+```tsx --path=/src/components/UserNames.tsx --line-active=3,11,19
 import { useQuery } from '@tanstack/react-query'
 
 type Users = User[]
@@ -402,6 +403,32 @@ export default function UserNames() {
     staleTime: 1000 * 10,
     select: data => data.map(user => user.name)
   })
+  // ...
+}
+```
+
+##### placeholderData
+
+새로운 데이터를 가져오는 과정에서는 쿼리가 무효화되어 일시적으로 데이터가 없는 상태(`undefined`)가 되면 데이터 출력 화면이 화면이 깜빡일 수 있습니다.
+이런 현상을 방지하기 위해 `placeholderData` 옵션을 사용하면, 쿼리 함수가 호출되는 대기 상태(Pending)에서 임시로 표시할 데이터를 미리 지정할 수 있습니다.
+`placeholderData` 옵션에는 함수를 지정할 수 있으며, 이 함수는 새로운 데이터를 가져오기 직전의 이전(Previous) 데이터를 받을 수 있어서 이를 반환해 임시 데이터로 사용할 수 있습니다.
+
+```tsx --path=/src/components/UserNames.tsx --line-active=13
+// ...
+
+export default function Movies() {
+  // ...
+  
+  const { data: movies } = useQuery<Movie[]>({
+    queryKey: ['movies', searchText], // 검색어
+    queryFn: async () => {
+      const res = await fetch(`https://omdbapi.com?apikey=7035c60c&s=${searchText}`)
+      const { Search: movies } = await res.json()
+      return movies
+    },
+    placeholderData: prev => prev
+  })
+  
   // ...
 }
 ```
@@ -505,7 +532,7 @@ export default function DelayedData() {
 
 ##### 다시 가져오기
 
-`refetch` 함수를 사용하면, 데이터를 새롭게 다시 가져올 수 있습니다.
+`refetch` 함수를 사용하면, 데이터를 항상 새롭게 다시 가져올 수 있습니다.
 
 ```tsx --path=/src/components/DelayedData.tsx --line-active=4,13
 // ...
@@ -526,37 +553,6 @@ export default function DelayedData() {
 }
 ```
 
-만약 새로운 데이터가 아닌 캐시된 데이터가 필요하다면, `queryClient.getQueryData()` 메소드를 사용할 수 있습니다.
-데이터가 상해도 새로 가져오지 않고, 캐시된 데이터만 반환합니다.
-`useQueryClient` 훅을 사용해 `queryClient` 객체를 가져온 후, `getQueryData` 메소드를 사용합니다.
-
-```tsx --path=/src/components/DelayedData.tsx --line-active=2,12,14
-import { useCallback } from 'react'
-import { useQuery, useQueryClient } from '@tanstack/react-query'
-
-// ...
-
-export default function DelayedData() {
-  const { data, isStale } = useQuery<ResponseValue>({
-    queryKey: ['delay'],
-    queryFn: async () => (await fetch('https://api.heropy.dev/v0/delay?t=1000')).json(),
-    staleTime: 1000 * 10
-  })
-  const queryClient = useQueryClient()
-  const queryData = useCallback(() => {
-    const data = queryClient.getQueryData(['delay'])
-    console.log(data) // 캐시된 데이터
-  }, [queryClient])
-  return (
-    <>
-      <div>{data?.time}</div>
-      <div>데이터가 상했나요?: {JSON.stringify(isStale)}</div>
-      <button onClick={queryData}>데이터 가져오기!</button>
-    </>
-  )
-}
-```
-
 만약 신선도(`staleTime`) 기반으로 데이터를 가져오려면, `queryClient.fetchQuery()` 메소드를 사용할 수 있습니다.
 주의할 부분은, `queryKey`와 `staleTime`를 기존 쿼리와 동일하게 제공해야 합니다.(`queryFn` 생략 가능)
 
@@ -564,10 +560,8 @@ export default function DelayedData() {
 `queryOptions` 함수를 사용해 옵션을 미리 정의하고 재사용할 수 있습니다.
 ///
 
-```tsx --path=/src/components/DelayedData.tsx --line-active=2,6,14,16
-import { useCallback } from 'react'
+```tsx --path=/src/components/DelayedData.tsx --line-active=1,4,11,12,15
 import { useQuery, useQueryClient, queryOptions } from '@tanstack/react-query'
-
 // ...
 
 const options = queryOptions<ResponseValue>({
@@ -577,17 +571,54 @@ const options = queryOptions<ResponseValue>({
 })
 
 export default function DelayedData() {
-  const { data, isStale } = useQuery(options)
   const queryClient = useQueryClient()
-  const queryData = useCallback(async () => {
+  const { data, isStale } = useQuery(options)
+  
+  function fetchData() {
     const data = await queryClient.fetchQuery(options)
     console.log(data) // 캐시된 데이터 or 새로 가져온 데이터
-  }, [queryClient])
+  }
   return (
     <>
       <div>{data?.time}</div>
       <div>데이터가 상했나요?: {JSON.stringify(isStale)}</div>
-      <button onClick={queryData}>데이터 가져오기!</button>
+      <button onClick={fetchData}>데이터 가져오기!</button>
+    </>
+  )
+}
+```
+
+만약 캐시된 데이터가 필요하다면, `queryClient.getQueryData()` 메소드를 사용할 수 있습니다.
+데이터가 상해도 새로 가져오지 않고, 캐시된 데이터만 반환합니다.
+캐시된 데이터가 없는 경우, `undefined`를 반환합니다.
+
+/// message-box --icon=info
+`queryClient.getQueryData()` 대신 `queryClient.ensureQueryData()` 메소드를 사용하면, 캐시된 데이터가 없는 경우 `undefined`를 반환하지 않고, 자동으로 `queryClient.fetchQuery()` 메소드를 호출해 데이터를 가져옵니다.
+///
+
+`useQueryClient` 훅을 사용해 `queryClient` 객체를 가져온 후, `getQueryData` 메소드를 사용합니다.
+
+```tsx --path=/src/components/DelayedData.tsx --line-active=1,5,13
+import { useQuery, useQueryClient } from '@tanstack/react-query'
+// ...
+
+export default function DelayedData() {
+  const queryClient = useQueryClient()
+  const { data, isStale } = useQuery<ResponseValue>({
+    queryKey: ['delay'],
+    queryFn: async () => (await fetch('https://api.heropy.dev/v0/delay?t=1000')).json(),
+    staleTime: 1000 * 10
+  })
+  
+  function getCachedData() {
+    const data = queryClient.getQueryData(['delay'])
+    console.log(data) // 캐시된 데이터 or undefined
+  }
+  return (
+    <>
+      <div>{data?.time}</div>
+      <div>데이터가 상했나요?: {JSON.stringify(isStale)}</div>
+      <button onClick={getCachedData}>데이터 가져오기!</button>
     </>
   )
 }
