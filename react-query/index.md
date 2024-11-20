@@ -433,6 +433,49 @@ export default function Movies() {
 }
 ```
 
+##### structuralSharing
+
+`structuralSharing` 옵션으로, 새로운 데이터를 가져올 때 이전 데이터와 비교해 변경되지 않은 부분은 이전 데이터를 재사용하도록 설정할 수 있습니다.
+이를 통해 메모리 사용량을 최적화하고 불필요한 리렌더링을 방지할 수 있습니다.
+
+다음 예제와 같이 중첩된 객체의 이전 데이터와 새로운 데이터가 있습니다.
+`structuralSharing` 옵션이 `true`이면 변경된 부분만 새롭게 업데이트하고 변경되지 않은 부분은 이전 데이터의 참조를 재사용합니다.
+반대로 옵션이 `false`이면, 모든 객체가 새로운 참조로 생성됩니다.
+
+```ts
+// 이전 데이터
+const prevUser = {
+  id: 'abc123',
+  name: 'Neo',
+  age: 22,
+  contact: {
+    email: 'neo@gmail.com',
+    address: {
+      country: 'Korea',
+      city: 'Seoul'
+    }
+  }
+}
+
+// 새로운 데이터
+const newUser = {
+  id: 'abc123',
+  name: 'Neo',
+  age: 22,
+  contact: {
+    email: 'neo@gmail.com',
+    address: {
+      country: 'Korea',
+      city: 'Suwon' // 변경된 부분!
+    }
+  }
+}
+```
+
+때로는 `structuralSharing` 옵션을 `false`로 설정하는 것이 더 유리할 수 있습니다.
+예를 들어, 매우 큰 중첩 객체를 다루는 경우 구조적인 비교 자체가 성능에 부담이 될 수 있습니다.
+또한 데이터가 항상 새로운 참조여야 하거나 데이터가 단순해 깊은 비교가 필요하지 않은 경우에도 `false`로 설정하는 게 좋습니다.
+
 #### 반환
 
 다음은 알파벳 순으로 정렬한 목록입니다.
