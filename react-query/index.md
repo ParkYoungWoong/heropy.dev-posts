@@ -242,7 +242,7 @@ useQuery({ queryKey: ['hello', 'world', 123, { b: 2, c: undefined, a: 1 }] })
 useQuery({ queryKey: ['hello', 'world', 123, { a: 1, b: 2 }] })
 useQuery({ queryKey: ['hello', 'world', 123, { a: 1, b: 2, c: 3 }] })
 useQuery({ queryKey: ['hello', 'world'] })
-useQuery({ queryKey: [123, 'world', { a: 1, b: 2, c: 3 }], 'hello' })
+useQuery({ queryKey: [123, 'world', { a: 1, b: 2, c: 3 }, 'hello'] })
 ```
 
 다음 예제에서 `DelayedData` 컴포넌트의 `wait` Prop의 값이 다르면, 각각 별개의 요청을 전송합니다.
