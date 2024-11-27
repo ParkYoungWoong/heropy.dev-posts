@@ -17,7 +17,7 @@ description:
 ---
 
 /// message-box --icon=info
-이 글은 TanStack Query(React Query) `5.50.1` 버전을 기준으로 작성되었습니다.
+이 글은 TanStack Query(React Query) `5.61.4` 버전을 기준으로 작성되었습니다.
 ///
 
 ## 개요
