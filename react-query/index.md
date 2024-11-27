@@ -4,7 +4,7 @@ filename: react-query
 image: https://heropy.dev/postAssets/HZaKIE/main.jpg
 title: TanStack Query(React Query) 핵심 정리
 createdAt: 2024-07-07
-updatedAt: 2024-11-20
+updatedAt: 2024-11-27
 group: React
 author:
   - ParkYoungWoong
@@ -200,9 +200,9 @@ export default function DelayedData() {
 `enabled` | 쿼리 자동 실행 여부.<br/>`false`인 경우, 대기 상태(`pending`)로 시작. | `true` | `boolean \| (query: Query) => boolean`
 `gcTime` | 비활성 캐시 데이터(Inactive)가 메모리에 남아 있는 시간(ms). | `5 * 60 * 1000` | `number \| Infinity`
 `initialData` | 쿼리가 생성되거나 캐시되기 전에 사용하는 초기 데이터. |  | `TData \| () => TData`
-`initialDataUpdatedAt` | 초기 데이터의 마지막 업데이트 시간 설정. |  | `number \| (() => number \| undefined)`
-`meta` | 활용할 메타 정보를 저장. |  | `Record<string, unknown>`
-`networkMode` | 네트워크 모드 설정. | `'online'` | `'online' \| 'always' \| 'offlineFirst'`
+`initialDataUpdatedAt` | 초기 데이터의 마지막 업데이트 시간 지정. |  | `number \| (() => number \| undefined)`
+`meta` | 활용할 추가 정보를 지정. |  | `Record<string, unknown>`
+`networkMode` | 네트워크 모드 지정. | `'online'` | `'online' \| 'always' \| 'offlineFirst'`
 `notifyOnChangeProps` | 컴포넌트 리랜더링을 위해 변경 여부를 확인할 쿼리의 특정 반환 속성 목록.<br/>예시: `['data', 'error']` | 컴포넌트에서 접근한 반환 속성 | `string[] \| "all" \| (() => string[] \| "all")`
 `placeholderData` | 대기(Pending) 중인 상태에서 사용할 데이터. |  | `TData \| (previousValue: TData \| undefined, previousQuery: Query \| undefined) => TData`
 `queryClient` | 커스텀 쿼리 클라인트 연결 |  | `QueryClient`
@@ -413,7 +413,7 @@ export default function UserNames() {
 이런 현상을 방지하기 위해 `placeholderData` 옵션을 사용하면, 쿼리 함수가 호출되는 대기 상태(Pending)에서 임시로 표시할 데이터를 미리 지정할 수 있습니다.
 `placeholderData` 옵션에는 함수를 지정할 수 있으며, 이 함수는 새로운 데이터를 가져오기 직전의 이전(Previous) 데이터를 받을 수 있어서 이를 반환해 임시 데이터로 사용할 수 있습니다.
 
-```tsx --path=/src/components/UserNames.tsx --line-active=13
+```tsx --path=/src/components/Movies.tsx --line-active=13
 // ...
 
 export default function Movies() {
@@ -435,14 +435,14 @@ export default function Movies() {
 
 ##### structuralSharing
 
-`structuralSharing` 옵션으로, 새로운 데이터를 가져올 때 이전 데이터와 비교해 변경되지 않은 부분은 이전 데이터를 재사용하도록 설정할 수 있습니다.
+`structuralSharing` 옵션으로, 새로운 데이터를 가져올 때 이전 데이터와 비교해 변경되지 않은 부분은 이전 데이터를 재사용하도록 지정.할 수 있습니다.
 이를 통해 메모리 사용량을 최적화하고 불필요한 리렌더링을 방지할 수 있습니다.
 
 다음 예제와 같이 중첩된 객체의 이전 데이터와 새로운 데이터가 있습니다.
 `structuralSharing` 옵션이 `true`이면 변경된 부분만 새롭게 업데이트하고 변경되지 않은 부분은 이전 데이터의 참조를 재사용합니다.
 반대로 옵션이 `false`이면, 모든 객체가 새로운 참조로 생성됩니다.
 
-```ts
+```ts --line-active=10,24
 // 이전 데이터
 const prevUser = {
   id: 'abc123',
@@ -472,9 +472,57 @@ const newUser = {
 }
 ```
 
-때로는 `structuralSharing` 옵션을 `false`로 설정하는 것이 더 유리할 수 있습니다.
+때로는 `structuralSharing` 옵션을 `false`로 지정.하는 것이 더 유리할 수 있습니다.
 예를 들어, 매우 큰 중첩 객체를 다루는 경우 구조적인 비교 자체가 성능에 부담이 될 수 있습니다.
-또한 데이터가 항상 새로운 참조여야 하거나 데이터가 단순해 깊은 비교가 필요하지 않은 경우에도 `false`로 설정하는 게 좋습니다.
+또한 데이터가 항상 새로운 참조여야 하거나 데이터가 단순해 깊은 비교가 필요하지 않은 경우에도 `false`로 지정.하는 게 좋습니다.
+
+##### meta
+
+`meta` 속성은 쿼리에 대한 추가 정보를 제공할 수 있습니다.
+
+예를 들어, 쿼리 함수에서 발생한 오류 메시지 출력을 전역적으로 처리할 수 있습니다.
+쿼리 클라이언트 생성의 `queryCache` 옵션에서 호출 쿼리의 추가 정보(`meta`)를 얻을 수 있습니다.
+
+```tsx --path=/src/main.tsx --line-active=11
+// ...
+import {
+  QueryClient,
+  QueryClientProvider,
+  QueryCache
+} from '@tanstack/react-query'
+
+const queryClient = new QueryClient({
+  queryCache: new QueryCache({
+    onError: (_error, query) => {
+      alert(query.meta?.myErrorMessage) // 오류 메시지 출력!
+    }
+  })
+})
+
+// ...
+```
+
+```tsx --path=/src/components/Movies.tsx --line-active=13-15
+// ...
+
+export default function Movies() {
+  // ...
+  
+  const { data: movies } = useQuery<Movie[]>({
+    queryKey: ['movies', searchText], // 검색어
+    queryFn: async () => {
+      const res = await fetch(`https://omdbapi.com?apikey=7035c60c&s=${searchText}`)
+      const { Search: movies } = await res.json()
+      return movies
+    },
+    meta: {
+      myErrorMessage: '영화를 검색할 수 없어요!'
+    }
+  })
+  
+  // ...
+}
+```
 
 #### 반환
 
@@ -487,8 +535,8 @@ const newUser = {
 `error` | 오류가 발생했을 때의 오류 객체.<br>오류가 발생하지 않았다면 `null`. | `null \| TError`
 `errorUpdateCount` | 모든 오류의 횟수. | `number`
 `errorUpdatedAt` | 최근에 오류가 발생한 시간(유닉스 타임스탬프). | `number`
-`failureCount` | 쿼리의 실패 횟수.<br>쿼리가 실패할 때마다 증가하고 쿼리가 성공하면 `0`으로 재설정. | `number`
-`failureReason` | 쿼리의 재시도 실패 이유.<br/>쿼리가 성공하면 `null`로 재설정. | `null \| TError`
+`failureCount` | 쿼리의 실패 횟수.<br>쿼리가 실패할 때마다 증가하고 쿼리가 성공하면 `0`으로 재지정. | `number`
+`failureReason` | 쿼리의 재시도 실패 이유.<br/>쿼리가 성공하면 `null`로 재지정. | `null \| TError`
 `fetchStatus` | `'fetching'`: 쿼리 함수가 실행 중.(첫 대기 및 백그라운드 다시 가져오기 포함, `isFetching`)<br/>`'paused'`: 쿼리 함수의 가져오기가 일시 중단됨.(`isPaused`)<br/>`'idle'`: 쿼리 함수가 동작 중이지 않음. | `'fetching'` \| `'paused'` \| `'idle'`
 `isError` | 쿼리 함수에서의 오류 발생 여부. | `boolean`
 `isFetched` | 쿼리의 첫 데이터 가져오기가 완료되었는지 여부. | `boolean`
@@ -511,7 +559,7 @@ const newUser = {
 `isFetching`은 쿼리 함수(`queryFn`)가 실행 중인지의 여부로, 데이터를 가져오는 중을 나타냅니다.
 
 `isPending`은 캐시된 데이터가 없고 쿼리가 아직 완료되지 않은 상태의 여부로, `initialData` 혹은 `placeholderData` 옵션으로 데이터를 제공하면 출력 대기(Pending)가 필요하지 않으므로 `false`를 반환합니다.
-`enabled` 옵션을 `false`로 설정하면, 쿼리가 대기 상태로 시작하므로 `isPending`는 `true`를 반환합니다.
+`enabled` 옵션을 `false`로 지정.하면, 쿼리가 대기 상태로 시작하므로 `isPending`는 `true`를 반환합니다.
 
 `isLoading`은 `isFetching && isPending`와 같은 의미로, 쿼리의 첫 번째 가져오기가 진행 중인 경우를 나타냅니다.
 
@@ -962,10 +1010,10 @@ const 반환 = useMutation(옵션)
 옵션 | 설명 | 기본값 | 타입
 -- | -- | -- | --
 `gcTime` | 비활성 캐시 데이터(Inactive)가 메모리에 남아 있는 시간(ms). |  | `number \| Infinity`
-`meta` | 활용할 메타 정보를 저장. |  | `Record<string, unknown>`
+`meta` | 활용할 추가 정보를 지정. |  | `Record<string, unknown>`
 `mutationFn` | 실행할 비동기 변이 함수.<br/>필수 옵션! |  | `(variables: TVariables) => Promise<TData>`
 `mutationKey` | `queryClient.setMutationDefaults`의 기본값 상속을 위한 키 |  | `unknown[]`
-`networkMode` | 네트워크 모드 설정. | `'online'` | `'online' \| 'always' \| 'offlineFirst'`
+`networkMode` | 네트워크 모드 지정. | `'online'` | `'online' \| 'always' \| 'offlineFirst'`
 `onError` | 변이 중 오류가 발생할 때 호출되는 함수. |  | `(err: TError, variables: TVariables, context?: TContext) => Promise<unknown> \| unknown`
 `onMutate` | 변이 함수가 실행되기 전에 호출되는 함수. |  | `(variables: TVariables) => Promise<TContext \| void> \| TContext \| void`
 `onSettled` | 변이가 성공하거나 실패해도 항상 호출되는 함수. |  | `(data: TData, error: TError, variables: TVariables, context?: TContext) => Promise<unknown> \| unknown`
@@ -973,7 +1021,7 @@ const 반환 = useMutation(옵션)
 `queryClient` | 커스텀 쿼리 클라인트 연결. |  | `QueryClient`
 `retry` | 변이 실패 시 재시도 횟수. | `0` | `boolean \| number \| (failureCount: number, error: TError) => boolean`
 `retryDelay` | 재시도 시간 간격(ms). |  | `number \| (retryAttempt: number, error: TError) => number`
-`scope` | 동시 실행 범위 설정.<br/>같은 범위 ID를 가진 변이는 병렬이 아닌 직렬로 실행. |  | `{ id: string }`
+`scope` | 동시 실행 범위 지정.<br/>같은 범위 ID를 가진 변이는 병렬이 아닌 직렬로 실행. |  | `{ id: string }`
 `throwOnError` | 변이 실패 시 오류를 던질지 여부. | `undefined` | `undefined \| boolean \| (error: TError) => boolean`
 
 #### 반환
@@ -984,8 +1032,8 @@ const 반환 = useMutation(옵션)
 -- | -- | --
 `data` | 성공적으로 가져온 데이터. | `undefined \| unknown`
 `error` | 오류가 발생했을 때의 오류 객체.<br/>오류가 발생하지 않았다면 null. | `null \| TError`
-`failureCount` | 변이의 실패 횟수.<br/>변이가 실패할 때마다 증가하고 변이가 성공하면 `0`으로 재설정. | `number`
-`failureReason` | 변이의 재시도 실패 이유.<br/>쿼리가 성공하면 null로 재설정. | `null \| TError`
+`failureCount` | 변이의 실패 횟수.<br/>변이가 실패할 때마다 증가하고 변이가 성공하면 `0`으로 재지정. | `number`
+`failureReason` | 변이의 재시도 실패 이유.<br/>쿼리가 성공하면 null로 재지정. | `null \| TError`
 `isError` | 변이 함수에서의 오류 발생 여부. | `boolean`
 `isIdle` | 변이 함수가 실행되기 전의 초기 상태인지 여부 | `boolean`
 `isPaused` | 변이 함수가 일시 중단되었는지 여부 | `boolean`
@@ -993,7 +1041,7 @@ const 반환 = useMutation(옵션)
 `isSuccess` | 데이터를 성공적으로 가져왔는지 여부. | `boolean`
 `mutate` | 변이 실행 함수 | `(variables: TVariables, { onSuccess, onSettled, onError }) => void`
 `mutateAsync` | 비동기 변이 실행 함수 | `(variables: TVariables, { onSuccess, onSettled, onError }) => Promise<TData>`
-`reset` | 변이 내부 상태를 초기 상태로 재설정하는 함수 | `() => void`
+`reset` | 변이 내부 상태를 초기 상태로 재지정.하는 함수 | `() => void`
 `status` | 변이의 현재 상태.<br/>`idle`: 초기 상태<br/>`pending`: 실행 중<br/>`error`: 오류 발생<br/>`success`: 성공 | `string`
 `submittedAt` | 변이가 제출된 시간(유닉스 타임스탬프). | `number`
 `variables` | 변이 실행 함수(`mutate`)에 전달된 데이터. | `undefined \| TVariables`
@@ -1181,7 +1229,7 @@ function makeQueryClient() {
   return new QueryClient({
     defaultOptions: {
       queries: {
-        // 클라이언트의 즉시 다시 요청에 대응하도록, 기본 캐싱 시간(min)을 설정.
+        // 클라이언트의 즉시 다시 요청에 대응하도록, 기본 캐싱 시간(min)을 지정.
         staleTime: 60 * 1000
       }
     }
