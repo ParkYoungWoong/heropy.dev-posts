@@ -101,7 +101,7 @@ Flex는 요소의 크기가 불분명하거나 동적인 경우에도, 각 요�
 Container에는 `display`, `flex-flow`, `justify-content` 등의 속성을 사용할 수 있으며,
 Items에는 `order`, `flex`, `align-self` 등의 속성을 사용할 수 있습니다.
 
-![Flex Container 속성들과 Flex Items 속성들](./assets/flex-base.jpg)
+![Flex Container 속성들과 Flex Items 속성들](./assets/flex-base.jpg "--1470x653")
 
 ## Flex Container
 
@@ -137,7 +137,7 @@ inline-flex | Inline 특성의 Flex Container를 정의 |
 여기서 말하는 수직과 수평 쌓임은 Items가 아니라 Container라는 것에 주의합시다.
 두 값의 차이는 내부에 Items에는 영향을 주지 않습니다.
 
-![Flex](./assets/flex-display.jpg)
+![Flex](./assets/flex-display.jpg "--1050x876")
 
 ### flex-flow
 
@@ -175,7 +175,7 @@ column-reverse | Items를 `column`의 반대 축으로 표시 |
 flex-direction: 주축;
 ```
 
-![Flex](./assets/flex-direction.jpg)
+![Flex](./assets/flex-direction.jpg "--1050x711")
 
 #### 주 축(main-axis)과 교차 축(cross-axis)
 
@@ -184,7 +184,7 @@ flex-direction: 주축;
 반대로 값 `column`은 Items를 수직축으로 표시하므로 주 축은 수직이며 교차 축은 수평이 됩니다.
 즉, 방향(수평, 수직)에 따라 주 축과 교차 축이 달라집니다.
 
-![Flex](./assets/flex-direction-main-axis.jpg)
+![Flex](./assets/flex-direction-main-axis.jpg "--1050x711")
 
 #### 시작점(flex-start)과 끝점(flex-end)
 
@@ -192,8 +192,8 @@ flex-direction: 주축;
 이는 주 축이나 교차 축의 시작하는 지점과 끝나는 지점을 지칭합니다.
 역시 방향에 따라 시작점과 끝점이 달라집니다.
 
-![Flex](./assets/flex-direction-main-start.jpg)
-![Flex](./assets/flex-direction-cross-start.jpg)
+![Flex](./assets/flex-direction-main-start.jpg "--1150x711")
+![Flex](./assets/flex-direction-cross-start.jpg "--1050x711")
 
 뒤에서 언급할 속성 중 값으로 `flex-start`와 `flex-end`를 사용하는데 이는 방향에 맞는 그 시작점과 끝점을 의미합니다.
 
@@ -215,7 +215,7 @@ flex-wrap: 여러줄묶음;
 이는 지정된 크기(주 축에 따라 `width`나 `height`)를 무시하고 한 줄 안에서만 가변합니다.
 Items를 줄 바꿈 하려면 값으로 `wrap`을 사용해야 합니다.
 
-![Flex](./assets/flex-wrap.jpg)
+![Flex](./assets/flex-wrap.jpg "--1050x842")
 
 ### justify-content
 
@@ -234,7 +234,7 @@ space-evenly | 모든 여백을 고르게 정렬 |
 justify-content: 정렬방법;
 ```
 
-![Flex](./assets/flex-justify-content.jpg)
+![Flex](./assets/flex-justify-content.jpg "--1050x865")
 
 ### align-content
 
@@ -259,7 +259,7 @@ align-content: 정렬방법;
 
 값 `stretch`는 교차 축에 해당하는 너비(속성 `width` 혹은 `height`)가 값이 `auto`(기본값)일 경우 교차 축을 채우기 위해 자동으로 늘어납니다.
 
-![Flex](./assets/flex-align-content.jpg)
+![Flex](./assets/flex-align-content.jpg "--1581x709")
 
 ### align-items
 
@@ -281,7 +281,7 @@ baseline | Items를 문자 기준선에 정렬 |
 align-items: 정렬방법;
 ```
 
-![Flex](./assets/flex-align-items.jpg)
+![Flex](./assets/flex-align-items.jpg "--1581x709")
 
 ### gap
 
@@ -320,7 +320,7 @@ Item에 숫자를 지정하고 숫자가 클수록 순서가 밀립니다.
 order: 순서;
 ```
 
-![Flex](./assets/flex-order.jpg)
+![Flex](./assets/flex-order.jpg "--1050x711")
 
 ### flex
 
@@ -373,7 +373,7 @@ flex-grow: 증가너비;
 두 번째 Item은 총 너비의 50%(2/4)를,
 세 번째 Item은 총 너비의 25%(1/4)을 가지게 됩니다.
 
-![Flex](./assets/flex-grow.jpg)
+![Flex](./assets/flex-grow.jpg "--1050x1079")
 
 <iframe height='500' scrolling='no' title='flex-grow' src='//codepen.io/heropark/embed/zMLbPw/?height=265&theme-id=0&default-tab=html,result' frameborder='no' allowtransparency='true' allowfullscreen='true' style='width: 100%;'>See the Pen <a href='https://codepen.io/heropark/pen/zMLbPw/'>flex-grow</a> by park young woong (<a href='https://codepen.io/heropark'>@heropark</a>) on <a href='https://codepen.io'>CodePen</a>.
 </iframe>
@@ -409,7 +409,7 @@ Container의 너비가 줄어 Items의 너비에 영향을 미칠 경우, 영향
 첫 번째 Item은 `90px`의 4/5인 `72px` 만큼 너비가 감소하고,
 두 번째 Item은 `90px`의 1/5인 `18px` 만큼 너비가 감소합니다.
 
-![Flex](./assets/flex-shrink.jpg)
+![Flex](./assets/flex-shrink.jpg "--1680x860")
 
 <iframe height='500' scrolling='no' title='flex-shrink' src='//codepen.io/heropark/embed/oeWLVm/?height=265&theme-id=0&default-tab=html,result' frameborder='no' allowtransparency='true' allowfullscreen='true' style='width: 100%;'>See the Pen <a href='https://codepen.io/heropark/pen/oeWLVm/'>flex-shrink</a> by park young woong (<a href='https://codepen.io/heropark'>@heropark</a>) on <a href='https://codepen.io'>CodePen</a>.
 </iframe>
@@ -434,7 +434,7 @@ flex-basis: 기본너비;
 
 `flex` 속성에서 설명한 것 같이 단축 속성 내에서 `flex-basis`를 생략하면 값이 `0`이 되는 것을 주의합시다.
 
-![Flex](./assets/flex-basis.jpg)
+![Flex](./assets/flex-basis.jpg "--1680x1077")
 
 ### align-self
 
@@ -457,4 +457,4 @@ baseline | Item을 문자 기준선에 정렬 |
 align-self: 정렬방법;
 ```
 
-![Flex](./assets/flex-align-self.jpg)
+![Flex](./assets/flex-align-self.jpg "--1050x556")

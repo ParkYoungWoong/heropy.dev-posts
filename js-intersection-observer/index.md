@@ -21,7 +21,7 @@ description:
 
 이 기능은 비동기적으로 실행되기 때문에, `scroll` 같은 이벤트 기반의 요소 관찰에서 발생하는 [렌더링 성능](https://developers.google.com/web/fundamentals/performance/rendering/?hl=ko)이나 이벤트 연속 호출 같은 문제 없이 사용할 수 있습니다.
 
-![각 요소들이 화면 안으로 들어왔나요?](./assets/intersection-observer-summary.jpg)
+![각 요소들이 화면 안으로 들어왔나요?](./assets/intersection-observer-summary.jpg "--698x435")
 
 `new IntersectionObserver()`를 통해 생성한 인스턴스(`io`)로 관찰자(Observer)를 초기화하고 관찰할 대상([Element](https://developer.mozilla.org/ko/docs/Web/API/Element))을 지정합니다.
 생성자는 2개의 인수(`callback`, `options`)를 가집니다.
@@ -67,22 +67,22 @@ io.observe(element2) // 관찰 대상 2
 // ...
 ```
 
-![intersection observer entry object](./assets/intersection-observer-entry-object.jpg)
+![intersection observer entry object](./assets/intersection-observer-entry-object.jpg "--384x208")
 
 #### entry.boundingClientRect
 
 관찰 대상의 사각형 정보([DOMRectReadOnly](https://developer.mozilla.org/en-US/docs/Web/API/DOMRectReadOnly))를 반환합니다.
 이 값은, `Element.getBoundingClientRect()`를 사용해 동일하게 얻을 수 있습니다.(`getBoundingClientRect` 호출에서 [Reflow 현상](https://developers.google.com/speed/docs/insights/browser-reflow?hl=ko)이 발생합니다.)
 
-![intersection observer boundingClientRect](./assets/intersection-observer-bounding-client-rect.jpg)
-![intersection observer DOM rect](./assets/intersection-observer-dom-rect-object.jpg)
-![intersection observer DOM rect](./assets/intersection-observer-dom-rect.jpg)
+![intersection observer boundingClientRect](./assets/intersection-observer-bounding-client-rect.jpg "--698x435")
+![intersection observer DOM rect](./assets/intersection-observer-dom-rect-object.jpg "--297x224")
+![intersection observer DOM rect](./assets/intersection-observer-dom-rect.jpg "--622x267")
 
 #### entry.intersectionRect
 
 관찰 대상과 루트 요소와의 교차하는(겹치는) 영역에 대한 사각형 정보([DOMRectReadOnly](https://developer.mozilla.org/en-US/docs/Web/API/DOMRectReadOnly))를 반환합니다.
 
-![intersection observer intersectionRect](./assets/intersection-observer-intersection-rect.jpg)
+![intersection observer intersectionRect](./assets/intersection-observer-intersection-rect.jpg "--698x435")
 
 #### entry.intersectionRatio
 
@@ -93,7 +93,7 @@ io.observe(element2) // 관찰 대상 2
 
 관찰 대상이 루트 요소와 교차 상태로 들어가거나(`true`) 교차 상태에서 나가는지(`false`) 여부를 나타내는 값(Boolean)입니다.
 
-![intersection observer isIntersecting](./assets/intersection-observer-is-intersecting.jpg)
+![intersection observer isIntersecting](./assets/intersection-observer-is-intersecting.jpg "--698x435")
 
 #### entry.rootBounds
 
@@ -120,7 +120,7 @@ const io = new IntersectionObserver((entries, observer) => {
 io.observe(element)
 ```
 
-![intersection observer observer](./assets/intersection-observer-observer.jpg)
+![intersection observer observer](./assets/intersection-observer-observer.jpg "--425x415")
 
 ## 옵션
 
@@ -138,7 +138,7 @@ const io = new IntersectionObserver(callback, {
 })
 ```
 
-![intersection observer root](./assets/intersection-observer-root.jpg)
+![intersection observer root](./assets/intersection-observer-root.jpg "--698x435")
 
 ### rootMargin
 
@@ -157,9 +157,9 @@ const io = new IntersectionObserver(callback, {
 })
 ```
 
-![intersection observer rootMargin](./assets/intersection-observer-root-margin-0.jpg)
-![intersection observer rootMargin](./assets/intersection-observer-root-margin+100.jpg)
-![intersection observer rootMargin](./assets/intersection-observer-root-margin-100.jpg)
+![intersection observer rootMargin](./assets/intersection-observer-root-margin-0.jpg "--698x435")
+![intersection observer rootMargin](./assets/intersection-observer-root-margin+100.jpg "--698x435")
+![intersection observer rootMargin](./assets/intersection-observer-root-margin-100.jpg "--698x435")
 
 ### threshold
 
@@ -176,9 +176,9 @@ const io = new IntersectionObserver(callback, {
 })
 ```
 
-![intersection observer threshold](./assets/intersection-observer-threshold-0.jpg)
-![intersection observer threshold](./assets/intersection-observer-threshold-0.3.jpg)
-![intersection observer threshold](./assets/intersection-observer-threshold-1.jpg)
+![intersection observer threshold](./assets/intersection-observer-threshold-0.jpg "--698x435")
+![intersection observer threshold](./assets/intersection-observer-threshold-0.3.jpg "--698x435")
+![intersection observer threshold](./assets/intersection-observer-threshold-1.jpg "--698x435")
 
 ## 메소드
 
@@ -404,7 +404,7 @@ Array.prototype.slice.call(els).forEach(el => {
 
 ### Infinite scroll
 
-![set Network tab in Chrome](./assets/intersection-observer-infinite-scroll-example-chrome-network-tab-setting.jpg)
+![set Network tab in Chrome](./assets/intersection-observer-infinite-scroll-example-chrome-network-tab-setting.jpg "--433x149")
 
 <iframe height="700" style="width: 100%;" scrolling="no" title="Infinite scroll" src="https://codepen.io/heropark/embed/LYYjMQp?height=265&theme-id=0&default-tab=js,result" frameborder="no" allowtransparency="true" allowfullscreen="true">
   See the Pen <a href='https://codepen.io/heropark/pen/LYYjMQp'>Infinite scroll</a> by park young woong

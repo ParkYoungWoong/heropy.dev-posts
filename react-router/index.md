@@ -102,9 +102,9 @@ createRoot(document.getElementById('root')!).render(
 )
 ```
 
-![http://localhost:5173/](./assets/s3-1.JPG)
+![http://localhost:5173/](./assets/s3-1.JPG "--500x95")
 
-![http://localhost:5173/about](./assets/s3-2.JPG)
+![http://localhost:5173/about](./assets/s3-2.JPG "--500x95")
 
 ## 레이아웃
 
@@ -184,7 +184,7 @@ export default function Router() {
 }
 ```
 
-![헤더 컴포넌트](./assets/s4.JPG)
+![헤더 컴포넌트](./assets/s4.JPG "--500x117")
 
 ## 스크롤 복원
 
@@ -268,7 +268,7 @@ export default function TheHeader() {
 }
 ```
 
-![일치하는 경로에 활성 상태 표시](./assets/s1.JPG)
+![일치하는 경로에 활성 상태 표시](./assets/s1.JPG "--536x254")
 
 스타일을 모듈화하거나 클래스 이름을 동적으로 지정하고 싶다면, `className` 속성에 함수를 전달하여 활성 상태에 따라 스타일을 다르게 적용할 수 있습니다. 
 그리고 이 함수의 매개변수에서 `isActive` 속성을 활용하면 현재 링크의 활성 상태(Boolean)를 확인할 수 있습니다.
@@ -354,7 +354,7 @@ export default function TheHeader() {
 }
 ```
 
-![내비게이션 활성화 표시](./assets/s5.JPG)
+![내비게이션 활성화 표시](./assets/s5.JPG "--498x112")
 
 만약 `<NavLink>` 컴포넌트 내부에서 활성 상태를 활용하고 싶다면, 함수를 `children`으로 전달하는 방법을 사용할 수도 있습니다. 
 그러면 활성 상태에 따라 내부 요소를 동적으로 조정할 수 있습니다.
@@ -605,7 +605,7 @@ const navigations = [
 // ...
 ```
 
-![영화 상세 페이지 / http://localhost:5173/movies/tt4154796](./assets/s6.JPG)
+![영화 상세 페이지 / http://localhost:5173/movies/tt4154796](./assets/s6.JPG "--500x119")
 
 ## 중첩 라우팅
 
@@ -825,11 +825,11 @@ export default function TheHeader() {
 }
 ```
 
-![영화 검색 페이지 / http://localhost:5173/movies](./assets/s7.JPG)
+![영화 검색 페이지 / http://localhost:5173/movies](./assets/s7.JPG "--500x359")
 
 이제 영화 검색 페이지에서 영화를 선택하면 영화 상세 정보 페이지가 모달 형태로 표시됩니다.
 
-![영화 선택으로 모달 표시 / http://localhost:5173/movies/tt4154796](./assets/s2.JPG)
+![영화 선택으로 모달 표시 / http://localhost:5173/movies/tt4154796](./assets/s2.JPG "--511x387")
 
 자식 라우트를 렌더링할 때는 주로 `<Outlet>` 컴포넌트를 사용하지만, 상황에 따라 `useOutlet` 훅을 활용할 수도 있습니다. 
 `useOutlet` 훅은 렌더링할 (새로운 )자식 라우트를 반환하며, 이를 통해 페이지 전환을 쉽게 감지하고 애니메이션 효과를 적용하는 등의 더 유연한 처리가 가능해집니다.
@@ -900,7 +900,7 @@ export default function Router() {
 }
 ```
 
-![찾을 수 없는 페이지 / http://localhost:5173/helloworld](./assets/s8.JPG)
+![찾을 수 없는 페이지 / http://localhost:5173/helloworld](./assets/s8.JPG "--500x159")
 
 ## 보호된 경로 설정
 
@@ -1048,7 +1048,7 @@ export default function Router() {
 }
 ```
 
-![로그인 전 영화 페이지로 이동하면 로그인 페이지로 리다이렉트 / http://localhost:5173/signin?redirectTo=%2Fmovies](./assets/s9.JPG)
+![로그인 전 영화 페이지로 이동하면 로그인 페이지로 리다이렉트 / http://localhost:5173/signin?redirectTo=%2Fmovies](./assets/s9.JPG "--500x170")
 
 Loader 함수에서 반환하는 데이터는 필요한 경우 `useLoaderData` 훅을 통해 컴포넌트에서 사용할 수 있습니다.
 
