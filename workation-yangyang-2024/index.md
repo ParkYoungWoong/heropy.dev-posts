@@ -22,7 +22,7 @@ description:
 
 원격 업무가 가능한 회사에 재직 중이시라면 적극 추천합니다.
 
-<iframe style="width: 100%; aspect-ratio: 16/9;" src="https://www.youtube.com/embed/68NxMuUiQJs" title="양양 쏠비치 워케이션 (SBA 어촌체험휴양마을 워케이션, 12월 3일~6일)" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+<iframe src="https://www.youtube.com/embed/68NxMuUiQJs" title="양양 쏠비치 워케이션 (SBA 어촌체험휴양마을 워케이션, 12월 3일~6일)" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
 
 ## 워케이션 신청 방법
 
@@ -72,8 +72,8 @@ description:
 
 ### 워케이션 출발
 
-저는 12월 3일(화)부터 6일(금)까지 양양 쏠비치로 워케이션을 다녀왔어요.
-비용은 3박 4일 총 12만 원이고, 4성급 호텔 숙박비로는 엄청 저렴하지만 워케이션 중에서는 비싼 편이에요.
+저는 12월 3일(화)부터 6일(금)까지 양양으로 워케이션을 다녀왔어요.
+비용은 3박 4일 총 12만 원이고, 4성급 호텔(쏠비치 양양) 숙박비로는 엄청 저렴하지만 워케이션 중에서는 비싼 편이에요.
 
 두근두근!😘 새벽 5시 반에 일어나 바로 양양으로 출발했습니다.
 12월이라 그런지 7시쯤 돼야 밝아지네요.
@@ -206,7 +206,7 @@ description:
 
 ![](./assets/s31.jpg "--2500x1875")
 
-저녁 식사로 양양시장 근처에 [양양회포장](https://naver.me/G386s3SR)이라는 곳에서 광어막회1인(2.5만)와 야채+물회소스(7천)를 포장해서 숙소로 가져왔어요.
+저녁 식사로 양양시장 근처에 [양양회포장](https://naver.me/G386s3SR)이라는 곳에서 광어막회1인(2.5만)과 야채+물회소스(7천)를 포장해서 숙소로 가져왔어요.
 먼저 광어회를 먹고 나머지를 물회로 먹으면 됩니다.
 양이 엄청 많아서, 간단히 식사를 하고 2명이 술안주로 먹어도 좋을 것 같아요.
 
