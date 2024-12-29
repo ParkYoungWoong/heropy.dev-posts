@@ -12,7 +12,7 @@ tags:
   - TaeBaek
   - SBA
 description:
-  hello world!
+  서울경제진흥원(SBA)에서 지원하는 24년 마지막 워케이션을 신청해서, 12월 17일(화)부터 20일(금)까지 태백 오투리조트로 다녀왔습니다.
 ---
 
 /// message-box --icon=info
