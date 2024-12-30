@@ -4,7 +4,7 @@ filename: sveltekit
 image: https://heropy.dev/postAssets/QWrwz3/main.jpg
 title: (초안) SvelteKit
 createdAt: 2024-06-27
-updatedAt: 2024-06-28
+updatedAt: 2024-12-30
 group: Svelte
 author:
   - ParkYoungWoong
@@ -178,6 +178,24 @@ body {
 }
 ```
 
+## 링크 옵션
+
+SvelteKit은 `<Link>` 같은 별도의 컴포넌트가 아닌 HTML `<a>`를 경로 탐색 요소로 사용합니다.
+요소 자신이나 부모 요소에 다음의 링크 옵션을 적용할 수 있습니다.
+
+```html
+<a data-sveltekit-preload-data="hover" href="/path">To Path!</a>
+```
+
+옵션 | 설명 | 값
+---|---|---
+`data-sveltekit-preload-data` | 페이지 데이터 미리로드 | `hover`, `tap`
+`data-sveltekit-preload-code` | 페이지 코드만 미리로드 | `eager`, `viewport`, `hover`, `tap`
+`data-sveltekit-reload` | 패이지 다시로드 | 
+`data-sveltekit-replacestate` | 탐색 히스토리를 대체 |
+`data-sveltekit-keepfocus` | 탐색 후에도 포커스 유지 |
+`data-sveltekit-noscroll` | 스크롤 초기화 비활성화 |
+
 ## 페이지의 데이터 로드 및 전달
 
 페이지(`+page.svelte`)를 렌더링하기 전에 필요한 데이터를 로드하는 방법으로 `load` 함수를 내보내는 `+page.server.ts`와 `+page.ts` 파일을 사용할 수 있습니다.
@@ -290,4 +308,8 @@ export async function load({ parent, fetch, params }) {
     console.log(data)
   })
 </script>
+
+<div>
+  <div>{$query.isLoading ? '로딩 중..' : $query.data}</div>
+</div>
 ```
