@@ -4,20 +4,32 @@ filename: react-zustand
 image: https://heropy.dev/postAssets/n74Tgc/main.jpg
 title: Zustand 핵심 정리
 createdAt: 2024-06-11
-updatedAt: 2024-08-22
+updatedAt: 2025-02-02
 group: React
 author:
   - ParkYoungWoong
 tags:
   - React
   - Zustand
+  - Store
 description:
   Zustand(주스탠드)는 작고 빠르며 확장 가능한 React 프로젝트에서 사용하는 상태 관리(Store) 라이브러리입니다.
 ---
 
 /// message-box --icon=info
-이 글은 Zustand 4.5.2 버전을 기준으로 작성되었습니다.
+이 글은 Zustand 5.0.3 버전을 기준으로 작성되었습니다.
 ///
+
+다음은 v5의 주요 업데이트 내용입니다.
+
+- React v18 이상 필요
+- TypeScript v4.5 이상 필요
+- UMD/SystemJS 지원 중단
+- ES5 지원 중단
+- 기본 내보내기(Default Export) 삭제
+- Persist 미들웨어가 초기 상태를 바로 스토리지에 저장하지 않음
+- `use-sync-external-store` 패키지가 피어 종속성으로 변경, 필요한 경우 직접 설치
+- `setState`의 상태 대체(`replace`)가 더욱 엄격하게 동작
 
 ## 개요
 
@@ -824,6 +836,8 @@ Zustand는 `persist` 미들웨어를 사용해 스토리지에 상태를 저장�
 
 스토리지에 저장될 스토어의 고유한 이름을 필수 옵션(`name`)으로 제공해야 합니다.
 또한 로컬 스토리지(`localStorage`)를 기본으로 사용하며, 필요하면 세션 스토리지(`sessionStorage`)나 커스텀 스토리지를 만들어 사용할 수도 있습니다.
+
+기타 옵션은 [Zustand Persist Middleware(스토리지 사용)의 선택 옵션 정리](https://www.heropy.dev/s/70)에서 설명합니다.
 
 /// message-box --icon=warning
 JSON 형식으로 변환할 수 없는 상태는 저장할 수 없습니다.
